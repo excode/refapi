@@ -1,0 +1,605 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /currencies:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - currencies
+      summary: Add new Currencies
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Currencies
+          required: true
+          schema:
+            $ref: '#/definitions/currencies'
+      responses:
+        '201':
+          description: An object with Currencies details
+
+  /currencies/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - currencies
+      summary: List Currencies
+      description: Search Currencies 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: minTransaction
+          in: query
+          description: minTransaction values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: minTransaction_mode
+          in: query
+          description: minTransaction mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: transactionFee
+          in: query
+          description: transactionFee values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: transactionFee_mode
+          in: query
+          description: transactionFee mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: maxTransaction
+          in: query
+          description: maxTransaction values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: maxTransaction_mode
+          in: query
+          description: maxTransaction mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: decimal
+          in: query
+          description: decimal values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: decimal_mode
+          in: query
+          description: decimal mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: isocode
+          in: query
+          description: isocode values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: isocode_mode
+          in: query
+          description: isocode mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: cSign
+          in: query
+          description: cSign values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: cSign_mode
+          in: query
+          description: cSign mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/currenciesData'
+        '400':
+          description: Invalid status value
+/currencies/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - currencies
+      summary: List Currencies
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: minTransaction
+          in: query
+          description: minTransaction values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: minTransaction_mode
+          in: query
+          description: minTransaction mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: transactionFee
+          in: query
+          description: transactionFee values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: transactionFee_mode
+          in: query
+          description: transactionFee mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: maxTransaction
+          in: query
+          description: maxTransaction values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: maxTransaction_mode
+          in: query
+          description: maxTransaction mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: decimal
+          in: query
+          description: decimal values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: decimal_mode
+          in: query
+          description: decimal mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: isocode
+          in: query
+          description: isocode values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: isocode_mode
+          in: query
+          description: isocode mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: cSign
+          in: query
+          description: cSign values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: cSign_mode
+          in: query
+          description: cSign mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/currenciesData'
+        '400':
+          description: Invalid status value
+/currencies/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - currencies
+      summary: List currencies
+      description: Keyward search data on name,isocode,cSign
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on name,isocode,cSign
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/currenciesData'
+        '400':
+          description: Invalid status value
+/currencies/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - currencies
+      summary: List currencies
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Currencies by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/currenciesData'
+        '400':
+          description: Invalid status value
+definitions:
+  currencies:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        minTransaction:
+            type: number
+            format: double
+        transactionFee:
+            type: number
+            format: double
+        maxTransaction:
+            type: number
+            format: double
+        decimal:
+            type: integer
+            maximum: 2      
+        name:
+            type: string
+            maxLength: 20      
+        isocode:
+            type: string
+            maxLength: 3      
+        cSign:
+            type: string
+            maxLength: 5      
+            
+
+  currenciesData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        minTransaction:
+            type: number
+            format: double
+        transactionFee:
+            type: number
+            format: double
+        maxTransaction:
+            type: number
+            format: double
+        decimal:
+            type: integer
+            maximum: 2      
+        name:
+            type: string
+            maxLength: 20      
+        isocode:
+            type: string
+            maxLength: 3      
+        cSign:
+            type: string
+            maxLength: 5      
+            
+    

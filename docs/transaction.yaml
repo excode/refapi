@@ -1,0 +1,501 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /transaction:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - transaction
+      summary: Add new Transaction
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Transaction
+          required: true
+          schema:
+            $ref: '#/definitions/transaction'
+      responses:
+        '201':
+          description: An object with Transaction details
+
+  /transaction/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - transaction
+      summary: List Transaction
+      description: Search Transaction 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: amount
+          in: query
+          description: amount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: amount_mode
+          in: query
+          description: amount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rtype
+          in: query
+          description: rtype values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rtype_mode
+          in: query
+          description: rtype mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: particular
+          in: query
+          description: particular values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: particular_mode
+          in: query
+          description: particular mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/transactionData'
+        '400':
+          description: Invalid status value
+/transaction/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - transaction
+      summary: List Transaction
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: amount
+          in: query
+          description: amount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: amount_mode
+          in: query
+          description: amount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rtype
+          in: query
+          description: rtype values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rtype_mode
+          in: query
+          description: rtype mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: particular
+          in: query
+          description: particular values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: particular_mode
+          in: query
+          description: particular mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/transactionData'
+        '400':
+          description: Invalid status value
+/transaction/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - transaction
+      summary: List transaction
+      description: Keyward search data on contactNumber,particular
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on contactNumber,particular
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/transactionData'
+        '400':
+          description: Invalid status value
+/transaction/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - transaction
+      summary: List transaction
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Transaction by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/transactionData'
+        '400':
+          description: Invalid status value
+definitions:
+  transaction:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        amount:
+            type: number
+            format: double
+        quantity:
+            type: number
+            format: double
+        rtype:
+            type: integer
+        contactNumber:
+            type: string
+        particular:
+            type: string
+          
+
+  transactionData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        amount:
+            type: number
+            format: double
+        quantity:
+            type: number
+            format: double
+        rtype:
+            type: integer
+        contactNumber:
+            type: string
+        particular:
+            type: string
+          
+    

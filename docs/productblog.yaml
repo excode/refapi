@@ -1,0 +1,414 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /productblog:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - productblog
+      summary: Add new Productblog
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Productblog
+          required: true
+          schema:
+            $ref: '#/definitions/productblog'
+      responses:
+        '201':
+          description: An object with Productblog details
+
+  /productblog/upload/{colName}/{rowId}:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - productblog
+      parameters:
+      - name: colName
+        in: path
+        description: Column/Field name in table/document
+        required: true
+        schema:
+          type: string
+      - name: rowId
+        in: path
+        description: primary id in table/document
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+              properties:
+                filename:
+                  type: file
+                  format: binary
+  responses:
+    '200':
+      description: Successful upload
+        
+  /productblog/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productblog
+      summary: List Productblog
+      description: Search Productblog 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/productblogData'
+        '400':
+          description: Invalid status value
+/productblog/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productblog
+      summary: List Productblog
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productblogData'
+        '400':
+          description: Invalid status value
+/productblog/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productblog
+      summary: List productblog
+      description: Keyward search data on title
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on title
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productblogData'
+        '400':
+          description: Invalid status value
+/productblog/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productblog
+      summary: List productblog
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Productblog by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/productblogData'
+        '400':
+          description: Invalid status value
+definitions:
+  productblog:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+        rank:
+            type: integer
+        title:
+            type: string
+
+
+  productblogData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+        rank:
+            type: integer
+        title:
+            type: string
+
+    

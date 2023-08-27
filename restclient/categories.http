@@ -1,0 +1,58 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/categories HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"active":"false",
+"rank":"10",
+"category":"eiusmod"
+}
+
+###
+
+GET {{HOST}}/categories? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/categories?active=false&rank=10&category=eiusmod HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/categories/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/categories/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"active":"false",
+"rank":"10",
+"category":"eiusmod"
+}
+###
+PATCH {{HOST}}/categories/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"active":"false",
+"rank":"10",
+"category":"eiusmod"
+}
+###
+DELETE {{HOST}}/categories/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

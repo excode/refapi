@@ -1,0 +1,366 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /productnew:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - productnew
+      summary: Add new Productnew
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Productnew
+          required: true
+          schema:
+            $ref: '#/definitions/productnew'
+      responses:
+        '201':
+          description: An object with Productnew details
+
+  /productnew/upload/{colName}/{rowId}:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - productnew
+      parameters:
+      - name: colName
+        in: path
+        description: Column/Field name in table/document
+        required: true
+        schema:
+          type: string
+      - name: rowId
+        in: path
+        description: primary id in table/document
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+              properties:
+                filename:
+                  type: file
+                  format: binary
+  responses:
+    '200':
+      description: Successful upload
+        
+  /productnew/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productnew
+      summary: List Productnew
+      description: Search Productnew 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/productnewData'
+        '400':
+          description: Invalid status value
+/productnew/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productnew
+      summary: List Productnew
+      description: get all data without paging
+      parameters: 
+       
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productnewData'
+        '400':
+          description: Invalid status value
+/productnew/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productnew
+      summary: List productnew
+      description: Keyward search data on title
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on title
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productnewData'
+        '400':
+          description: Invalid status value
+/productnew/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - productnew
+      summary: List productnew
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Productnew by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/productnewData'
+        '400':
+          description: Invalid status value
+definitions:
+  productnew:
+      type: object
+      properties:
+        
+        updateBy:
+            type: string
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+        title:
+            type: string
+
+
+  productnewData:
+      type: object
+      properties:
+      
+        updateBy:
+            type: string
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+        title:
+            type: string
+
+    

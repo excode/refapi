@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "winandwings-c05ab",
+  "private_key_id": "b9b494a69a402a4229f137f4855634fe9c442a89",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCq57KcNDjQvoVu\nclr/ZVGbMB96pTztI08QpaNYn0EjV4HFWBWI0Ht3rV1lTpAKn/gTigJdnsVFS5wM\nbEBAkmmkVCugE/pi3Xd76F4VXOYb2+6w+L5t1H+dg1L2DBmg/Xpbo59lpAhaoqTZ\nuu8AIocutmjSaHpfbm0kxL0AC5oAl38mKm8bcZra6HPrKBZfuUX5ryuVYcIMJLyL\n54wG0j7QgntanFUFgdsAgaaKxYzofNoyBLlBGvWdOAFYXapg4n3ykqOkSZr/L6N0\nBaHTdNDVWIgBsyO5f+Wvdbheq5StOB/9GGrexaejFMPaWleS6UybojX2NepT0nSe\n7/ihFe8vAgMBAAECggEAKcnCffg05jGXnaRfhLAo7omrQMlTZuZpyDfAA4TZIAOf\nCvpZNZ1Ie0BMJF+7z6VCusBViL+wG5v7uXvkkAVcyF3+VsNbxz3An+72xkFzUF+L\n8wC3S1KYq5J3QAtAXwFroCmXaXpcwpCfP0+6ba2DoVPfuIbsWRY+oK1sSy0LCFac\nCfeoL7ajxclsZ9XEchyHLXG9A+Xd7bBmMOlsj/W9mTKLKw4+hVJNqPyCpRxZeK1Z\nlxVRi+T4IJpNKT2jegaoQhznAcsRvcQZs1/lMdkpAigVWELrm5+euPVNPPca3zHX\n5asEg/G9uZbtbeH/mx9QWb4lqMABaaXgElRBtIatpQKBgQDj1imOsLBu9zRkRoQP\nDRoMhehUnAgDvpn62GPgZOyCLwrzcma+SkIyhHgOk7A+iuMsdPbSVSGRgXXzhi9q\nePx19WD5vbPLQ+eEvHjiwzllVqMMT2TAPSSvIUdAXgBk1tGz2scleEejWHJcs/Ki\nkvxeLTSmumXJfUyXixkZphW75QKBgQDAB/Nb3rtVJcBHgWVcLcJDHCLiKaeMCPQs\nUzIr8RlqsXTG+hZdBtkD/uoSYDPNVrnG+RFf6LscLWuM25n4Hf1VwO6EPkYRqk1g\nYHk9NdlM6afbJRQGKfmMkw29X0MqLWhMTXgAOAoOPTBD8WZA4SyDsqjWmyLrPNNd\niqDRNokVgwKBgF17X+3GHX5KO9rw+/pY+9krkFo28yrmJ7O+2awWfNwlhS7CP9nQ\nCj1EESaZ/nSK9A8npqZCe9WB8u2KnyXmol+b4MBXz8+U+weBdXBFfeVQmPHSGZqu\n+8BHvT5x02OMqNpM5+093tbs0W+r/eAqwxW5IqNOU7lKigSb9B6MANrpAoGAMMNU\nFuYuZ+bYNtAy7v9nryb77LZrJ3I2nvLZcLMeoytA3i4vc5wDi7I1ukjXnrMBJfel\nY9dzfCpEf1ZceNcUt6vwZYByxpWaZHjbEKIV9iP3TfzSYuZRylKlUItaQOGa9JVP\nfa69TvRWx0oLjzoe1aqOmUB304h0m/JR+A6DLQUCgYEA4LtGiBo3EKlkPESNNNm9\n4yH1Ne3Q79TI03wNavBOaNKvAgQjmw74omlAH5CsvXL7klXr3fwo4ihFFK+SsEQf\nzLpKW9m4mFYo1k5HDJtbiQSlmvaqofdnupv6Aajz60S9kowIJO0xK8K/f1uoexY1\nofHE6ZFnw0luEYw2uYIXxMI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "win-images@winandwings-c05ab.iam.gserviceaccount.com",
+  "client_id": "115518651437643642692",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/win-images%40winandwings-c05ab.iam.gserviceaccount.com"
+}

@@ -1,0 +1,661 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /reward:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - reward
+      summary: Add new Reward
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Reward
+          required: true
+          schema:
+            $ref: '#/definitions/reward'
+      responses:
+        '201':
+          description: An object with Reward details
+
+  /reward/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - reward
+      summary: List Reward
+      description: Search Reward 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: level
+          in: query
+          description: level values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: level_mode
+          in: query
+          description: level mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: amount
+          in: query
+          description: amount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: amount_mode
+          in: query
+          description: amount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: status
+          in: query
+          description: status true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: productid
+          in: query
+          description: productid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productid_mode
+          in: query
+          description: productid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: ref
+          in: query
+          description: ref values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: ref_mode
+          in: query
+          description: ref mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: sourceContactNumber
+          in: query
+          description: sourceContactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sourceContactNumber_mode
+          in: query
+          description: sourceContactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: particular
+          in: query
+          description: particular values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: particular_mode
+          in: query
+          description: particular mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: type
+          in: query
+          description: type values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: type_mode
+          in: query
+          description: type mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/rewardData'
+        '400':
+          description: Invalid status value
+/reward/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - reward
+      summary: List Reward
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: level
+          in: query
+          description: level values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: level_mode
+          in: query
+          description: level mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: amount
+          in: query
+          description: amount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: amount_mode
+          in: query
+          description: amount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: status
+          in: query
+          description: status true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: productid
+          in: query
+          description: productid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productid_mode
+          in: query
+          description: productid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: ref
+          in: query
+          description: ref values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: ref_mode
+          in: query
+          description: ref mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: sourceContactNumber
+          in: query
+          description: sourceContactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sourceContactNumber_mode
+          in: query
+          description: sourceContactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: particular
+          in: query
+          description: particular values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: particular_mode
+          in: query
+          description: particular mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: type
+          in: query
+          description: type values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: type_mode
+          in: query
+          description: type mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/rewardData'
+        '400':
+          description: Invalid status value
+/reward/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - reward
+      summary: List reward
+      description: Keyward search data on productid,contactNumber,ref,sourceContactNumber,particular,type
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on productid,contactNumber,ref,sourceContactNumber,particular,type
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/rewardData'
+        '400':
+          description: Invalid status value
+/reward/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - reward
+      summary: List reward
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Reward by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/rewardData'
+        '400':
+          description: Invalid status value
+definitions:
+  reward:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        level:
+            type: integer
+        amount:
+            type: number
+            format: double
+        status:
+            type: boolean
+        productid:
+            type: string
+        contactNumber:
+            type: string
+        ref:
+            type: string
+        sourceContactNumber:
+            type: string
+        particular:
+            type: string
+        type:
+            type: string
+          
+
+  rewardData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        level:
+            type: integer
+        amount:
+            type: number
+            format: double
+        status:
+            type: boolean
+        productid:
+            type: string
+        contactNumber:
+            type: string
+        ref:
+            type: string
+        sourceContactNumber:
+            type: string
+        particular:
+            type: string
+        type:
+            type: string
+          
+    

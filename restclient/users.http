@@ -1,0 +1,94 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/users HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"lastname":"quiclf",
+"usertype":"1",
+"firstname":"velit",
+"password":"ucode1234",
+"contactNumber":"601775735722",
+"email":"commodo@ucode.ai8"
+}
+
+###
+
+#MAIN REGISTRATION for NODEJS VERSION
+POST {{HOST}}/users/reg HTTP/1.1
+content-type: application/json
+    
+{
+"email":"test@ucode.ai",
+"password":"123456",
+"firstname":"uCode",
+"lastname":"Test",
+"usertype":"0",
+"mobile":"60176408250"
+}
+###
+#MAIN REGISTRATION for Java Spring boot
+POST {{HOST}}/reg HTTP/1.1
+content-type: application/json
+ 
+{
+"email":"test@ucode.ai",
+"password":"123456",
+"firstname":"uCode",
+"lastname":"Test",
+"usertype":"0",
+"mobile":"60176408250"
+}
+###
+
+GET {{HOST}}/users? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/users?lastname=quiclf&usertype=1&firstname=velit&contactNumber=6017757357&email=commodo@uc HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/users/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/users/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"lastname":"quiclf",
+"usertype":"1",
+"firstname":"velit",
+"password":"ucode1234",
+"contactNumber":"601775735722",
+"email":"commodo@ucode.ai8"
+}
+###
+PATCH {{HOST}}/users/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"lastname":"quiclf",
+"usertype":"1",
+"firstname":"velit",
+"password":"ucode1234",
+"contactNumber":"601775735722",
+"email":"commodo@ucode.ai8"
+}
+###
+DELETE {{HOST}}/users/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

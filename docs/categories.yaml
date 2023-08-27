@@ -1,0 +1,385 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /categories:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - categories
+      summary: Add new Category
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Category
+          required: true
+          schema:
+            $ref: '#/definitions/categories'
+      responses:
+        '201':
+          description: An object with Category details
+
+  /categories/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - categories
+      summary: List Category
+      description: Search Category 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: category
+          in: query
+          description: category values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: category_mode
+          in: query
+          description: category mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/categoriesData'
+        '400':
+          description: Invalid status value
+/categories/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - categories
+      summary: List Category
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: category
+          in: query
+          description: category values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: category_mode
+          in: query
+          description: category mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/categoriesData'
+        '400':
+          description: Invalid status value
+/categories/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - categories
+      summary: List categories
+      description: Keyward search data on category
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on category
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/categoriesData'
+        '400':
+          description: Invalid status value
+/categories/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - categories
+      summary: List categories
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Category by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/categoriesData'
+        '400':
+          description: Invalid status value
+definitions:
+  categories:
+      type: object
+      properties:
+        
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        active:
+            type: boolean
+        rank:
+            type: integer
+            maximum: 50      
+        category:
+            type: string
+            maxLength: 50      
+            
+
+  categoriesData:
+      type: object
+      properties:
+      
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        active:
+            type: boolean
+        rank:
+            type: integer
+            maximum: 50      
+        category:
+            type: string
+            maxLength: 50      
+            
+    

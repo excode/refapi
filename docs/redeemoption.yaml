@@ -1,0 +1,464 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /redeemoption:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - redeemoption
+      summary: Add new Redeemoption
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Redeemoption
+          required: true
+          schema:
+            $ref: '#/definitions/redeemoption'
+      responses:
+        '201':
+          description: An object with Redeemoption details
+
+  /redeemoption/upload/{colName}/{rowId}:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - redeemoption
+      parameters:
+      - name: colName
+        in: path
+        description: Column/Field name in table/document
+        required: true
+        schema:
+          type: string
+      - name: rowId
+        in: path
+        description: primary id in table/document
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+              properties:
+                filename:
+                  type: file
+                  format: binary
+  responses:
+    '200':
+      description: Successful upload
+        
+  /redeemoption/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeemoption
+      summary: List Redeemoption
+      description: Search Redeemoption 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productid
+          in: query
+          description: productid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productid_mode
+          in: query
+          description: productid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: rate
+          in: query
+          description: rate values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rate_mode
+          in: query
+          description: rate mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/redeemoptionData'
+        '400':
+          description: Invalid status value
+/redeemoption/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeemoption
+      summary: List Redeemoption
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productid
+          in: query
+          description: productid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productid_mode
+          in: query
+          description: productid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: rate
+          in: query
+          description: rate values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rate_mode
+          in: query
+          description: rate mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/redeemoptionData'
+        '400':
+          description: Invalid status value
+/redeemoption/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeemoption
+      summary: List redeemoption
+      description: Keyward search data on productid,name
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on productid,name
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/redeemoptionData'
+        '400':
+          description: Invalid status value
+/redeemoption/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeemoption
+      summary: List redeemoption
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Redeemoption by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/redeemoptionData'
+        '400':
+          description: Invalid status value
+definitions:
+  redeemoption:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        productid:
+            type: string
+        name:
+            type: string
+        rate:
+            type: number
+            format: double
+        active:
+            type: boolean
+
+
+  redeemoptionData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        productid:
+            type: string
+        name:
+            type: string
+        rate:
+            type: number
+            format: double
+        active:
+            type: boolean
+
+    

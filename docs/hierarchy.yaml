@@ -1,0 +1,475 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /hierarchy:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - hierarchy
+      summary: Add new Hierarchy
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Hierarchy
+          required: true
+          schema:
+            $ref: '#/definitions/hierarchy'
+      responses:
+        '201':
+          description: An object with Hierarchy details
+
+  /hierarchy/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - hierarchy
+      summary: List Hierarchy
+      description: Search Hierarchy 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: walletbalance
+          in: query
+          description: walletbalance values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: walletbalance_mode
+          in: query
+          description: walletbalance mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rewardbalance
+          in: query
+          description: rewardbalance values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rewardbalance_mode
+          in: query
+          description: rewardbalance mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: distributor
+          in: query
+          description: distributor true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: introducer
+          in: query
+          description: introducer values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: introducer_mode
+          in: query
+          description: introducer mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/hierarchyData'
+        '400':
+          description: Invalid status value
+/hierarchy/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - hierarchy
+      summary: List Hierarchy
+      description: get all data without paging
+      parameters: 
+       
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: walletbalance
+          in: query
+          description: walletbalance values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: walletbalance_mode
+          in: query
+          description: walletbalance mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rewardbalance
+          in: query
+          description: rewardbalance values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rewardbalance_mode
+          in: query
+          description: rewardbalance mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: distributor
+          in: query
+          description: distributor true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: introducer
+          in: query
+          description: introducer values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: introducer_mode
+          in: query
+          description: introducer mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/hierarchyData'
+        '400':
+          description: Invalid status value
+/hierarchy/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - hierarchy
+      summary: List hierarchy
+      description: Keyward search data on contactNumber,introducer
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on contactNumber,introducer
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/hierarchyData'
+        '400':
+          description: Invalid status value
+/hierarchy/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - hierarchy
+      summary: List hierarchy
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Hierarchy by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/hierarchyData'
+        '400':
+          description: Invalid status value
+definitions:
+  hierarchy:
+      type: object
+      properties:
+        
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        walletbalance:
+            type: integer
+        rewardbalance:
+            type: integer
+        distributor:
+            type: boolean
+        contactNumber:
+            type: string
+        introducer:
+            type: string
+          
+
+  hierarchyData:
+      type: object
+      properties:
+      
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        walletbalance:
+            type: integer
+        rewardbalance:
+            type: integer
+        distributor:
+            type: boolean
+        contactNumber:
+            type: string
+        introducer:
+            type: string
+          
+    

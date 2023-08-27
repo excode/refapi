@@ -1,0 +1,551 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /sell:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - sell
+      summary: Add new Sell
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Sell
+          required: true
+          schema:
+            $ref: '#/definitions/sell'
+      responses:
+        '201':
+          description: An object with Sell details
+
+  /sell/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - sell
+      summary: List Sell
+      description: Search Sell 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: selltype
+          in: query
+          description: selltype values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: selltype_mode
+          in: query
+          description: selltype mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: unitprice
+          in: query
+          description: unitprice values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: unitprice_mode
+          in: query
+          description: unitprice mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: total
+          in: query
+          description: total values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: total_mode
+          in: query
+          description: total mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: sellerNumber
+          in: query
+          description: sellerNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sellerNumber_mode
+          in: query
+          description: sellerNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/sellData'
+        '400':
+          description: Invalid status value
+/sell/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - sell
+      summary: List Sell
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: selltype
+          in: query
+          description: selltype values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: selltype_mode
+          in: query
+          description: selltype mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: unitprice
+          in: query
+          description: unitprice values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: unitprice_mode
+          in: query
+          description: unitprice mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: total
+          in: query
+          description: total values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: total_mode
+          in: query
+          description: total mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: sellerNumber
+          in: query
+          description: sellerNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sellerNumber_mode
+          in: query
+          description: sellerNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/sellData'
+        '400':
+          description: Invalid status value
+/sell/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - sell
+      summary: List sell
+      description: Keyward search data on sellerNumber,contactNumber
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on sellerNumber,contactNumber
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/sellData'
+        '400':
+          description: Invalid status value
+/sell/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - sell
+      summary: List sell
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Sell by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/sellData'
+        '400':
+          description: Invalid status value
+definitions:
+  sell:
+      type: object
+      properties:
+        
+        createAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        selltype:
+            type: integer
+        quantity:
+            type: number
+            format: double
+        unitprice:
+            type: number
+            format: double
+        total:
+            type: number
+            format: double
+        sellerNumber:
+            type: string
+        contactNumber:
+            type: string
+          
+
+  sellData:
+      type: object
+      properties:
+      
+        createAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        selltype:
+            type: integer
+        quantity:
+            type: number
+            format: double
+        unitprice:
+            type: number
+            format: double
+        total:
+            type: number
+            format: double
+        sellerNumber:
+            type: string
+        contactNumber:
+            type: string
+          
+    

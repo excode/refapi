@@ -1,0 +1,67 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/redeem HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"productid":"occaecat",
+"redeemproductid":"cillum",
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"sellerNumber":"601714777907"
+}
+
+###
+
+GET {{HOST}}/redeem? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/redeem?productid=occaecat&redeemproductid=cillum&quantity=1.35&unitprice=1.35&total=1.35&sellerNumber=6017147779 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/redeem/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/redeem/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"productid":"occaecat",
+"redeemproductid":"cillum",
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"sellerNumber":"601714777907"
+}
+###
+PATCH {{HOST}}/redeem/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"productid":"occaecat",
+"redeemproductid":"cillum",
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"sellerNumber":"601714777907"
+}
+###
+DELETE {{HOST}}/redeem/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

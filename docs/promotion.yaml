@@ -1,0 +1,516 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /promotion:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - promotion
+      summary: Add new Promotion
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Promotion
+          required: true
+          schema:
+            $ref: '#/definitions/promotion'
+      responses:
+        '201':
+          description: An object with Promotion details
+
+  /promotion/upload/{colName}/{rowId}:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - promotion
+      parameters:
+      - name: colName
+        in: path
+        description: Column/Field name in table/document
+        required: true
+        schema:
+          type: string
+      - name: rowId
+        in: path
+        description: primary id in table/document
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+              properties:
+                filename:
+                  type: file
+                  format: binary
+  responses:
+    '200':
+      description: Successful upload
+        
+  /promotion/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - promotion
+      summary: List Promotion
+      description: Search Promotion 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: discount
+          in: query
+          description: discount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: discount_mode
+          in: query
+          description: discount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: validFrom
+          in: query
+          description: validFrom values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            format: date
+        - name: validFrom_mode
+          in: query
+          description: validFrom mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: dateIs
+            enum:
+              - dateIs
+              - dateIsNot
+              - dateBefore
+              - dateAfter
+        - name: validTill
+          in: query
+          description: validTill values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            format: date
+        - name: validTill_mode
+          in: query
+          description: validTill mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: dateIs
+            enum:
+              - dateIs
+              - dateIsNot
+              - dateBefore
+              - dateAfter
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/promotionData'
+        '400':
+          description: Invalid status value
+/promotion/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - promotion
+      summary: List Promotion
+      description: get all data without paging
+      parameters: 
+       
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: title
+          in: query
+          description: title values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: title_mode
+          in: query
+          description: title mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: discount
+          in: query
+          description: discount values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: discount_mode
+          in: query
+          description: discount mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: validFrom
+          in: query
+          description: validFrom values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            format: date
+        - name: validFrom_mode
+          in: query
+          description: validFrom mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: dateIs
+            enum:
+              - dateIs
+              - dateIsNot
+              - dateBefore
+              - dateAfter
+        - name: validTill
+          in: query
+          description: validTill values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            format: date
+        - name: validTill_mode
+          in: query
+          description: validTill mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: dateIs
+            enum:
+              - dateIs
+              - dateIsNot
+              - dateBefore
+              - dateAfter
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/promotionData'
+        '400':
+          description: Invalid status value
+/promotion/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - promotion
+      summary: List promotion
+      description: Keyward search data on title
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on title
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/promotionData'
+        '400':
+          description: Invalid status value
+/promotion/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - promotion
+      summary: List promotion
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Promotion by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/promotionData'
+        '400':
+          description: Invalid status value
+definitions:
+  promotion:
+      type: object
+      properties:
+        
+        updateBy:
+            type: string
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        title:
+            type: string
+        discount:
+            type: number
+            format: double
+            maximum: 70      
+        validFrom:
+            type: string
+            format: date-time
+        validTill:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+
+
+  promotionData:
+      type: object
+      properties:
+      
+        updateBy:
+            type: string
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        title:
+            type: string
+        discount:
+            type: number
+            format: double
+            maximum: 70      
+        validFrom:
+            type: string
+            format: date-time
+        validTill:
+            type: string
+            format: date-time
+        active:
+            type: boolean
+
+    

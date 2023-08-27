@@ -1,0 +1,61 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/hierarchy HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"distributor":"false",
+"contactNumber":"601714316041",
+"productid":"estclf",
+"introducer":"601778100897"
+}
+
+###
+
+GET {{HOST}}/hierarchy? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/hierarchy?distributor=false&contactNumber=6017143160&productid=estclf&introducer=6017781008 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/hierarchy/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/hierarchy/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"distributor":"false",
+"contactNumber":"601714316041",
+"productid":"estclf",
+"introducer":"601778100897"
+}
+###
+PATCH {{HOST}}/hierarchy/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"distributor":"false",
+"contactNumber":"601714316041",
+"productid":"estclf",
+"introducer":"601778100897"
+}
+###
+DELETE {{HOST}}/hierarchy/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

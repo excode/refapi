@@ -1,0 +1,67 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/sell HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"productid":"utclf",
+"sellerNumber":"601790661886",
+"contactNumber":"601739649935"
+}
+
+###
+
+GET {{HOST}}/sell? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/sell?quantity=1.35&unitprice=1.35&total=1.35&productid=utclf&sellerNumber=6017906618&contactNumber=6017396499 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/sell/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/sell/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"productid":"utclf",
+"sellerNumber":"601790661886",
+"contactNumber":"601739649935"
+}
+###
+PATCH {{HOST}}/sell/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"quantity":"1.35",
+"unitprice":"1.35",
+"total":"1.35",
+"productid":"utclf",
+"sellerNumber":"601790661886",
+"contactNumber":"601739649935"
+}
+###
+DELETE {{HOST}}/sell/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

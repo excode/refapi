@@ -1,0 +1,70 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/currencies HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"minTransaction":"1.35",
+"transactionFee":"1.35",
+"maxTransaction":"1.35",
+"decimal":"6",
+"name":"esse",
+"isocode":"inc",
+"cSign":"sitcl"
+}
+
+###
+
+GET {{HOST}}/currencies? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/currencies?minTransaction=1.35&transactionFee=1.35&maxTransaction=1.35&decimal=6&name=esse&isocode=inclf&cSign=sitclf HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/currencies/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/currencies/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"minTransaction":"1.35",
+"transactionFee":"1.35",
+"maxTransaction":"1.35",
+"decimal":"6",
+"name":"esse",
+"isocode":"inc",
+"cSign":"sitcl"
+}
+###
+PATCH {{HOST}}/currencies/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"minTransaction":"1.35",
+"transactionFee":"1.35",
+"maxTransaction":"1.35",
+"decimal":"6",
+"name":"esse",
+"isocode":"inc",
+"cSign":"sitcl"
+}
+###
+DELETE {{HOST}}/currencies/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

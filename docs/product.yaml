@@ -1,0 +1,1166 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /product:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - product
+      summary: Add new Product
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Product
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+      responses:
+        '201':
+          description: An object with Product details
+
+  /product/upload/{colName}/{rowId}:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+      - product
+      parameters:
+      - name: colName
+        in: path
+        description: Column/Field name in table/document
+        required: true
+        schema:
+          type: string
+      - name: rowId
+        in: path
+        description: primary id in table/document
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+              properties:
+                filename:
+                  type: file
+                  format: binary
+  responses:
+    '200':
+      description: Successful upload
+        
+  /product/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - product
+      summary: List Product
+      description: Search Product 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: serviceType
+          in: query
+          description: serviceType values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: serviceType_mode
+          in: query
+          description: serviceType mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: level
+          in: query
+          description: level values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: level_mode
+          in: query
+          description: level mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: price
+          in: query
+          description: price values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: price_mode
+          in: query
+          description: price mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: qty
+          in: query
+          description: qty values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: qty_mode
+          in: query
+          description: qty mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rewardCondition
+          in: query
+          description: rewardCondition values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rewardCondition_mode
+          in: query
+          description: rewardCondition mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: totalVotes
+          in: query
+          description: totalVotes values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: totalVotes_mode
+          in: query
+          description: totalVotes mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: totalRating
+          in: query
+          description: totalRating values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: totalRating_mode
+          in: query
+          description: totalRating mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: config
+          in: query
+          description: config values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: config_mode
+          in: query
+          description: config mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: mypaId
+          in: query
+          description: mypaId values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: mypaId_mode
+          in: query
+          description: mypaId mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productname
+          in: query
+          description: productname values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productname_mode
+          in: query
+          description: productname mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: subCatid
+          in: query
+          description: subCatid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: subCatid_mode
+          in: query
+          description: subCatid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: country
+          in: query
+          description: country values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: country_mode
+          in: query
+          description: country mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: currency
+          in: query
+          description: currency values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: currency_mode
+          in: query
+          description: currency mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: unitName
+          in: query
+          description: unitName values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: unitName_mode
+          in: query
+          description: unitName mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: website
+          in: query
+          description: website values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: website_mode
+          in: query
+          description: website mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: facebook
+          in: query
+          description: facebook values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: facebook_mode
+          in: query
+          description: facebook mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: youtube
+          in: query
+          description: youtube values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: youtube_mode
+          in: query
+          description: youtube mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: levelConfig
+          in: query
+          description: levelConfig values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: levelConfig_mode
+          in: query
+          description: levelConfig mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/productData'
+        '400':
+          description: Invalid status value
+/product/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - product
+      summary: List Product
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: serviceType
+          in: query
+          description: serviceType values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: serviceType_mode
+          in: query
+          description: serviceType mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: level
+          in: query
+          description: level values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: level_mode
+          in: query
+          description: level mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: price
+          in: query
+          description: price values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: price_mode
+          in: query
+          description: price mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: qty
+          in: query
+          description: qty values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: qty_mode
+          in: query
+          description: qty mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rewardCondition
+          in: query
+          description: rewardCondition values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rewardCondition_mode
+          in: query
+          description: rewardCondition mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: totalVotes
+          in: query
+          description: totalVotes values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: totalVotes_mode
+          in: query
+          description: totalVotes mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: totalRating
+          in: query
+          description: totalRating values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: totalRating_mode
+          in: query
+          description: totalRating mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: config
+          in: query
+          description: config values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: config_mode
+          in: query
+          description: config mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: mypaId
+          in: query
+          description: mypaId values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: mypaId_mode
+          in: query
+          description: mypaId mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productname
+          in: query
+          description: productname values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productname_mode
+          in: query
+          description: productname mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: subCatid
+          in: query
+          description: subCatid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: subCatid_mode
+          in: query
+          description: subCatid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: country
+          in: query
+          description: country values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: country_mode
+          in: query
+          description: country mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: currency
+          in: query
+          description: currency values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: currency_mode
+          in: query
+          description: currency mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: unitName
+          in: query
+          description: unitName values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: unitName_mode
+          in: query
+          description: unitName mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: website
+          in: query
+          description: website values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: website_mode
+          in: query
+          description: website mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: facebook
+          in: query
+          description: facebook values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: facebook_mode
+          in: query
+          description: facebook mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: youtube
+          in: query
+          description: youtube values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: youtube_mode
+          in: query
+          description: youtube mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: levelConfig
+          in: query
+          description: levelConfig values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: levelConfig_mode
+          in: query
+          description: levelConfig mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productData'
+        '400':
+          description: Invalid status value
+/product/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - product
+      summary: List product
+      description: Keyward search data on config,mypaId,productname,subCatid,country,currency,unitName,website,facebook,youtube,levelConfig
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on config,mypaId,productname,subCatid,country,currency,unitName,website,facebook,youtube,levelConfig
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/productData'
+        '400':
+          description: Invalid status value
+/product/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - product
+      summary: List product
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Product by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/productData'
+        '400':
+          description: Invalid status value
+definitions:
+  product:
+      type: object
+      properties:
+        
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        serviceType:
+            type: integer
+        level:
+            type: integer
+        price:
+            type: number
+            format: double
+        qty:
+            type: integer
+        rewardCondition:
+            type: number
+            format: double
+        active:
+            type: boolean
+        totalVotes:
+            type: integer
+        totalRating:
+            type: integer
+        config:
+            type: string
+        mypaId:
+            type: string
+        productname:
+            type: string
+        subCatid:
+            type: string
+        country:
+            type: string
+        currency:
+            type: string
+        unitName:
+            type: string
+        website:
+            type: string
+        facebook:
+            type: string
+        youtube:
+            type: string
+        levelConfig:
+            type: string
+
+
+  productData:
+      type: object
+      properties:
+      
+        updateAt:
+            type: string
+            format: date-time
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        serviceType:
+            type: integer
+        level:
+            type: integer
+        price:
+            type: number
+            format: double
+        qty:
+            type: integer
+        rewardCondition:
+            type: number
+            format: double
+        active:
+            type: boolean
+        totalVotes:
+            type: integer
+        totalRating:
+            type: integer
+        config:
+            type: string
+        mypaId:
+            type: string
+        productname:
+            type: string
+        subCatid:
+            type: string
+        country:
+            type: string
+        currency:
+            type: string
+        unitName:
+            type: string
+        website:
+            type: string
+        facebook:
+            type: string
+        youtube:
+            type: string
+        levelConfig:
+            type: string
+
+    

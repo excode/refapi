@@ -1,0 +1,97 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/distributor HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"blogTitle":"esse",
+"category":"adipisicing",
+"currency":"consectetur",
+"telephone":"601780485308",
+"email":"consequat@ucode.ai",
+"state":"ullamco",
+"active":"false",
+"productid":"estclf",
+"contactNumber":"601716937174",
+"name":"ipsum",
+"address":"Culpa elit duis laborum cupidatat.",
+"city":"proident",
+"zipcode":"idclf",
+"country":"dolor",
+"productname":"commodo",
+"serviceType":"1.35"
+}
+
+###
+
+GET {{HOST}}/distributor? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/distributor?blogTitle=esse&category=adipisicin&currency=consectetu&telephone=6017804853&email=consequat@&state=ullamco&active=false&productid=estclf&contactNumber=6017169371&name=ipsum&address=Culpa elit&city=proident&zipcode=idclf&country=dolor&productname=commodo&serviceType=1.35 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/distributor/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/distributor/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"blogTitle":"esse",
+"category":"adipisicing",
+"currency":"consectetur",
+"telephone":"601780485308",
+"email":"consequat@ucode.ai",
+"state":"ullamco",
+"active":"false",
+"productid":"estclf",
+"contactNumber":"601716937174",
+"name":"ipsum",
+"address":"Culpa elit duis laborum cupidatat.",
+"city":"proident",
+"zipcode":"idclf",
+"country":"dolor",
+"productname":"commodo",
+"serviceType":"1.35"
+}
+###
+PATCH {{HOST}}/distributor/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"blogTitle":"esse",
+"category":"adipisicing",
+"currency":"consectetur",
+"telephone":"601780485308",
+"email":"consequat@ucode.ai",
+"state":"ullamco",
+"active":"false",
+"productid":"estclf",
+"contactNumber":"601716937174",
+"name":"ipsum",
+"address":"Culpa elit duis laborum cupidatat.",
+"city":"proident",
+"zipcode":"idclf",
+"country":"dolor",
+"productname":"commodo",
+"serviceType":"1.35"
+}
+###
+DELETE {{HOST}}/distributor/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

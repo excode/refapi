@@ -1,0 +1,503 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /redeem:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - redeem
+      summary: Add new Redeem
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Redeem
+          required: true
+          schema:
+            $ref: '#/definitions/redeem'
+      responses:
+        '201':
+          description: An object with Redeem details
+
+  /redeem/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeem
+      summary: List Redeem
+      description: Search Redeem 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: redeemproductid
+          in: query
+          description: redeemproductid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: redeemproductid_mode
+          in: query
+          description: redeemproductid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: unitprice
+          in: query
+          description: unitprice values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: unitprice_mode
+          in: query
+          description: unitprice mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: total
+          in: query
+          description: total values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: total_mode
+          in: query
+          description: total mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: sellerNumber
+          in: query
+          description: sellerNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sellerNumber_mode
+          in: query
+          description: sellerNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/redeemData'
+        '400':
+          description: Invalid status value
+/redeem/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeem
+      summary: List Redeem
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: redeemproductid
+          in: query
+          description: redeemproductid values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: redeemproductid_mode
+          in: query
+          description: redeemproductid mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: quantity
+          in: query
+          description: quantity values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: quantity_mode
+          in: query
+          description: quantity mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: unitprice
+          in: query
+          description: unitprice values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: unitprice_mode
+          in: query
+          description: unitprice mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: total
+          in: query
+          description: total values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: total_mode
+          in: query
+          description: total mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: sellerNumber
+          in: query
+          description: sellerNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: sellerNumber_mode
+          in: query
+          description: sellerNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/redeemData'
+        '400':
+          description: Invalid status value
+/redeem/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeem
+      summary: List redeem
+      description: Keyward search data on redeemproductid,sellerNumber
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on redeemproductid,sellerNumber
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/redeemData'
+        '400':
+          description: Invalid status value
+/redeem/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - redeem
+      summary: List redeem
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Redeem by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/redeemData'
+        '400':
+          description: Invalid status value
+definitions:
+  redeem:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        redeemproductid:
+            type: string
+        quantity:
+            type: number
+            format: double
+        unitprice:
+            type: number
+            format: double
+        total:
+            type: number
+            format: double
+        sellerNumber:
+            type: string
+          
+
+  redeemData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        updateBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateAt:
+            type: string
+            format: date-time
+        redeemproductid:
+            type: string
+        quantity:
+            type: number
+            format: double
+        unitprice:
+            type: number
+            format: double
+        total:
+            type: number
+            format: double
+        sellerNumber:
+            type: string
+          
+    

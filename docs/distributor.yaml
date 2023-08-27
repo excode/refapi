@@ -1,0 +1,987 @@
+
+securitySchemes:
+    bearerAuth:  # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+paths:
+  /distributor:
+    post:
+      security:
+      - bearerAuth: []
+      tags:
+        - distributor
+      summary: Add new Distributor
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: displayName
+          description: Save new Distributor
+          required: true
+          schema:
+            $ref: '#/definitions/distributor'
+      responses:
+        '201':
+          description: An object with Distributor details
+
+  /distributor/:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - distributor
+      summary: List Distributor
+      description: Search Distributor 
+      parameters:
+        - name: page
+          in: query
+          description: page No
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: limit data per page or Page Size
+          required: false
+          explode: true
+          schema:
+            type: integer
+        
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: location
+          in: query
+          description: location values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: location_mode
+          in: query
+          description: location mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: blogTitle
+          in: query
+          description: blogTitle values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: blogTitle_mode
+          in: query
+          description: blogTitle mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: telephone
+          in: query
+          description: telephone values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: telephone_mode
+          in: query
+          description: telephone mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: email
+          in: query
+          description: email values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: email_mode
+          in: query
+          description: email mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: state
+          in: query
+          description: state values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: state_mode
+          in: query
+          description: state mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: sync
+          in: query
+          description: sync values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: sync_mode
+          in: query
+          description: sync mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: address
+          in: query
+          description: address values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: address_mode
+          in: query
+          description: address mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: city
+          in: query
+          description: city values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: city_mode
+          in: query
+          description: city mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: zipcode
+          in: query
+          description: zipcode values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: zipcode_mode
+          in: query
+          description: zipcode mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: country
+          in: query
+          description: country values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: country_mode
+          in: query
+          description: country mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productname
+          in: query
+          description: productname values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productname_mode
+          in: query
+          description: productname mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: serviceType
+          in: query
+          description: serviceType values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: serviceType_mode
+          in: query
+          description: serviceType mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  perpage:
+                    type: integer
+                  page:
+                    type: integer
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/distributorData'
+        '400':
+          description: Invalid status value
+/distributor/all:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - distributor
+      summary: List Distributor
+      description: get all data without paging
+      parameters: 
+       
+        - name: createBy
+          in: query
+          description: createBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createBy_mode
+          in: query
+          description: createBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: updateBy
+          in: query
+          description: updateBy values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: updateBy_mode
+          in: query
+          description: updateBy mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: location
+          in: query
+          description: location values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: location_mode
+          in: query
+          description: location mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: blogTitle
+          in: query
+          description: blogTitle values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: blogTitle_mode
+          in: query
+          description: blogTitle mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: telephone
+          in: query
+          description: telephone values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: telephone_mode
+          in: query
+          description: telephone mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: email
+          in: query
+          description: email values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: email_mode
+          in: query
+          description: email mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: state
+          in: query
+          description: state values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: state_mode
+          in: query
+          description: state mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: active
+          in: query
+          description: active true or false
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: true
+            enum:
+              - true
+              - false
+        - name: sync
+          in: query
+          description: sync values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: sync_mode
+          in: query
+          description: sync mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: rank
+          in: query
+          description: rank values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: rank_mode
+          in: query
+          description: rank mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+        - name: contactNumber
+          in: query
+          description: contactNumber values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: contactNumber_mode
+          in: query
+          description: contactNumber mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: name
+          in: query
+          description: name values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: name_mode
+          in: query
+          description: name mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: address
+          in: query
+          description: address values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: address_mode
+          in: query
+          description: address mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: city
+          in: query
+          description: city values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: city_mode
+          in: query
+          description: city mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: zipcode
+          in: query
+          description: zipcode values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: zipcode_mode
+          in: query
+          description: zipcode mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: country
+          in: query
+          description: country values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: country_mode
+          in: query
+          description: country mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: productname
+          in: query
+          description: productname values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: productname_mode
+          in: query
+          description: productname mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: contains
+            enum:
+              - equals
+              - contains
+              - startsWith
+              - endsWith
+              - notContains
+        - name: serviceType
+          in: query
+          description: serviceType values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: integer
+        - name: serviceType_mode
+          in: query
+          description: serviceType mode values that need to be considered for filter type greater than,less than,equal
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: equals
+            enum:
+              - equals
+              - notEquals
+              - lt
+              - lte
+              - gt
+              - gte
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/distributorData'
+        '400':
+          description: Invalid status value
+/distributor/suggestions:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - distributor
+      summary: List distributor
+      description: Keyward search data on location,blogTitle,telephone,email,state,contactNumber,name,address,city,zipcode,country,productname
+      parameters:
+        - name: search  
+          in: query
+          description: keyword search on location,blogTitle,telephone,email,state,contactNumber,name,address,city,zipcode,country,productname
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/distributorData'
+        '400':
+          description: Invalid status value
+/distributor/{id}:
+    get:
+      security:
+          - bearerAuth: []
+      tags:
+        - distributor
+      summary: List distributor
+      description: get 
+      parameters:
+        - name: id
+          in: path
+          description: get Distributor by id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/definitions/distributorData'
+        '400':
+          description: Invalid status value
+definitions:
+  distributor:
+      type: object
+      properties:
+        
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        location:
+            type: string
+        blogTitle:
+            type: string
+        telephone:
+            type: string
+        email:
+            type: string
+        state:
+            type: string
+        active:
+            type: boolean
+        sync:
+            type: integer
+        rank:
+            type: integer
+        contactNumber:
+            type: string
+        name:
+            type: string
+        address:
+            type: string
+        city:
+            type: string
+        zipcode:
+            type: string
+            maxLength: 10      
+        country:
+            type: string
+        productname:
+            type: string
+        serviceType:
+            type: number
+            format: double
+              
+
+  distributorData:
+      type: object
+      properties:
+      
+        createBy:
+            type: string
+        createAt:
+            type: string
+            format: date-time
+        updateBy:
+            type: string
+        updateAt:
+            type: string
+            format: date-time
+        location:
+            type: string
+        blogTitle:
+            type: string
+        telephone:
+            type: string
+        email:
+            type: string
+        state:
+            type: string
+        active:
+            type: boolean
+        sync:
+            type: integer
+        rank:
+            type: integer
+        contactNumber:
+            type: string
+        name:
+            type: string
+        address:
+            type: string
+        city:
+            type: string
+        zipcode:
+            type: string
+            maxLength: 10      
+        country:
+            type: string
+        productname:
+            type: string
+        serviceType:
+            type: number
+            format: double
+              
+    

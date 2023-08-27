@@ -1,0 +1,109 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/product HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"serviceType":"1",
+"level":"1",
+"price":"1.35",
+"qty":"1",
+"rewardCondition":"1.35",
+"active":"false",
+"config":"utclf",
+"mypaId":"inclf",
+"productname":"occaecat",
+"categoryid":"voluptate",
+"subCatid":"nulla",
+"country":"ullamco",
+"description":"Incididunt irure voluptate quis ea ad consequat ad.",
+"currency":"commodo",
+"unitName":"elit",
+"website":"https://mypaaa.com",
+"facebook":"https://mypaaa.com",
+"youtube":"https://excode.net",
+"levelConfig":"aute",
+"photo":""
+}
+
+###
+
+GET {{HOST}}/product? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/product?serviceType=1&level=1&price=1.35&qty=1&rewardCondition=1.35&active=false&config=utclf&mypaId=inclf&productname=occaecat&categoryid=voluptate&subCatid=nulla&country=ullamco&description=Incididunt&currency=commodo&unitName=elit&website=https://my&facebook=https://my&youtube=https://ex&levelConfig=aute&photo= HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/product/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/product/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"serviceType":"1",
+"level":"1",
+"price":"1.35",
+"qty":"1",
+"rewardCondition":"1.35",
+"active":"false",
+"config":"utclf",
+"mypaId":"inclf",
+"productname":"occaecat",
+"categoryid":"voluptate",
+"subCatid":"nulla",
+"country":"ullamco",
+"description":"Incididunt irure voluptate quis ea ad consequat ad.",
+"currency":"commodo",
+"unitName":"elit",
+"website":"https://mypaaa.com",
+"facebook":"https://mypaaa.com",
+"youtube":"https://excode.net",
+"levelConfig":"aute",
+"photo":""
+}
+###
+PATCH {{HOST}}/product/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"serviceType":"1",
+"level":"1",
+"price":"1.35",
+"qty":"1",
+"rewardCondition":"1.35",
+"active":"false",
+"config":"utclf",
+"mypaId":"inclf",
+"productname":"occaecat",
+"categoryid":"voluptate",
+"subCatid":"nulla",
+"country":"ullamco",
+"description":"Incididunt irure voluptate quis ea ad consequat ad.",
+"currency":"commodo",
+"unitName":"elit",
+"website":"https://mypaaa.com",
+"facebook":"https://mypaaa.com",
+"youtube":"https://excode.net",
+"levelConfig":"aute",
+"photo":""
+}
+###
+DELETE {{HOST}}/product/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 

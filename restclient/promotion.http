@@ -1,0 +1,70 @@
+@HOST = http://localhost:8080
+@AUTH = authtoken
+@TESTID = testID
+//LOGIN ENDPOINT TO GET AUTH TOKEN
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"email":"test@ucode.ai",
+"password":"123456"
+}
+###
+POST {{HOST}}/promotion HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"title":"consectetur",
+"discount":"2.95",
+"productid":"sint",
+"validFrom":"2023-05-07",
+"validTill":"2023-05-07",
+"active":"false",
+"photo":""
+}
+
+###
+
+GET {{HOST}}/promotion? HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/promotion?title=consectetu&discount=2.95&productid=sint&validFrom=2023-05-07&validTill=2023-05-07&active=false&photo= HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/promotion/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+PUT {{HOST}}/promotion/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"title":"consectetur",
+"discount":"2.95",
+"productid":"sint",
+"validFrom":"2023-05-07",
+"validTill":"2023-05-07",
+"active":"false",
+"photo":""
+}
+###
+PATCH {{HOST}}/promotion/{{TESTID}} HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+"title":"consectetur",
+"discount":"2.95",
+"productid":"sint",
+"validFrom":"2023-05-07",
+"validTill":"2023-05-07",
+"active":"false",
+"photo":""
+}
+###
+DELETE {{HOST}}/promotion/{{TESTID}} http/1.1
+Authorization: Bearer {{AUTH}} 
