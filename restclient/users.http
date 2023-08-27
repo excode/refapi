@@ -35,7 +35,7 @@ content-type: application/json
 "firstname":"uCode",
 "lastname":"Test",
 "usertype":"0",
-"mobile":"60176408250"
+"contactNumber":"60176408250"
 }
 ###
 #MAIN REGISTRATION for Java Spring boot
