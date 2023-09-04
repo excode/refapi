@@ -146,7 +146,69 @@ exports.listSuggestions = (req, res ) => {
           });
   
   };
+  exports.updateLevelConfig = (req, res) => {
+    let levelConfig=req.body;
+    let req_={body:{}};
+    req_.body.updateBy=req.jwt.email  
+    req_.body.updateAt=funcs.getTime()
+    let filter ={}
+    /*
+  IMPORTANT
+   
+  you can put predefined condition here  based on user and role  
+  for example 
+  filter['createBy'] = req.JWT.email
+  filter['organizationId'] = req.JWT.userOrganization
+
+  you can also put condition based on user role
+  like 
+  if(req.JWT.userType>1) 
+  filter['organizationId'] = req.JWT.userOrganization //  I
+  }
+   */
   
+  req_.body.levelConfig=levelConfig;
+  console.log(req_.body)
+    ProductModel.patchProduct(req.params.productId, req_.body,filter)
+        .then((result) => {
+            res.status(204).send({});
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+
+};
+exports.updateConfig = (req, res) => {
+    let config=req.body;
+    let req_={body:{}};
+    req_.body.updateBy=req.jwt.email  
+    req_.body.updateAt=funcs.getTime()
+    let filter ={}
+    /*
+  IMPORTANT
+   
+  you can put predefined condition here  based on user and role  
+  for example 
+  filter['createBy'] = req.JWT.email
+  filter['organizationId'] = req.JWT.userOrganization
+
+  you can also put condition based on user role
+  like 
+  if(req.JWT.userType>1) 
+  filter['organizationId'] = req.JWT.userOrganization //  I
+  }
+   */
+  
+  req_.body.config=config;
+  console.log(req_.body)
+    ProductModel.patchProduct(req.params.productId, req_.body,filter)
+        .then((result) => {
+            res.status(204).send({});
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+
+};
+
   exports.removeById = (req, res) => {
     let filter ={}
       /*

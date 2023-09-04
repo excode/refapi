@@ -76,6 +76,18 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
           ProductController.removeById
       ]);
+      app.patch('/product/levelconfig/:productId', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+       // FormValidation.formValidation(formValidationRules,'UPDATE'),
+        ProductController.updateLevelConfig
+    ]);
+    app.patch('/product/config/:productId', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+     // FormValidation.formValidation(formValidationRules,'UPDATE'),
+      ProductController.updateConfig
+  ]);
   };
   
     

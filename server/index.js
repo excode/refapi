@@ -92,7 +92,7 @@ function postTrimmer(req, res, next) {
     }
     next();
 }
-
+/*
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads')
@@ -111,6 +111,16 @@ const multerMid = multer({
         fileSize: 2 * 1024 * 1024,
     },
     });
+*/
+    const multerMid = multer({
+        storage: multer.memoryStorage(),
+        limits: {
+          // no larger than 5mb.
+          fileSize: 2 * 1024 * 1024,
+        },
+      });
+      
+
 app.use(multerMid.single('uploadFile'));
 app.use(postTrimmer);
 AuthorizationRouter.routesConfig(app);

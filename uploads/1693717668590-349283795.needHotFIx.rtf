@@ -1,0 +1,155 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww44600\viewh21780\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 kalamazad@Kalams-iMac kitchen % cd web_react_ts\
+kalamazad@Kalams-iMac web_react_ts % npm run dev\
+\
+> MealDelivery&Subscription@9.1.2 dev\
+> next dev\
+\
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000\
+event - compiled client and server successfully in 624 ms (305 modules)\
+wait  - compiling / (client and server)...\
+event - compiled client and server successfully in 131 ms (312 modules)\
+wait  - compiling /auth/login...\
+event - compiled client and server successfully in 273 ms (379 modules)\
+wait  - compiling /secure (client and server)...\
+event - compiled client and server successfully in 170 ms (395 modules)\
+wait  - compiling /middleware (client and server)...\
+event - compiled successfully in 33 ms (62 modules)\
+*****\
+\{\
+  name: 'user',\
+  value: '\{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDgwNTY1YmFhZTZlMDM5MTQyYjUwZmIiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJuYW1lIjoidUNvZGUgVGVzdCIsIndlYkFjY2VzcyI6MCwicmVmcmVzaEtleSI6Ing4T2VVUjRhdmxnamxTL24rbWlDYnc9PSIsImlhdCI6MTY4NjE0MzA5Nn0.Sbn8hvMDb9JnmKJ9TrjTK9p-Kp9fDlA6m6p3HjZqWdg","refreshToken":"dm4ySFhuT0RLU1J3aGQ5cHB2alFCdjBmVDhzMEZJRkxBN0VJZlNXc2h5ZHh5UysyeE1HNk53Vy9RbFNWV0FwSFd4RDErMmZnWEl0VmYwTGlkdzNuRnc9PQ==","name":"uCode Test"\}'\
+\}\
+wait  - compiling /secure/mealOrder...\
+event - compiled client and server successfully in 221 ms (416 modules)\
+wait  - compiling /secure/chef...\
+event - compiled client and server successfully in 222 ms (437 modules)\
+ \
+^C\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types ...Failed to compile.\
+\
+./pages/secure/chef/dataview.tsx:165:32\
+Type error: Property 'image' does not exist on type 'Chef'.\
+\
+  163 |                         </div>\
+  164 |                         <div className="flex flex-column align-items-center text-center mb-3">\
+> 165 |                         \{(data.image!=undefined  ) \
+      |                                ^\
+  166 |                       ?  <img src=\{`$\{config.serverURI\}/$\{data.photo\}`\} alt=\{data.createBy\} className="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />\
+  167 |                       :  <img src=\{`/photo_na.png`\} alt=\{data.createBy\} className="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />\
+  168 |                     \}\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types ..Failed to compile.\
+\
+./pages/secure/customer/index.tsx:41:5\
+Type error: Property 'mobile' is missing in type '\{ name: string; email: string; Address: string; customerType: string; GeoTag: string; \}' but required in type 'Customer'.\
+\
+  39 | \{id:'GeoTag',type:validate.text,max:50,min:0,required:true\}\
+  40 |     ]\
+> 41 | let emptyCustomer:Customer = \{\
+     |     ^\
+  42 |     name:'',\
+  43 | email:'',\
+  44 | Address:'',\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types ..Failed to compile.\
+\
+./pages/secure/customerSupport/index.tsx:235:19\
+Type error: Cannot find name 'customerSupportService'. Did you mean 'customersupportService'?\
+\
+  233 | const deleteCustomerSupport = async() => \{\
+  234 | \
+> 235 |     let d=  await customerSupportService.deleteCustomerSupport(customerSupport.id??'');\
+      |                   ^\
+  236 |     if(d.error==undefined)\{\
+  237 |         let _customerSupports = customerSupports.filter((val) => val.id !== customerSupport.id);\
+  238 |         setCustomerSupports(_customerSupports);\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types .Failed to compile.\
+\
+./pages/secure/mealGroup/index.tsx:260:19\
+Type error: Cannot find name 'mealGroupService'. Did you mean 'mealgroupService'?\
+\
+  258 | const deleteMealGroup = async() => \{\
+  259 | \
+> 260 |     let d=  await mealGroupService.deleteMealGroup(mealGroup.id??'');\
+      |                   ^\
+  261 |     if(d.error==undefined)\{\
+  262 |         let _mealGroups = mealGroups.filter((val) => val.id !== mealGroup.id);\
+  263 |         setMealGroups(_mealGroups);\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types .Failed to compile.\
+\
+./pages/secure/mealGroup/index.tsx:260:19\
+Type error: Cannot find name 'mealGroupService'. Did you mean 'mealgroupService'?\
+\
+  258 | const deleteMealGroup = async() => \{\
+  259 | \
+> 260 |     let d=  await mealGroupService.deleteMealGroup(mealGroup.id??'');\
+      |                   ^\
+  261 |     if(d.error==undefined)\{\
+  262 |         let _mealGroups = mealGroups.filter((val) => val.id !== mealGroup.id);\
+  263 |         setMealGroups(_mealGroups);\
+kalamazad@Kalams-iMac web_react_ts % npm run build\
+\
+> MealDelivery&Subscription@9.1.2 build\
+> next build\
+\
+info  - Linting and checking validity of types ..Failed to compile.\
+\
+./pages/secure/mealIngItem/index.tsx:212:19\
+Type error: Cannot find name 'mealIngItemService'. Did you mean 'mealingitemService'?\
+\
+  210 | const deleteMealIngItem = async() => \{\
+  211 | \
+> 212 |     let d=  await mealIngItemService.deleteMealIngItem(mealIngItem.id??'');\
+      |                   ^\
+  213 |     if(d.error==undefined)\{\
+  214 |         let _mealIngItems = mealIngItems.filter((val) => val.id !== mealIngItem.id);\
+  215 |         setMealIngItems(_mealIngItems);\
+kalamazad@Kalams-iMac web_react_ts % \
+\
+\
+./pages/secure/mealIngItem/index.tsx:500:124\
+Type error: No overload matches this call.\
+  Overload 1 of 2, '(props: InputNumberProps | Readonly<InputNumberProps>): InputNumber', gave the following error.\
+    Type '\{ id: string; value: any; onValueChange: (e: InputNumberValueChangeEvent) => void; integeronly: true; \}' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<InputNumber> & Readonly<InputNumberProps>'.\
+      Property 'integeronly' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<InputNumber> & Readonly<InputNumberProps>'.\
+  Overload 2 of 2, '(props: InputNumberProps, context: any): InputNumber', gave the following error.\
+    Type '\{ id: string; value: any; onValueChange: (e: InputNumberValueChangeEvent) => void; integeronly: true; \}' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<InputNumber> & Readonly<InputNumberProps>'.\
+      Property 'integeronly' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<InputNumber> & Readonly<InputNumberProps>'.\
+\
+  498 |     <div className="field">\
+  499 |         <label htmlFor="quantity">quantity</label>\
+> 500 |          <InputNumber id="quantity" value=\{mealIngItem.quantity\} onValueChange=\{(e) => onInputNumberChange(e, 'quantity')\} integeronly />\
+      |                                                                                                                            ^\
+  501 |     </div>\
+  502 |             \
+  503 |                 </Dialog>}

@@ -1,6 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
+const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -8,8 +9,8 @@ const {queryFormatter,queryBuilder_string,
     queryBuilder_range_array} = require("../../common/functions/queryutilMongo")
 const productSchema = new Schema({
     	updateAt : { type: Date},
-			createBy : { type: String,required:true,default:''},
-			createAt : { type: Date,required:true},
+			createBy : { type: String},
+			createAt : { type: Date},
 			updateBy : { type: String},
 			serviceType : { type: Number,required:true,default:0},
 			level : { type: Number,required:true,default:0},
@@ -20,17 +21,17 @@ const productSchema = new Schema({
 			totalVotes : { type: Number,required:true,default:0},
 			totalRating : { type: Number,required:true,default:0},
 			config : funcs.productConfig(),
-			mypaId : { type: String,required:true,default:''},
+			mypaId : { type: String,default:''},
 			productname : { type: String,required:true,default:''},
 			categoryid : { type: String},
-			subCatid : { type: String,required:true,default:''},
+			subCatid : { type: String,default:''},
 			country : { type: String,required:true,default:''},
 			description : { type: String},
 			currency : { type: String,required:true,default:''},
-			unitName : { type: String,required:true,default:''},
-			website : { type: String,required:true,default:''},
-			facebook : { type: String,required:true,default:''},
-			youtube : { type: String,required:true,default:''},
+			unitName : { type: String,default:''},
+			website : { type: String,default:''},
+			facebook : { type: String,default:''},
+			youtube : { type: String,default:''},
 			levelConfig : [funcs.levelConfig()],
 			photo : { type: String}
 });
@@ -393,20 +394,26 @@ exports.removeById = (productId,extraField={}) => {
 
     exports.uploadFile = (req) => {
         return new Promise(async(resolve, reject) => {
-            if(req.file.size>1*1024*1024){ // you can chnage the file upload limit
-                reject('file_size_too_big');
-            }
             let colName = req.params.columnName
+           
             let rowId = req.params.rowId
-            let uploadedFileName =req.file.filename;
-            Product.findById(rowId, function (err, product) {
-                if (err) reject(err);
-                product[colName] =uploadedFileName;
-                product.save(function (err, updatedData) {
-                    if (err) return reject(err);
-                    resolve(uploadedFileName)
+            //let uploadedFileName =req.file.filename;
+            UF.uploadFiles(req,rowId,"product").then((va)=>{
+                Product.findById(rowId, function (err, product) {
+                    if (err) reject(err);
+                    product[colName] =va;
+                    product.save(function (err, updatedData) {
+                        if (err) return reject(err);
+                        resolve(va)
+                    });
                 });
+            }).catch((err)=>{
+           
+            reject(err);
             });
+        
+           
+            
         });
         };
         
