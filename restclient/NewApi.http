@@ -1,0 +1,11 @@
+@REMOTE_HOST = https://plankton-app-anvjc.ondigitalocean.app
+@LOCAL_HOST = http://localhost:8080
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGVhYjUzZjZlMTMzMzBhZTQzYTBlMDYiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJmaXJzdG5hbWUiOiJ1Q29kZSIsImxhc3RuYW1lIjoiVGVzdCIsIndlYkFjY2VzcyI6MCwicmVmcmVzaEtleSI6Ikd1UEc1VHVNdFpKVU14TmFGc2RCd2c9PSIsImlhdCI6MTY5NDUxMzMyN30.jzY9fUb-LOxrJ5rt6GLLCkFkj2GT5umpcYIYIqlLedA
+
+### SELL:: Latest 5 sell
+GET {{LOCAL_HOST}}/sell/latest-sell HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+### REDEEM: Latest 5 redeem
+GET {{LOCAL_HOST}}/redeem/latest-redeem HTTP/1.1
+Authorization: Bearer {{AUTH}}
