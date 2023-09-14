@@ -35,6 +35,7 @@ redeemSchema.findById = function (cb) {
 };
 
 const Redeem = mongoose.model("Redeem", redeemSchema);
+exports.RedeemModel = Redeem;
 
 exports.findById = (id, extraField) => {
   var extraQuery = queryFormatter(extraField);
