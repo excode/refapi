@@ -9,3 +9,7 @@ Authorization: Bearer {{AUTH}}
 ### REDEEM: Latest 5 redeem
 GET {{LOCAL_HOST}}/redeem/latest-redeem HTTP/1.1
 Authorization: Bearer {{AUTH}}
+
+### Analytics
+GET {{LOCAL_HOST}}/analytics HTTP/1.1
+Authorization: Bearer {{AUTH}}

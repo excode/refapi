@@ -9,6 +9,7 @@ const {
   queryBuilder_array,
   queryBuilder_range_array,
 } = require("../../common/functions/queryutilMongo");
+
 const sellSchema = new Schema({
   createAt: { type: Date, required: true },
   createBy: { type: String, required: true, default: "" },
@@ -37,6 +38,8 @@ sellSchema.findById = function (cb) {
 };
 
 const Sell = mongoose.model("Sell", sellSchema);
+
+exports.SellModel = Sell;
 
 exports.findById = (id, extraField) => {
   var extraQuery = queryFormatter(extraField);
