@@ -1,4 +1,4 @@
-@HOST = http://192.168.100.30:8080
+@HOST = https://winmarchant.azurewebsites.net
 @AUTH = authtoken
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
@@ -6,7 +6,7 @@ POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"kalam@mypaaa.com",
+"email":"founder@mypaaa.com",
 "password":"123456"
 }
 ###

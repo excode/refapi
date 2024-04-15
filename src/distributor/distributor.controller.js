@@ -131,7 +131,9 @@ exports.listSuggestions = (req, res ) => {
   
   exports.getById = (req, res) => {
     let filter ={}
+    if(req.jwt.email){
     filter['createBy'] = req.jwt.email
+    }
       /*
     IMPORTANT
      

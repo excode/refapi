@@ -55,6 +55,7 @@ const Distributor = mongoose.model('Distributor', distributorSchema);
 exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
+    console.log(queries)
     return Distributor.findOne(queries)
         .populate({path:'productid',select:'_id productname'})
         .then((result) => {
@@ -263,7 +264,7 @@ exports.list = (perPage, page , query ) => {
             _query = { ..._query, ...productid_ };
       }
 
-
+       console.log("Assss")
         if(query.sortBy){
             sortBy = query.sortBy;
         }
@@ -279,12 +280,14 @@ exports.list = (perPage, page , query ) => {
             .skip(perPage * page)
             .exec(function (err, distributor) {
                 if (err) {
+                    console.log(err)
                     reject(err);
                 } else {
                     Distributor.countDocuments(_query).exec().then((total)=>{
                         const promises = { docs: distributor , count: total ,perpage:perPage,page:page };
                         resolve(promises);
                     }).catch((err2)=>{
+                        console.log(err2)
                         reject(err2);
                     })
                 }
