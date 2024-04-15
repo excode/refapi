@@ -8,7 +8,7 @@ const rootPath="../../";
   const USER = config.permissionLevels.APP_USER;
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
-    {ctrl:'active',format:'boolean',required:true},
+   
 {ctrl:'productid',format:'',required:true},
 {ctrl:'title',format:'text',required:true},
 {ctrl:'details',format:'',required:true}

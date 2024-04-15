@@ -1,5 +1,5 @@
 @HOST = http://localhost:8080
-@AUTH = authtoken
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGVhYjUzZjZlMTMzMzBhZTQzYTBlMDYiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJmaXJzdG5hbWUiOiJ1Q29kZSIsImxhc3RuYW1lIjoiVGVzdCIsImNvbnRhY3ROdW1iZXIiOiI2MDE3NjQwODI1MCIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbIjY1N2U4MDg2NTZjMzA2MjcxN2FmY2Q3MCIsIjY1N2U3ZWI3NWUxZjBhMjRiNzAyNjJiYyIsIjY1N2U3OTY2NWUxZjQ2MjAyYjMyMjliOSJdLCJyZWZyZXNoS2V5IjoibktBZHVRUm9uWUhkSjVtQ3dZcXh5dz09IiwiaWF0IjoxNzA1NDY5MzQ1fQ.WifHFtq1Eb2Yo3mM0Vl9QkZ_cS3mYwLNAnnaPOzeRl8
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
 POST {{HOST}}/auth HTTP/1.1
@@ -23,7 +23,7 @@ content-type: application/json
 
 ###
 
-GET {{HOST}}/hierarchy? HTTP/1.1
+GET {{HOST}}/hierarchy?productid=60828a990b94d12774a900cf&productid_mode=equals HTTP/1.1
 Authorization: Bearer {{AUTH}}
 
 ###

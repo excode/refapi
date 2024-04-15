@@ -1,6 +1,7 @@
 const UserModel = require("../../src/users/users.model");
 const crypto = require("crypto");
 const funcs = require("../../common/functions/funcs");
+const ProductModel = require("../../src/product/product.model")
 exports.hasAuthValidFields = (req, res, next) => {
   let errors = [];
 
@@ -24,10 +25,12 @@ exports.hasAuthValidFields = (req, res, next) => {
   }
 };
 exports.isPasswordAndUserMatch = (req, res, next) => {
-  UserModel.findByEmail(req.body.email.trim()).then((user) => {
+  UserModel.findByContactNumber(req.body.email.trim()).then(async(user) => {
+    console.log(user)
     if (!user) {
-      res.status(404).send({ errors: "Invalid Login information" });
+      res.status(404).send({ errors: "Invalid Login information 1" });
     } else {
+      let productId= await ProductModel.listIds(req.body.email.trim());
       let passwordFields = user.password.split("$");
       let salt = passwordFields[0];
       let fcm = req.body.fcm;
@@ -45,12 +48,14 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
           firstname: user.firstname,
           lastname: user.lastname,
           country: user.country,
-          mobile: user.mobile,
-          webAccess: 0,
+          contactNumber: user.contactNumber,
+          webAccess: 1,
+          productId:productId
         };
+       // console.log(req.body)
         return next();
       } else {
-        return res.status(400).send({ errors: "Invalid Login information" });
+        return res.status(400).send({ errors: "Invalid Login information 2" });
       }
     }
   });

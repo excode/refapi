@@ -1,5 +1,6 @@
 const mongoose = require("../../common/services/mongoose.service").mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
 const {
   queryFormatter,
   queryBuilder_string,
@@ -13,12 +14,13 @@ const redeemSchema = new Schema({
   updateBy: { type: String },
   createAt: { type: Date, required: true },
   updateAt: { type: Date },
-  productid: { type: String },
-  redeemproductid: { type: String, required: true, default: "" },
+  productid: {type: Schema.Types.ObjectId, ref: 'Product'},
+  redeemproductid: {type: Schema.Types.ObjectId, ref: 'Redeemoption'},
   quantity: { type: Number, required: true, default: 0 },
   unitprice: { type: Number, required: true, default: 0 },
   total: { type: Number, required: true, default: 0 },
-  sellerNumber: { type: String, required: true, default: "" },
+  contactNumber: { type: String, required: true, default: "" },
+  sellerNumber: { type: String, required: true, default: "" }
 });
 
 redeemSchema.virtual("id").get(function () {
@@ -40,7 +42,10 @@ exports.RedeemModel = Redeem;
 exports.findById = (id, extraField) => {
   var extraQuery = queryFormatter(extraField);
   var queries = { ...extraQuery, _id: id };
-  return Redeem.findOne(queries).then((result) => {
+  return Redeem.findOne(queries)
+    .populate({path:'productid',select:'_id productname'})
+    .populate({path:'redeemproductid',select:'_id name'})
+    .then((result) => {
     result = result.toJSON();
     delete result._id;
     delete result.__v;
@@ -110,7 +115,20 @@ exports.list = (perPage, page, query) => {
     let updateAt_a = queryBuilder_range_array(query, "updateAt", "date");
     _query = { ..._query, ...updateAt_a };
   }
+  if(query.forced_productid){
 
+     
+    let productID_= {productid:{$in:query.forced_productid}}
+      _query={..._query,...productID_}
+  
+     //console.log(productID_)
+  }
+  if(query.productid){
+
+      query.productid = new ObjectId( query.productid);
+      let productid_ = {productid:query.productid}
+        _query = { ..._query, ...productid_ };
+  }
   if (query.redeemproductid) {
     let redeemproductid_ = queryBuilder_string(query, "redeemproductid");
     _query = { ..._query, ...redeemproductid_ };
@@ -153,6 +171,10 @@ exports.list = (perPage, page, query) => {
     let sellerNumber_ = queryBuilder_string(query, "sellerNumber");
     _query = { ..._query, ...sellerNumber_ };
   }
+  if (query.contactNumber) {
+    let contactNumber_ = queryBuilder_string(query, "contactNumber");
+    _query = { ..._query, ...contactNumber_ };
+  }
 
   if (query.sortBy) {
     sortBy = query.sortBy;
@@ -163,11 +185,14 @@ exports.list = (perPage, page, query) => {
   var sortBoj = { [sortBy]: sortDirection };
   return new Promise((resolve, reject) => {
     Redeem.find(_query)
+      .populate({path:'productid',select:'_id productname'})
+      .populate({path:'redeemproductid',select:'_id name'})
       .limit(perPage)
       .sort(sortBoj)
       .skip(perPage * page)
       .exec(function (err, redeem) {
         if (err) {
+          console.log(err)
           reject(err);
         } else {
           Redeem.countDocuments(_query)
@@ -182,6 +207,7 @@ exports.list = (perPage, page, query) => {
               resolve(promises);
             })
             .catch((err2) => {
+              console.log(err2)
               reject(err2);
             });
         }
@@ -200,6 +226,7 @@ exports.listAll = (query = {}) => {
     sortDirection = query.sortDirection;
   }
   var sortBoj = { [sortBy]: sortDirection };
+  console.log(_query)
   return new Promise((resolve, reject) => {
     Redeem.find(_query)
       .limit(max_limit)

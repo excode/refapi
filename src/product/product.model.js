@@ -2,6 +2,7 @@ const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
 const UF = require('../../lib/fileUpload');
+//var ObjectId = require('mongodb').ObjectID;
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -23,7 +24,7 @@ const productSchema = new Schema({
 			config : funcs.productConfig(),
 			mypaId : { type: String,default:''},
 			productname : { type: String,required:true,default:''},
-			categoryid : { type: String},
+			categoryid : {type: Schema.Types.ObjectId, ref: 'Categories'},
 			subCatid : { type: String,default:''},
 			country : { type: String,required:true,default:''},
 			description : { type: String},
@@ -32,7 +33,7 @@ const productSchema = new Schema({
 			website : { type: String,default:''},
 			facebook : { type: String,default:''},
 			youtube : { type: String,default:''},
-			levelConfig : [funcs.levelConfig()],
+			levelConfig :{type:[funcs.levelConfig()],default:funcs.levelConfigData()},
 			photo : { type: String}
 });
 
@@ -56,6 +57,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Product.findOne(queries)
+       .populate({path:'categoryid',select:'id category'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -286,6 +288,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Product.find(_query)
+            .populate({path:'categoryid',select:'id category'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -419,3 +422,28 @@ exports.removeById = (productId,extraField={}) => {
         
 
     
+        exports.listIds = ( createBy ) => {
+            var _query={createBy:createBy};
+            let sortBy='_id'
+            let sortDirection=-1
+            let max_limit = 10;
+            
+            var sortBoj={[sortBy]:sortDirection};
+            return new Promise((resolve, reject) => {
+            Product.find(_query,{_id:1})
+                .limit(max_limit) 
+                .sort(sortBoj)
+                .exec(function (err, product) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                        let ids=[];
+                        product.forEach(element => {
+                            let id_=element.id
+                            ids.push(id_)
+                        });
+                        resolve(ids);
+                        }
+                    })
+            });
+        };

@@ -58,7 +58,7 @@ if (req.body.password) {
         IMPORTANT
         you can put predefined condition here  based on user and role  
         for example 
-        req.query.createBy = req.JWT.email
+        req.query.createBy = req.jwt.email
         req.query.organizationId = req.JWT.userOrganization
 
         you can also put condition based on user role
@@ -87,7 +87,7 @@ if (req.body.password) {
         IMPORTANT
         you can put predefined condition here  based on user and role  
         for example 
-        req.query.createBy = req.JWT.email
+        req.query.createBy = req.jwt.email
         req.query.organizationId = req.JWT.userOrganization
 
         you can also put condition based on user role
@@ -110,7 +110,7 @@ exports.listSuggestions = (req, res ) => {
     HERE  "serach" query parameter is reserved for keword searh  
     you can put predefined condition here  based on user and role  
     for example 
-    req.query.createBy = req.JWT.email
+    req.query.createBy = req.jwt.email
     req.query.organizationId = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -134,7 +134,7 @@ exports.listSuggestions = (req, res ) => {
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    filter['createBy'] = req.jwt.email
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -165,7 +165,7 @@ if (req.body.password) {
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    filter['createBy'] = req.jwt.email
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -190,7 +190,7 @@ if (req.body.password) {
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    filter['createBy'] = req.jwt.email
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role

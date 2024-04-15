@@ -1,5 +1,7 @@
 @HOST = http://localhost:8080
-@AUTH = authtoken
+@HOST2 = http://localhost:8081
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGVhYjUzZjZlMTMzMzBhZTQzYTBlMDYiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJmaXJzdG5hbWUiOiJ1Q29kZSIsImxhc3RuYW1lIjoiVGVzdCIsImNvbnRhY3ROdW1iZXIiOiI2MDE3NjQwODI1MCIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbIjY1N2U4MDg2NTZjMzA2MjcxN2FmY2Q3MCIsIjY1N2U3ZWI3NWUxZjBhMjRiNzAyNjJiYyIsIjY1N2U3OTY2NWUxZjQ2MjAyYjMyMjliOSJdLCJyZWZyZXNoS2V5IjoiUkEzc1IwQkFIYS9PMWZsMFF4eEVxdz09IiwiaWF0IjoxNzA1NDY4OTMwfQ.AY9wFfrho3D1nO4--HpZOQqHYNciZos7yJI8RadaLeE
+@AUTH2 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDdkNGRiNjk2ZmYxNTAwMTNjMWNkMjEiLCJjb250YWN0TnVtYmVyIjoiODgwMTU1MjM3NzIwNSIsImNvdW50cnkiOiJiZCIsIm5hbWUiOiJLYWxhbSBBemFkIiwicmVmcmVzaEtleSI6InVRakZwOXRWdU9wZHNNNE0wZDRxU1E9PSIsImlhdCI6MTcwNTQ3MjcxNCwiZXhwIjoxNzA3NDcyNzE0fQ.DDohc4pSJTCOasjPHvVoGLmyfZ0JRiXjasqfQL89aSo
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
 POST {{HOST}}/auth HTTP/1.1
@@ -25,7 +27,7 @@ content-type: application/json
 
 ###
 
-GET {{HOST}}/transaction? HTTP/1.1
+GET {{HOST}}/transaction HTTP/1.1
 Authorization: Bearer {{AUTH}}
 
 ###
@@ -65,3 +67,10 @@ content-type: application/json
 ###
 DELETE {{HOST}}/transaction/{{TESTID}} http/1.1
 Authorization: Bearer {{AUTH}} 
+
+
+
+###
+
+GET {{HOST2}}/transaction?productid=657e808656c3062717afcd70 HTTP/1.1
+Authorization: Bearer {{AUTH2}}

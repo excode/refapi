@@ -1,5 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
+const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -14,7 +16,7 @@ const productblogSchema = new Schema({
 			rank : { type: Number,required:true,default:0},
 			title : { type: String,required:true,default:''},
 			details : { type: String},
-			productid : { type: String},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			categoryid : { type: String},
 			country : { type: String},
 			photo : { type: String}
@@ -40,6 +42,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Productblog.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -123,6 +126,14 @@ exports.list = (perPage, page , query ) => {
         _query={..._query,...title_}
     }
 
+    
+      if(query.productid){
+  
+          query.productid = new ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
+
         if(query.sortBy){
             sortBy = query.sortBy;
         }
@@ -132,6 +143,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Productblog.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -228,7 +240,7 @@ exports.removeById = (productblogId,extraField={}) => {
 };
 
 
-    exports.uploadFile = (req) => {
+    exports.uploadFile2 = (req) => {
         return new Promise(async(resolve, reject) => {
             if(req.file.size>1*1024*1024){ // you can chnage the file upload limit
                 reject('file_size_too_big');
@@ -247,5 +259,29 @@ exports.removeById = (productblogId,extraField={}) => {
         });
         };
         
+        exports.uploadFile = (req) => {
+            return new Promise(async(resolve, reject) => {
+                let colName = req.params.columnName
+               
+                let rowId = req.params.rowId
+                //let uploadedFileName =req.file.filename;
+                UF.uploadFiles(req,rowId,"productblog").then((va)=>{
+                    Productblog.findById(rowId, function (err, productblog) {
+                        if (err) reject(err);
+                        productblog[colName] =va;
+                        productblog.save(function (err, updatedData) {
+                            if (err) return reject(err);
+                            resolve(va)
+                        });
+                    });
+                }).catch((err)=>{
+               
+                reject(err);
+                });
+            
+               
+                
+            });
+            };
 
     

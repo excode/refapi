@@ -91,23 +91,28 @@ exports.productConfig =()=>{
     },
     level_1:{
       type: Number,
-      required:false
+      required:false,
+      default:5
     },
     level_2:{
       type: Number,
-      required:false
+      required:false,
+      default:2
     },
     level_3:{
       type: Number,
-      required:false
+      required:false,
+      default:1
     },
     level_4:{
       type: Number,
-      required:false
+      required:false,
+      default:0.5
     },
     level_5:{
       type: Number,
-      required:false
+      required:false,
+      default:0.25
     },
   }
 };
@@ -132,9 +137,9 @@ exports.levelConfig =()=>{
   }
 };
 exports.levelConfigData =()=> [
-      {name:'Basic',from:0,to:1000,reward:0},
-      {name:'Gold',from:1001,to:5000,reward:1.5},
-      {name:'Platinum',from:5001,to:500000,reward:3.0}
+    {name:'Basic',from:1000,to:10000,reward:1},
+    {name:'Gold',from:10001,to:50000,reward:1.5},
+    {name:'Platinum',from:50001,to:500000000,reward:3.0}
   ];
 exports.docLastUpdate =()=>{
   return {

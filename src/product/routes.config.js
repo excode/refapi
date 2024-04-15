@@ -8,25 +8,20 @@ const rootPath="../../";
   const USER = config.permissionLevels.APP_USER;
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
-    {ctrl:'serviceType',format:'int',required:true},
+  {ctrl:'serviceType',format:'int',required:true},
 {ctrl:'level',format:'int',required:true},
 {ctrl:'price',format:'number',required:true},
 {ctrl:'qty',format:'int',required:true},
-{ctrl:'rewardCondition',format:'number',required:true},
-{ctrl:'active',format:'boolean',required:true},
-{ctrl:'config',format:'text',required:true},
-{ctrl:'mypaId',format:'text',required:true},
 {ctrl:'productname',format:'text',required:true},
 {ctrl:'categoryid',format:'',required:true},
-{ctrl:'subCatid',format:'text',required:true},
 {ctrl:'country',format:'text',required:true},
 {ctrl:'description',format:'',required:true},
 {ctrl:'currency',format:'text',required:true},
 {ctrl:'unitName',format:'text',required:true},
-{ctrl:'website',format:'url',required:true},
-{ctrl:'facebook',format:'url',required:true},
-{ctrl:'youtube',format:'url',required:true},
-{ctrl:'levelConfig',format:'text',required:true}
+{ctrl:'website',format:'url',required:false},
+{ctrl:'facebook',format:'url',required:false},
+{ctrl:'youtube',format:'url',required:false},
+
   ];
   exports.routesConfig = function (app) {
       app.post('/product', [

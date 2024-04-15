@@ -1,21 +1,25 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
+const funcs =  require("../../common/functions/funcs");
+jwt = require("jsonwebtoken");
+const jwtSecret = require("../../common/config/env.config.js").jwt_secret
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
     queryBuilder_array,
     queryBuilder_range_array} = require("../../common/functions/queryutilMongo")
 const hierarchySchema = new Schema({
-    	updateBy : { type: String},
-			updateAt : { type: Date},
-			createBy : { type: String,required:true,default:''},
-			createAt : { type: Date,required:true},
-			walletbalance : { type: Number,required:true,default:0},
-			rewardbalance : { type: Number,required:true,default:0},
-			distributor : { type:Boolean,required:true,default:false},
-			contactNumber : { type: String,required:true,default:''},
-			productid : { type: String},
-			introducer : { type: String,required:true,default:''}
+    updateBy : { type: String},
+    updateAt : { type: Date},
+    createBy : { type: String,required:true,default:''},
+    createAt : { type: Date,required:true},
+    walletbalance : { type: Number,required:true,default:0},
+    rewardbalance : { type: Number,required:true,default:0},
+    distributor : { type:Boolean,required:true,default:false},
+    contactNumber : { type: String,required:true,default:''},
+    productid : {type: Schema.Types.ObjectId, ref: 'Product'},
+    introducer : { type: String,required:true,default:''}
 });
 
 hierarchySchema.virtual('id').get(function () {
@@ -38,6 +42,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Hierarchy.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -78,6 +83,21 @@ exports.list = (perPage, page , query ) => {
             let updateAt_a= queryBuilder_range_array(query,'updateAt',"date");
             _query={..._query,...updateAt_a}
         }
+
+        if(query.forced_productid){
+
+     
+            let productID_= {productid:{$in:query.forced_productid}}
+              _query={..._query,...productID_}
+          
+             //console.log(productID_)
+          }
+          if(query.productid){
+      
+              query.productid = new ObjectId( query.productid);
+              let productid_ = {productid:query.productid}
+                _query = { ..._query, ...productid_ };
+          }
     
     
 
@@ -147,8 +167,11 @@ exports.list = (perPage, page , query ) => {
             sortDirection = query.sortDirection;
         }
         var sortBoj={[sortBy]:sortDirection};
+        console.log(_query)
         return new Promise((resolve, reject) => {
+
         Hierarchy.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -247,4 +270,85 @@ exports.removeById = (hierarchyId,extraField={}) => {
 
 
 
-    
+exports.isIntroduction = (Seller,Buyer,ProductId,req,isDistributor=0) => {
+    const now = funcs.getNowUTC();
+        return new Promise((resolve, reject) => {
+        this.getUserWinBalance(Buyer,ProductId).then(wallet=>{
+            console.log("AAAAA")
+        if(wallet == null){
+            let data = {} ;
+        var NewBalance = 0 ;
+        data['minfo']  = jwt.sign(NewBalance, jwtSecret ); 
+        data['rinfo']  = jwt.sign(NewBalance, jwtSecret + "_r"); 
+        data['walletbalance'] = NewBalance ;
+        data['rewardbalance'] = NewBalance ;
+        data['updateTime'] = now ;
+        data['insertTime'] = now ;
+        data['contactNumber'] = Buyer ;
+        data['productid'] = ProductId ;
+        data['introducer'] = Seller ;
+        data['distributor'] = isDistributor ;
+        data['createAt']=funcs.getTime()
+        data['createBy']=req.jwt.email
+
+        this.createHierarchy(data).then(save=>{
+            //console.log(save);
+            resolve(save);
+        }).catch(err=>{
+            reject(err);
+        }) ;
+        }else{
+            resolve(true);
+        }
+      }).catch(err2=>{
+        reject(err2);
+      });  
+     });
+  };
+
+  exports.getUserWinBalance = (userId, productId ) => {
+    const uId = ObjectId(productId);
+    const _query={productid:uId,contactNumber:userId};
+    console.log("STEP 1111");
+    console.log(_query);
+      return new Promise((resolve, reject) => {
+        Hierarchy.findOne(_query)
+              .select('walletbalance rewardbalance minfo rinfo tcode distributor _id')
+              .exec(function (err, wallet) {
+                  if (err) {
+                      reject(err);
+                  } else {
+                    //console.log("VVVVV")
+                     // console.log(wallet);
+                    if(wallet!=null){
+
+                    
+                    var result = {
+                        id : wallet._id,
+                        Wallet: wallet.walletbalance ,
+                        Reward: wallet.rewardbalance,
+                        Encry: wallet.minfo,
+                        TCode: wallet.tcode,
+                        Distributor: wallet.distributor
+                    }
+                    resolve(result);
+                  }else{
+                    resolve(null);
+                  }
+                  }
+              })
+      });
+  };
+
+  exports.addWallets = (Seller,Buyer,ProductId,req,isDistributor=0) =>{
+    return new Promise((resolve, reject) =>{
+
+    this.isIntroduction(Seller,Buyer,ProductId,req,isDistributor).then(done=>{
+       // UserModel.updateSyncTime([Seller,Buyer],"hierarchy").then(done2=>{
+            resolve(done);
+       // });
+    }).catch(err2=>{
+        reject(err2);
+    });
+ });
+};

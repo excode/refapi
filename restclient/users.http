@@ -1,4 +1,4 @@
-@HOST = http://localhost:8080
+@HOST = http://192.168.100.30:8080
 @AUTH = authtoken
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
@@ -6,7 +6,7 @@ POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"test@ucode.ai",
+"email":"kalam@mypaaa.com",
 "password":"123456"
 }
 ###
@@ -35,7 +35,7 @@ content-type: application/json
 "firstname":"uCode",
 "lastname":"Test",
 "usertype":"0",
-"contactNumber":"60176408250"
+"contactNumber":"601764082501"
 }
 ###
 #MAIN REGISTRATION for Java Spring boot
@@ -43,12 +43,12 @@ POST {{HOST}}/reg HTTP/1.1
 content-type: application/json
  
 {
-"email":"test@ucode.ai",
+"country":"my",
 "password":"123456",
-"firstname":"uCode",
+"name":"Kalma",
 "lastname":"Test",
 "usertype":"0",
-"mobile":"60176408250"
+"contactNumber":"60176408250"
 }
 ###
 
@@ -92,3 +92,24 @@ content-type: application/json
 ###
 DELETE {{HOST}}/users/{{TESTID}} http/1.1
 Authorization: Bearer {{AUTH}} 
+
+
+###
+POST {{HOST}}/auth HTTP/1.1
+content-type: application/json
+
+{
+"contactNumber":"8801552377205",
+"password":"123456"
+}
+
+
+
+###
+POST {{HOST}}/reg HTTP/1.1
+content-type: application/json
+
+{
+"contactNumber":"60176701946",
+"password":"123456"
+}

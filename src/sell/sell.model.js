@@ -1,5 +1,6 @@
 const mongoose = require("../../common/services/mongoose.service").mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
 const res = require("express/lib/response");
 const {
   queryFormatter,
@@ -19,9 +20,12 @@ const sellSchema = new Schema({
   quantity: { type: Number, required: true, default: 0 },
   unitprice: { type: Number, required: true, default: 0 },
   total: { type: Number, required: true, default: 0 },
-  productid: { type: String },
+  productid: {type: Schema.Types.ObjectId, ref: 'Product'},
   sellerNumber: { type: String, required: true, default: "" },
   contactNumber: { type: String, required: true, default: "" },
+  isSelfClaim:{type:Boolean,default:false},
+  rewarded:{type:Boolean,default:true},
+  claimExpires:{type:Number,default:0},
 });
 
 sellSchema.virtual("id").get(function () {
@@ -44,7 +48,9 @@ exports.SellModel = Sell;
 exports.findById = (id, extraField) => {
   var extraQuery = queryFormatter(extraField);
   var queries = { ...extraQuery, _id: id };
-  return Sell.findOne(queries).then((result) => {
+  return Sell.findOne(queries)
+  .populate({path:'productid',select:'_id productname'})
+  .then((result) => {
     result = result.toJSON();
     delete result._id;
     delete result.__v;
@@ -87,6 +93,21 @@ exports.list = (perPage, page, query) => {
   let sortBy = "_id";
   let sortDirection = -1;
 
+
+  if(query.forced_productid){
+
+     
+    let productID_= {productid:{$in:query.forced_productid}}
+      _query={..._query,...productID_}
+  
+     //console.log(productID_)
+  }
+  if(query.productid){
+
+      query.productid = new ObjectId( query.productid);
+      let productid_ = {productid:query.productid}
+        _query = { ..._query, ...productid_ };
+  }
   if (query.createAt) {
     let createAt_ = queryBuilder_date(query, "createAt");
     _query = { ..._query, ...createAt_ };
@@ -176,8 +197,10 @@ exports.list = (perPage, page, query) => {
     sortDirection = query.sortDirection;
   }
   var sortBoj = { [sortBy]: sortDirection };
+  console.log(_query)
   return new Promise((resolve, reject) => {
     Sell.find(_query)
+      .populate({path:'productid',select:'_id productname'})
       .limit(perPage)
       .sort(sortBoj)
       .skip(perPage * page)

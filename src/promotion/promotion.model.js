@@ -1,5 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
+const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -12,11 +14,13 @@ const promotionSchema = new Schema({
 			updateAt : { type: Date},
 			title : { type: String,required:true,default:''},
 			discount : { type: Number,required:true,default:0,max:1e+70},
-			productid : { type: String},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			validFrom : { type: Date,required:true},
 			validTill : { type: Date,required:true},
 			active : { type:Boolean,required:true,default:false},
-			photo : { type: String}
+			photo : { type: String},
+            isPromocode : { type: Boolean,required:false,default:false},
+            promocode : { type: String,required:false,default:""}
 });
 
 promotionSchema.virtual('id').get(function () {
@@ -39,6 +43,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Promotion.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -48,7 +53,20 @@ exports.findById = (id,extraField) => {
 };
 
 exports.createPromotion = (promotionData) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
+
+        if(promotionData.isPromocode) {
+            if(promotionData.promocode.trim().length<4){
+                reject("Promocode Code cannot be empty or less than 4 characters");
+                return;
+            }
+
+            let   promoCodeCHeck =await Promotion.findOne({"promocode":promotionData.promocode,productid:promotionData.productid})
+           if(promoCodeCHeck){  
+            reject("Promocode Code exists for this product");
+            return;
+           }
+        }
     
     const promotion = new Promotion(promotionData);
     promotion.save(function (err, saved) {
@@ -143,6 +161,14 @@ exports.list = (perPage, page , query ) => {
     if(query.active!=null){
         _query['active'] = query.active 
     }
+
+    
+      if(query.productid){
+  
+          query.productid = new ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
             
         if(query.sortBy){
             sortBy = query.sortBy;
@@ -153,6 +179,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Promotion.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -249,7 +276,7 @@ exports.removeById = (promotionId,extraField={}) => {
 };
 
 
-    exports.uploadFile = (req) => {
+    exports.uploadFile2 = (req) => {
         return new Promise(async(resolve, reject) => {
             if(req.file.size>1*1024*1024){ // you can chnage the file upload limit
                 reject('file_size_too_big');
@@ -269,4 +296,27 @@ exports.removeById = (promotionId,extraField={}) => {
         };
         
 
-    
+        exports.uploadFile = (req) => {
+            return new Promise(async(resolve, reject) => {
+                let colName = req.params.columnName
+               
+                let rowId = req.params.rowId
+                //let uploadedFileName =req.file.filename;
+                UF.uploadFiles(req,rowId,"promotion").then((va)=>{
+                    Promotion.findById(rowId, function (err, promotion) {
+                        if (err) reject(err);
+                        promotion[colName] =va;
+                        promotion.save(function (err, updatedData) {
+                            if (err) return reject(err);
+                            resolve(va)
+                        });
+                    });
+                }).catch((err)=>{
+               
+                reject(err);
+                });
+            
+               
+                
+            });
+            };

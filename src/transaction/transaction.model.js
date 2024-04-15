@@ -1,5 +1,6 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -13,7 +14,7 @@ const transactionSchema = new Schema({
 			amount : { type: Number,required:true,default:0},
 			quantity : { type: Number,required:true,default:0},
 			rtype : { type: Number,required:true,default:0},
-			productid : { type: String},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			contactNumber : { type: String,required:true,default:''},
 			particular : { type: String,required:true,default:''}
 });
@@ -38,6 +39,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Transaction.findOne(queries)
+    .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -67,6 +69,21 @@ exports.list = (perPage, page , query ) => {
     if(query.createBy){
         let createBy_= queryBuilder_string(query,'createBy');
         _query={..._query,...createBy_}
+    }
+
+    if(query.forced_productid){
+
+     
+      let productID_= {productid:{$in:query.forced_productid}}
+        _query={..._query,...productID_}
+    
+       //console.log(productID_)
+    }
+    if(query.productid){
+
+        query.productid = new ObjectId( query.productid);
+        let productid_ = {productid:query.productid}
+          _query = { ..._query, ...productid_ };
     }
 
 
@@ -154,9 +171,13 @@ exports.list = (perPage, page , query ) => {
         if(query.sortDirection){
             sortDirection = query.sortDirection;
         }
+
+        //console.log(_query)
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
+            try {
         Transaction.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -172,6 +193,9 @@ exports.list = (perPage, page , query ) => {
                     })
                 }
             })
+        } catch (error) {
+            console.error('Error:', error);
+          }
     });
 };
 exports.listAll = ( query={} ) => {

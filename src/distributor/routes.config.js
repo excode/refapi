@@ -9,21 +9,15 @@ const rootPath="../../";
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
     {ctrl:'blogTitle',format:'text',required:true},
-{ctrl:'category',format:'',required:true},
-{ctrl:'currency',format:'',required:true},
-{ctrl:'telephone',format:'phone',required:true},
 {ctrl:'email',format:'email',required:true},
 {ctrl:'state',format:'text',required:true},
-{ctrl:'active',format:'boolean',required:true},
 {ctrl:'productid',format:'',required:true},
 {ctrl:'contactNumber',format:'phone',required:true},
 {ctrl:'name',format:'text',required:true},
 {ctrl:'address',format:'text',required:true},
 {ctrl:'city',format:'text',required:true},
-{ctrl:'zipcode',format:'text',required:true,max:10,min:0},
-{ctrl:'country',format:'text',required:true},
-{ctrl:'productname',format:'text',required:true},
-{ctrl:'serviceType',format:'number',required:true}
+{ctrl:'zipcode',format:'text',required:true,max:10,min:0}
+
   ];
   exports.routesConfig = function (app) {
       app.post('/distributor', [

@@ -1,5 +1,6 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -13,7 +14,7 @@ const rewardSchema = new Schema({
 			level : { type: Number,required:true,default:0},
 			amount : { type: Number,required:true,default:0},
 			status : { type:Boolean,required:true,default:false},
-			productid : { type: String,required:true,default:''},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			redeemProductId : { type: String},
 			contactNumber : { type: String,required:true,default:''},
 			ref : { type: String,required:true,default:''},
@@ -42,6 +43,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Reward.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -133,10 +135,21 @@ exports.list = (perPage, page , query ) => {
     }
             
 
-    if(query.productid){
-        let productid_= queryBuilder_string(query,'productid');
-        _query={..._query,...productid_}
-    }
+   
+    if(query.forced_productid){
+
+     
+        let productID_= {productid:{$in:query.forced_productid}}
+          _query={..._query,...productID_}
+      
+         //console.log(productID_)
+      }
+      if(query.productid){
+    
+          query.productid = new ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
 
 
     if(query.contactNumber){
@@ -177,6 +190,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Reward.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)

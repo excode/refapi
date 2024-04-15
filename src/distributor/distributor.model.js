@@ -1,6 +1,8 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
 const funcs =  require("../../common/functions/funcs");
+
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -22,7 +24,7 @@ const distributorSchema = new Schema({
 			active : { type:Boolean,required:true,default:false},
 			sync : { type: Number,required:true,default:0},
 			rank : { type: Number,required:true,default:0},
-			productid : { type: String},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			contactNumber : { type: String,required:true,default:''},
 			name : { type: String,required:true,default:''},
 			address : { type: String,required:true,default:''},
@@ -31,6 +33,7 @@ const distributorSchema = new Schema({
 			country : { type: String,required:true,default:''},
 			productname : { type: String,required:true,default:''},
 			serviceType : { type: Number,required:true,default:0}
+            
 });
 
 distributorSchema.virtual('id').get(function () {
@@ -53,6 +56,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Distributor.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -62,8 +66,25 @@ exports.findById = (id,extraField) => {
 };
 
 exports.createDistributor = (distributorData) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
     
+
+        let   contactNumberCHeck =await Distributor.findOne({"contactNumber":distributorData.contactNumber,productid:distributorData.productid})
+        if(contactNumberCHeck ) {
+          reject("contactNumber exists for this product");
+          return;
+        }
+      
+      let   emailCHeck =await Distributor.findOne({"email":distributorData.email,productid:distributorData.productid})
+        if(emailCHeck ) {
+          reject("email exists for this product");
+          return;
+        }
+      
+
+        
+        
+
     const distributor = new Distributor(distributorData);
     distributor.save(function (err, saved) {
         if (err) {
@@ -227,6 +248,21 @@ exports.list = (perPage, page , query ) => {
         _query={..._query,...serviceType_a}
     }
 
+    if(query.forced_productid){
+
+     
+        let productID_= {productid:{$in:query.forced_productid}}
+          _query={..._query,...productID_}
+      
+         //console.log(productID_)
+      }
+      if(query.productid){
+  
+          query.productid = new ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
+
 
         if(query.sortBy){
             sortBy = query.sortBy;
@@ -237,6 +273,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Distributor.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)

@@ -1,5 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
+var ObjectId = require('mongodb').ObjectID;
+const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -11,7 +13,7 @@ const productnewSchema = new Schema({
 			createAt : { type: Date,required:true},
 			updateAt : { type: Date},
 			active : { type:Boolean,required:true,default:false},
-			productid : { type: String},
+			productid : {type: Schema.Types.ObjectId, ref: 'Product'},
 			title : { type: String,required:true,default:''},
 			details : { type: String},
 			country : { type: String},
@@ -38,6 +40,7 @@ exports.findById = (id,extraField) => {
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
     return Productnew.findOne(queries)
+        .populate({path:'productid',select:'_id productname'})
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -108,6 +111,14 @@ exports.list = (perPage, page , query ) => {
         _query={..._query,...title_}
     }
 
+    
+      if(query.productid){
+  
+          query.productid = new ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
+
         if(query.sortBy){
             sortBy = query.sortBy;
         }
@@ -117,6 +128,7 @@ exports.list = (perPage, page , query ) => {
         var sortBoj={[sortBy]:sortDirection};
         return new Promise((resolve, reject) => {
         Productnew.find(_query)
+            .populate({path:'productid',select:'_id productname'})
             .limit(perPage)
             .sort(sortBoj)
             .skip(perPage * page)
@@ -213,7 +225,7 @@ exports.removeById = (productnewId,extraField={}) => {
 };
 
 
-    exports.uploadFile = (req) => {
+    exports.uploadFile2= (req) => {
         return new Promise(async(resolve, reject) => {
             if(req.file.size>1*1024*1024){ // you can chnage the file upload limit
                 reject('file_size_too_big');
@@ -233,4 +245,27 @@ exports.removeById = (productnewId,extraField={}) => {
         };
         
 
-    
+        exports.uploadFile = (req) => {
+            return new Promise(async(resolve, reject) => {
+                let colName = req.params.columnName
+               
+                let rowId = req.params.rowId
+                //let uploadedFileName =req.file.filename;
+                UF.uploadFiles(req,rowId,"productnews").then((va)=>{
+                    Productnew.findById(rowId, function (err, productnew) {
+                        if (err) reject(err);
+                        productnew[colName] =va;
+                        productnew.save(function (err, updatedData) {
+                            if (err) return reject(err);
+                            resolve(va)
+                        });
+                    });
+                }).catch((err)=>{
+               
+                reject(err);
+                });
+            
+               
+                
+            });
+            };

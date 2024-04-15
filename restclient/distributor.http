@@ -1,5 +1,5 @@
 @HOST = http://localhost:8080
-@AUTH = authtoken
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGVhYjUzZjZlMTMzMzBhZTQzYTBlMDYiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJmaXJzdG5hbWUiOiJ1Q29kZSIsImxhc3RuYW1lIjoiVGVzdCIsImNvbnRhY3ROdW1iZXIiOiI2MDE3NjQwODI1MCIsIndlYkFjY2VzcyI6MSwicmVmcmVzaEtleSI6ImVtNlJjbkVoc2pndWp5ZHI0bi96TGc9PSIsImlhdCI6MTcwNTM4MDQzMX0.EVp8FdJGYylLxYN-09oIbcw7BMDKlUt7Z-BOGQKXAWw
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
 POST {{HOST}}/auth HTTP/1.1
@@ -19,18 +19,16 @@ content-type: application/json
 "category":"adipisicing",
 "currency":"consectetur",
 "telephone":"601780485308",
-"email":"consequat@ucode.ai",
+"email":"cons2sq1u4dat@ucode.ai",
 "state":"ullamco",
 "active":"false",
-"productid":"estclf",
-"contactNumber":"601716937174",
+"productid":"657e7eb75e1f0a24b70262bc",
+"contactNumber":"6301432716937171",
 "name":"ipsum",
 "address":"Culpa elit duis laborum cupidatat.",
 "city":"proident",
-"zipcode":"idclf",
-"country":"dolor",
-"productname":"commodo",
-"serviceType":"1.35"
+"zipcode":"idclf"
+
 }
 
 ###

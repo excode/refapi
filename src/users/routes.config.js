@@ -8,7 +8,7 @@ const rootPath="../../";
   const USER = config.permissionLevels.APP_USER;
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
-    {ctrl:'lastname',format:'text',required:true,max:50,min:1},
+{ctrl:'lastname',format:'text',required:true,max:50,min:1},
 {ctrl:'usertype',format:'int',required:true},
 {ctrl:'firstname',format:'text',required:false},
 {ctrl:'password',format:'password',required:true,max:20,min:6},

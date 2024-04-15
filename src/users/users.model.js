@@ -82,6 +82,7 @@ exports.findByContactNumber = (contactNumber) => {
 
 exports.findByEmail = (email) => {
  return new Promise((resolve, reject) => {
+    console.log(email)
     return Users.findOne({email: email}).exec(function (err, data) {
     if (err) {
         reject(err);
@@ -341,4 +342,37 @@ exports.removeById = (usersId,extraField={}) => {
 
 
 
+exports.updateSyncTime = (users,docName) => {
+    const promises = [];
+    var accountArray = [];
+    if(Array.isArray(docName)){
+        accountArray = docName
+    }else{
+        accountArray = [docName] ;
+    }
+    for (let i = 0; i < accountArray.length; i++) {
+
+        var filter = {contactNumber:{$in:users},"syncDocs.docName":accountArray[i] };
+       // console.log(filter);
+        promises.push(new Promise((resolve, reject) => {
+            Users.updateMany(
+                filter, 
+              {"$set":{"sync":1,"syncDocs.$.sync":1}},function(err,usr){
+                    if (err) {
+                        reject(err);
+                    } else {
+                        //console.log("UPDATED DONE");
+                        //console.log(usr);
+                        resolve("UPDATED DONE");
+                    }
+                });
+        }));
+    }
+
+    return Promise.all(promises).then(done=>{
+        console.log(done);
+    }).catch(err=>{
+        console.log(err);
+    });
     
+};

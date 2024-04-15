@@ -1,6 +1,6 @@
 const RewardModel = require('./reward.model');
-
-  const funcs =  require("../../common/functions/funcs");
+var ObjectId = require('mongodb').ObjectID;
+const funcs =  require("../../common/functions/funcs");
   
   exports.insert = (req, res) => {
             req.body.createBy=req.jwt.email  
@@ -23,12 +23,12 @@ const RewardModel = require('./reward.model');
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-      req.query={...req.query,id:req.jwt.id}
+      req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
        /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
         for example 
-        req.query.createBy = req.JWT.email
+        req.query.createBy = req.jwt.email
         req.query.organizationId = req.JWT.userOrganization
 
         you can also put condition based on user role
@@ -52,12 +52,13 @@ const RewardModel = require('./reward.model');
           });
   };
   exports.listAll = (req, res ) => {
-    req.query={...req.query,id:req.jwt.id}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    //req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
         for example 
-        req.query.createBy = req.JWT.email
+        req.query.createBy = req.jwt.email
         req.query.organizationId = req.JWT.userOrganization
 
         you can also put condition based on user role
@@ -74,13 +75,14 @@ const RewardModel = require('./reward.model');
         });
 };
 exports.listSuggestions = (req, res ) => {
-    req.query={...req.query,id:req.jwt.id}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    // req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
     /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
     you can put predefined condition here  based on user and role  
     for example 
-    req.query.createBy = req.JWT.email
+    req.query.createBy = req.jwt.email
     req.query.organizationId = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -99,12 +101,14 @@ exports.listSuggestions = (req, res ) => {
   
   exports.getById = (req, res) => {
     let filter ={}
+    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    /*
       /*
     IMPORTANT
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -124,12 +128,14 @@ exports.listSuggestions = (req, res ) => {
       req.body.updateBy=req.jwt.email  
         req.body.updateAt=funcs.getTime()
       let filter ={}
+      filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+      /*
       /*
     IMPORTANT
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    filter['createBy'] = req.jwt.email
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role
@@ -149,12 +155,14 @@ exports.listSuggestions = (req, res ) => {
   
   exports.removeById = (req, res) => {
     let filter ={}
+    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    /*
       /*
     IMPORTANT
      
     you can put predefined condition here  based on user and role  
     for example 
-    filter['createBy'] = req.JWT.email
+    filter['createBy'] = req.jwt.email
     filter['organizationId'] = req.JWT.userOrganization
 
     you can also put condition based on user role

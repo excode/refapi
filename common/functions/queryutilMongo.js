@@ -24,6 +24,8 @@ const queryFormatter=(querys)=>{
                 _query[key] = new RegExp(value,'i');
             }else if(querys[key].hasOwnProperty('notContains')){
                 _query[key] = {$not: new RegExp(value,'i')} ;
+            }else if(querys[key].hasOwnProperty('in')){
+                _query[key] = {$in: value} ;
             }
         }else if(typeof(querys[key]) === 'string' || typeof(querys[key]) === 'number'){
             _query[key] =  querys[key] ;
