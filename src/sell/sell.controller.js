@@ -111,7 +111,10 @@ exports.listSuggestions = (req, res) => {
 
 exports.getById = (req, res) => {
   let filter = {};
-  filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  //filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  if(req.jwt.productid){
+    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+}
   /*
     IMPORTANT
      
