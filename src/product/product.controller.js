@@ -52,7 +52,7 @@ const ProductModel = require('./product.model');
           });
   };
   exports.listAll = (req, res ) => {
-    req.query={...req.query,createBy:req.jwt.email}
+    req.query={...req.query}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  

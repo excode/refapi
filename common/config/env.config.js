@@ -20,16 +20,20 @@ let  db_name = env.DB_NAME|| "winandwings";
         //let url ="mongodb+srv://mypaaa:MYpaaaHelpMeAllah*^@cluster1.omck1.mongodb.net/winandwings?retryWrites=true&w=majority";
         //"dbConfig":"mongodb://"+host+":"+port+"/winandwings", 
         "dbOptions":{
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        autoIndex: false, // Don't build indexes
-        reconnectTries: 30, // Retry up to 30 times
-        reconnectInterval: 500, // Reconnect every 500ms
-        poolSize: 10, // Maintain up to 10 socket connections
-        // If not connected, return errors immediately rather than waiting for reconnect
-        bufferMaxEntries: 0
-        }
-        
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            bufferCommands: false, // If not connected, return errors immediately rather than waiting for reconnect
+          }
+        //   "dbOptions":{
+        //     useUnifiedTopology: true,
+        //     useNewUrlParser: true,
+        //     autoIndex: false, // Don't build indexes
+        //     reconnectTries: 30, // Retry up to 30 times
+        //     reconnectInterval: 500, // Reconnect every 500ms
+        //     poolSize: 10, // Maintain up to 10 socket connections
+        //     // If not connected, return errors immediately rather than waiting for reconnect
+        //     bufferMaxEntries: 0
+        //     }
     
     };
     

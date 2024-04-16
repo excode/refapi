@@ -1,4 +1,5 @@
 @HOST = https://winmarchant.azurewebsites.net
+@HOST = http://localhost:8080
 @AUTH = authtoken
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
