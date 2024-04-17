@@ -50,7 +50,29 @@ exports.findById = (id,extraField) => {
             return result;
         });
 };
+exports.find = (query) => {
+    return new Promise((resolve, reject) => {
+        Hierarchy.find(query, function(err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
 
+exports.findOne = (query) => {
+    return new Promise((resolve, reject) => {
+        Hierarchy.findOne(query, function(err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
 exports.createHierarchy = (hierarchyData) => {
     return new Promise((resolve, reject) => {
     

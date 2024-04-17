@@ -1,6 +1,6 @@
 @HOST = https://winmarchant.azurewebsites.net
 @HOST = http://localhost:8080
-@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6IiIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6Ild4MEJDTnlmMEpaRXJwVklPTEREMEE9PSIsImlhdCI6MTcxMzMzODA1NX0.mbvbfzrsFLIh-YmDhQbGru16OXvyidu3_csabxaAIik
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6IkY2REZCZHE4WmpxK3phZE1BeHN2UlE9PSIsImlhdCI6MTcxMzM0MzcxOH0.f8Y9xsgTYOXENtPDQJP8xFN8hsO6uyY794RVkdboIc8
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
 POST {{HOST}}/auth HTTP/1.1
@@ -134,6 +134,6 @@ Authorization: Bearer {{AUTH}}
 GET {{HOST}}/sell/dash  HTTP/1.1
 Authorization: Bearer {{AUTH}}
 
-###   
+###       
 GET {{HOST}}/users/dash HTTP/1.1
 Authorization: Bearer {{AUTH}}

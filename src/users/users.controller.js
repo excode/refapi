@@ -4,6 +4,7 @@ const PromotionModel = require('../promotion/promotion.model');
 const RedeemModel = require('../redeem/redeem.model');
 const ReawardModel = require('../reward/reward.model');
 const SellModel = require('../sell/sell.model');
+const HierarchyModel = require('../hierarchy/hierarchy.model');
 const crypto = require('crypto');
   const funcs =  require("../../common/functions/funcs");
   
@@ -57,12 +58,14 @@ if (req.body.password) {
   
 exports.dash = (req, res) => {
     const email = req.jwt.email;
+    console.log("email:"+email);
     Promise.all([
-        ProductModel.find({ createAt: email }),
-        PromotionModel.find({ createAt: email }),
-        RedeemModel.find({ createAt: email }),
-        ReawardModel.find({ createAt: email }),
-        SellModel.find({ createAt: email })
+        ProductModel.find({ createBy: email }),
+        PromotionModel.find({ createBy: email }),
+        RedeemModel.find({ createBy: email }),
+        ReawardModel.find({ createBy: email }),
+        SellModel.find({ createBy: email }),
+        HierarchyModel.find({ createBy: email })
     ])
     .then(results => {
         //const counts = results.map(result => result);
@@ -73,7 +76,8 @@ exports.dash = (req, res) => {
             promotionCount: counts[1],
             redeemCount: counts[2],
             rewardCount: counts[3],
-            sellCount: counts[4]
+            sellCount: counts[4],
+            customerCount: counts[5],
         });
     })
     .catch(err => {
