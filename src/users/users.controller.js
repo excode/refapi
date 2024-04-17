@@ -1,7 +1,7 @@
 const UsersModel = require('./users.model');
 const ProductModel = require('../product/product.model');
 const PromotionModel = require('../promotion/promotion.model');
-const RedeemModel = require('../redeem');
+const RedeemModel = require('../redeem/redeem.model');
 const ReawardModel = require('../reward/reward.model');
 const SellModel = require('../sell/sell.model');
 const crypto = require('crypto');
@@ -65,7 +65,9 @@ exports.dash = (req, res) => {
         SellModel.find({ createAt: email })
     ])
     .then(results => {
+        //const counts = results.map(result => result);
         const counts = results.map(result => result.length);
+       
         res.status(200).send({
             productCount: counts[0],
             promotionCount: counts[1],
