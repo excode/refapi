@@ -1,5 +1,5 @@
 @HOST = https://winmarchant.azurewebsites.net
-//@HOST = http://localhost:8080
+@HOST = http://localhost:8080
 @AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6IiIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6IlVnSmRNNm51dG5mVVA5Vk5uY1pHUEE9PSIsImlhdCI6MTcxMzE1NjIxNH0.zAQZJilI8Zx8QvUGf6c4c-P1Gt8a1rBeJbmtlz8j40U
 @TESTID =657e808656c3062717afcd70 
 //LOGIN ENDPOINT TO GET AUTH TOKEN
@@ -79,7 +79,7 @@ content-type: application/json
 "photo":""
 }
 ###
-PATCH {{HOST}}/product/{{TESTID}} HTTP/1.1
+PATCH {{HOST}}/product/657e808656c3062717afcd70 HTTP/1.1
 Authorization: Bearer {{AUTH}}
 content-type: application/json
 
@@ -90,10 +90,10 @@ content-type: application/json
 "qty":"1",
 "rewardCondition":"1.35",
 "active":"false",
-"config":"utclf",
+//"config":"utclf",
 "mypaId":"inclf",
 "productname":"occaecat",
-"categoryid":"voluptate",
+//"categoryid":"voluptate",
 "subCatid":"nulla",
 "country":"ullamco",
 "description":"Incididunt irure voluptate quis ea ad consequat ad.",
@@ -102,9 +102,43 @@ content-type: application/json
 "website":"https://mypaaa.com",
 "facebook":"https://mypaaa.com",
 "youtube":"https://excode.net",
-"levelConfig":"aute",
+//"levelConfig":"aute",
 "photo":""
 }
+
+###
+PATCH {{HOST}}/product/levelconfig/657e808656c3062717afcd70 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+
+     [
+        {
+        "name": "aute",
+        "to":4,
+        "from":7,
+        "reward":8
+
+    }
+    ]
+
+###     
+PATCH {{HOST}}/product/config/657e808656c3062717afcd70 HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+
+  {
+        "transfer_type": 3,
+        "transaction_fees": 1.5,
+        "min_reward_purchase": 1,
+        "redeem_fraction_allowed": false,
+        "min_redeem": 25,
+        "reward_percentage": 5.0,
+        "reward_expires_days": 365
+    }
+
+
 ###
 DELETE {{HOST}}/product/{{TESTID}} http/1.1
 Authorization: Bearer {{AUTH}} 
