@@ -1,6 +1,6 @@
 @HOST = https://winmarchant.azurewebsites.net
 @HOST = http://localhost:8080
-@AUTH = authtoken
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6IiIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6Ild4MEJDTnlmMEpaRXJwVklPTEREMEE9PSIsImlhdCI6MTcxMzMzODA1NX0.mbvbfzrsFLIh-YmDhQbGru16OXvyidu3_csabxaAIik
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
 POST {{HOST}}/auth HTTP/1.1
@@ -114,3 +114,26 @@ content-type: application/json
 "contactNumber":"60176701946",
 "password":"123456"
 }
+
+
+////dash
+
+###
+GET {{HOST}}/redeem/dash  HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/promotion/dash  HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/reward/dash HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/sell/dash  HTTP/1.1
+Authorization: Bearer {{AUTH}}
+
+###
+GET {{HOST}}/product/dash HTTP/1.1
+Authorization: Bearer {{AUTH}}

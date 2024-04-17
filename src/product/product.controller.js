@@ -19,7 +19,15 @@ const ProductModel = require('./product.model');
              
      
   };
-  
+exports.findByCreatedAt = (req, res) => {
+    ProductModel.find({ createdAt: req.jwt.email })
+        .then(products => {
+            res.status(200).send({ length: products.length});
+        })
+        .catch(err => {
+            res.status(400).json({ err: err });
+        });
+};
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
@@ -186,8 +194,8 @@ exports.listSuggestions = (req, res ) => {
 exports.updateConfig = (req, res) => {
     let config=req.body;
     let req_={body:{}};
-    req_.body.updateBy=req.jwt.email  
-    req_.body.updateAt=funcs.getTime()
+    req.body.updateBy=req.jwt.email  
+    req.body.updateAt=funcs.getTime()
     let filter ={}
     filter['createBy'] = req.jwt.email
     /*
@@ -207,7 +215,7 @@ exports.updateConfig = (req, res) => {
   
   req_.body.config=config;
   console.log(req_.body)
-    ProductModel.patchProduct(req.params.productId, req_.body,filter)
+    ProductModel.patchProduct(req.params.productId, req.body,filter)
         .then((result) => {
             res.status(204).send({});
         }).catch((err)=>{

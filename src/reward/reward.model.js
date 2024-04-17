@@ -51,7 +51,29 @@ exports.findById = (id,extraField) => {
             return result;
         });
 };
+exports.findOne = (query) => {
+    return Reward.findOne(query)
+        .populate({path:'productid',select:'_id productname'})
+        .then((result) => {
+            result = result.toJSON();
+            delete result._id;
+            delete result.__v;
+            return result;
+        });
+};
 
+exports.find = (query) => {
+    return Reward.find(query)
+        .populate({path:'productid',select:'_id productname'})
+        .then((results) => {
+            return results.map(result => {
+                result = result.toJSON();
+                delete result._id;
+                delete result.__v;
+                return result;
+            });
+        });
+};
 exports.createReward = (rewardData) => {
     return new Promise((resolve, reject) => {
     

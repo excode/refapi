@@ -37,6 +37,11 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           PromotionController.list
       ]);
+      app.get('/promotion/dash', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        PromotionController.findByCreatedAt
+    ]);
       app.get('/promotion/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),

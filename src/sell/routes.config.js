@@ -28,6 +28,11 @@ exports.routesConfig = function (app) {
     PermissionMiddleware.minimumPermissionLevelRequired(USER),
     SellController.list,
   ]);
+  app.get('/sell/dash', [
+    ValidationMiddleware.validJWTNeeded,
+    PermissionMiddleware.minimumPermissionLevelRequired(USER),
+    SellController.findByCreatedAt
+]);
   app.get("/sell/all", [
     //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
     ValidationMiddleware.validJWTNeeded,

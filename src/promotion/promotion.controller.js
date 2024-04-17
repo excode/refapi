@@ -19,6 +19,16 @@ const PromotionModel = require('./promotion.model');
              
      
   };
+
+  exports.findByCreatedAt = (req, res) => {
+    PromotionModel.find({ createdAt: req.jwt.email })
+        .then(response => {
+            res.status(200).send({ length: response.length});
+        })
+        .catch(err => {
+            res.status(400).json({ err: err });
+        });
+  };
   
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;

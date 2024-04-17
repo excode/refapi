@@ -16,6 +16,16 @@ exports.insert = (req, res) => {
     });
 };
 
+exports.findByCreatedAt = (req, res) => {
+  RedeemModel.find({ createdAt: req.jwt.email })
+      .then(response => {
+          res.status(200).send({ length: response.length});
+      })
+      .catch(err => {
+          res.status(400).json({ err: err });
+      });
+};
+
 exports.latestRedeem = (req, res) => {
   //req.query = { ...req.query, id: req.jwt.id };
   RedeemModel.latestRedeem(req.query)

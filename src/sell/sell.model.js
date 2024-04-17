@@ -57,7 +57,29 @@ exports.findById = (id, extraField) => {
     return result;
   });
 };
+exports.findOne = (query) => {
+  return new Promise((resolve, reject) => {
+    Sell.findOne(query, function(err, sell) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(sell);
+      }
+    });
+  });
+};
 
+exports.find = (query) => {
+  return new Promise((resolve, reject) => {
+    Sell.find(query, function(err, sells) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(sells);
+      }
+    });
+  });
+};
 exports.createSell = (sellData) => {
   return new Promise((resolve, reject) => {
     const sell = new Sell(sellData);

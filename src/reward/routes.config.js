@@ -33,6 +33,11 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           RewardController.list
       ]);
+      app.get('/reward/dash', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        RewardController.findByCreatedAt
+    ]);
       app.get('/reward/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),

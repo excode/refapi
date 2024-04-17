@@ -15,7 +15,15 @@ exports.insert = (req, res) => {
       res.status(400).json({ err: err });
     });
 };
-
+exports.findByCreatedAt = (req, res) => {
+  SellModel.find({ createdAt: req.jwt.email })
+      .then(response => {
+          res.status(200).send({ length: response.length});
+      })
+      .catch(err => {
+          res.status(400).json({ err: err });
+      });
+};
 exports.latestSell = (req, res) => {
   req.query = { ...req.query, id: req.jwt.id };
   SellModel.latestSell(req.query)

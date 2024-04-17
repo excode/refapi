@@ -29,6 +29,12 @@ exports.routesConfig = function (app) {
     RedeemController.list,
   ]);
 
+  app.get('/redeem/dash', [
+    ValidationMiddleware.validJWTNeeded,
+    PermissionMiddleware.minimumPermissionLevelRequired(USER),
+    RedeemController.findByCreatedAt
+]);
+
   app.get("/redeem/latest-redeem", [
     ValidationMiddleware.validJWTNeeded,
     PermissionMiddleware.minimumPermissionLevelRequired(USER),

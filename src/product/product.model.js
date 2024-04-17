@@ -65,7 +65,31 @@ exports.findById = (id,extraField) => {
             return result;
         });
 };
+exports.findOne = (query) => {
+    return Product.findOne(query)
+        .populate({path:'categoryid',select:'id category'})
+        .then((result) => {
+            if (result) {
+                result = result.toJSON();
+                delete result._id;
+                delete result.__v;
+            }
+            return result;
+        });
+};
 
+exports.find = (query) => {
+    return Product.find(query)
+        .populate({path:'categoryid',select:'id category'})
+        .then((results) => {
+            return results.map(result => {
+                result = result.toJSON();
+                delete result._id;
+                delete result.__v;
+                return result;
+            });
+        });
+};
 exports.createProduct = (productData) => {
     return new Promise((resolve, reject) => {
     

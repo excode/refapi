@@ -53,6 +53,40 @@ exports.findById = (id, extraField) => {
   });
 };
 
+exports.find = (query) => {
+  return Redeem.find(query)
+    .populate({path:'productid',select:'_id productname'})
+    .populate({path:'redeemproductid',select:'_id name'})
+    .then((result) => {
+      return result.map(res => {
+        res = res.toJSON();
+        delete res._id;
+        delete res.__v;
+        return res;
+      });
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
+exports.findOne = (query) => {
+  return Redeem.findOne(query)
+    .populate({path:'productid',select:'_id productname'})
+    .populate({path:'redeemproductid',select:'_id name'})
+    .then((result) => {
+      if (result) {
+        result = result.toJSON();
+        delete result._id;
+        delete result.__v;
+      }
+      return result;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 exports.createRedeem = (redeemData) => {
   return new Promise((resolve, reject) => {
     const redeem = new Redeem(redeemData);
