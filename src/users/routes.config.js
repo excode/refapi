@@ -34,6 +34,13 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           UsersController.list
       ]);
+
+      app.get('/users/dash', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        UsersController.dash
+    ]);
+
       app.get('/users/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),

@@ -1,4 +1,9 @@
 const UsersModel = require('./users.model');
+const ProductModel = require('../product/product.model');
+const PromotionModel = require('../promotion/promotion.model');
+const RedeemModel = require('../redeem');
+const ReawardModel = require('../reward/reward.model');
+const SellModel = require('../sell/sell.model');
 const crypto = require('crypto');
   const funcs =  require("../../common/functions/funcs");
   
@@ -50,6 +55,30 @@ if (req.body.password) {
      
   };
   
+exports.dash = (req, res) => {
+    const email = req.jwt.email;
+    Promise.all([
+        ProductModel.find({ createAt: email }),
+        PromotionModel.find({ createAt: email }),
+        RedeemModel.find({ createAt: email }),
+        ReawardModel.find({ createAt: email }),
+        SellModel.find({ createAt: email })
+    ])
+    .then(results => {
+        const counts = results.map(result => result.length);
+        res.status(200).send({
+            productCount: counts[0],
+            promotionCount: counts[1],
+            redeemCount: counts[2],
+            rewardCount: counts[3],
+            sellCount: counts[4]
+        });
+    })
+    .catch(err => {
+        res.status(400).json({ err: err });
+    });
+};
+
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
