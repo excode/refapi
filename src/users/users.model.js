@@ -171,6 +171,8 @@ exports.verifyEmailOtp = (email, otp) => {
                 reject(new Error('OTP has expired'));
             } else {
                 user.emailVerified = true;
+                user.emailVerifyOtp= null,
+                user.emailVerifyOtpExpires= null
                 user.save(function(err) {
                     if (err) {
                         reject(err);

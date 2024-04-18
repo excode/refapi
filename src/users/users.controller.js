@@ -36,7 +36,7 @@ if (req.body.password) {
             req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
         req.body.id=req.jwt.id
-         
+        req.body.password=req.body.email
 // Hashing  password data 
 if (req.body.password) {
     let salt = crypto.randomBytes(16).toString('base64');

@@ -18,7 +18,7 @@ const formValidationRules = [
 exports.routesConfig = function (app) {
   app.post('/users', [
     ValidationMiddleware.validJWTNeeded,
-    FormValidation.formValidation(formValidationRules),
+    //FormValidation.formValidation(formValidationRules),
     PermissionMiddleware.minimumPermissionLevelRequired(USER),
     UsersController.insert
   ]);
@@ -32,7 +32,7 @@ exports.routesConfig = function (app) {
     UsersController.createEmailVerifyOtp
   ]);
 
-  app.post('/users/verifyEmailOtp', [
+  app.patch('/users/verifyEmailOtp', [
     UsersController.verifyEmailOtp
   ]);
 
@@ -40,11 +40,11 @@ exports.routesConfig = function (app) {
     UsersController.resetPasswordInit
   ]);
 
-  app.post('/users/resetPasswordFinish', [
+  app.patch('/users/resetPasswordFinish', [
     UsersController.resetPasswordFinish
   ]);
 
-  app.post('/users/changePassword', [
+  app.patch('/users/changePassword', [
     ValidationMiddleware.validJWTNeeded,
     UsersController.changePassword
   ]);

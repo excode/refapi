@@ -7,11 +7,11 @@ POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"founder@mypaaa.com",
-"password":"123456"
+"email":"commodo1@ucode.ai8",
+"password":"commodo1@ucode.ai8"
 }
 
-###
+### 
 POST {{HOST}}/users HTTP/1.1
 Authorization: Bearer {{AUTH}}
 content-type: application/json
@@ -20,9 +20,8 @@ content-type: application/json
 "lastname":"quiclf",
 "usertype":"1",
 "firstname":"velit",
-"password":"ucode1234",
-"contactNumber":"601775735722",
-"email":"commodo@ucode.ai8"
+"contactNumber":"601775735723",
+"email":"commodo1@ucode.ai8"
 }
 
 ###
@@ -139,49 +138,6 @@ content-type: application/json
 }
 
 
-###   
-POST {{HOST}}/users/emailOtp HTTP/1.1
-content-type: application/json
-
-{
-    "email":"test1@ucode.ai"
-}
-###
-POST {{HOST}}/users/verifyEmailOtp HTTP/1.1
-content-type: application/json
-
-{
-    "email":"test1@ucode.ai",
-    "otp":"324990"
-}
-
-###
-POST {{HOST}}/users/resetPasswordInit HTTP/1.1
-content-type: application/json
-
-{
-    "email":"test1@ucode.ai"
-}
-
-###
-POST {{HOST}}/users/resetPasswordFinish HTTP/1.1
-content-type: application/json
-
-{
-    "email":"test1@ucode.ai",
-    "otp":"807892",
-    "newPassword":"1234567"
-}
-
-### 
-POST {{HOST}}/users/changePassword HTTP/1.1
-content-type: application/json
-Authorization: Bearer {{AUTH}}
-
-{
-    "oldPassword":"1234567",
-    "newPassword":"123456"
-}
 
 ////dash
 
