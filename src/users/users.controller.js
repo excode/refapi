@@ -56,6 +56,53 @@ if (req.body.password) {
      
   };
   
+
+exports.createEmailVerifyOtp = (req, res) => {
+    console.log("email:"+req.body.email)
+    UsersModel.createEmailVerifyOtp(req.body.email)
+        .then((result) => {
+            res.status(200).send(result.emailVerifyOtp);
+        }).catch((err) => {
+            res.status(400).json({ err: err });
+        });
+};
+
+exports.verifyEmailOtp = (req, res) => {
+    UsersModel.verifyEmailOtp(req.body.email, req.body.otp)
+        .then((result) => {
+            res.status(200).send("Verified");
+        }).catch((err) => {
+            res.status(400).json({ err: err });
+        });
+};
+
+exports.resetPasswordInit = (req, res) => {
+    UsersModel.resetPasswordInit(req.body.email)
+        .then((result) => {
+            res.status(200).send(result.forgotPasswordOtp);
+        }).catch((err) => {
+            res.status(400).json({ err: err });
+        });
+};
+
+exports.resetPasswordFinish = (req, res) => {
+    UsersModel.resetPasswordFinish(req.body.email, req.body.otp, req.body.newPassword)
+        .then((result) => {
+            res.status(200).send("Password Reseted");
+        }).catch((err) => {
+            res.status(400).json({ err: err });
+        });
+};
+
+exports.changePassword = (req, res) => {
+    UsersModel.changePassword(req.jwt.email, req.body.oldPassword, req.body.newPassword)
+        .then((result) => {
+            res.status(200).send("Password Change Succesfully");
+        }).catch((err) => {
+            res.status(400).json({ err: err });
+        });
+};
+
 exports.dash = (req, res) => {
     const email = req.jwt.email;
     console.log("email:"+email);
@@ -84,6 +131,7 @@ exports.dash = (req, res) => {
         res.status(400).json({ err: err });
     });
 };
+
 
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;

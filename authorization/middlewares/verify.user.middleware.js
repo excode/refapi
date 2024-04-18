@@ -2,6 +2,7 @@ const UserModel = require("../../src/users/users.model");
 const crypto = require("crypto");
 const funcs = require("../../common/functions/funcs");
 const ProductModel = require("../../src/product/product.model")
+
 exports.hasAuthValidFields = (req, res, next) => {
   let errors = [];
 
@@ -24,8 +25,9 @@ exports.hasAuthValidFields = (req, res, next) => {
       .send({ errors: "Missing email and password fields" });
   }
 };
+
 exports.isPasswordAndUserMatch = (req, res, next) => {
-  UserModel.findByContactNumber(req.body.email.trim()).then(async(user) => {
+  UserModel.findByEmail(req.body.email.trim()).then(async(user) => {
     console.log(user)
     if (!user) {
       res.status(404).send({ errors: "Invalid Login information 1" });

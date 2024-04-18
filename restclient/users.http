@@ -1,15 +1,17 @@
 @HOST = https://winmarchant.azurewebsites.net
 @HOST = http://localhost:8080
-@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6IkY2REZCZHE4WmpxK3phZE1BeHN2UlE9PSIsImlhdCI6MTcxMzM0MzcxOH0.f8Y9xsgTYOXENtPDQJP8xFN8hsO6uyY794RVkdboIc8
+@AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjIwYzVlMjgzMDRiMzE0NmNlYjNkNDAiLCJlbWFpbCI6InRlc3QxQHVjb2RlLmFpIiwiZmlyc3RuYW1lIjoidUNvZGUyIiwibGFzdG5hbWUiOiJUZXN0MiIsImNvbnRhY3ROdW1iZXIiOiI2MDE3NjQwODI1MDIiLCJ3ZWJBY2Nlc3MiOjEsInByb2R1Y3RJZCI6W10sInJlZnJlc2hLZXkiOiJBMzhydm1ueTF2VitiaE5Tc3MrakNBPT0iLCJpYXQiOjE3MTM0MjQzNzR9.-WyhB3YQnZvC3AmTZOlPmWX1Iyra7kOcF6nNJPJyVDk
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
+###
 POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"founder@mypaaa.com",
+"email":"test1@ucode.ai",
 "password":"123456"
 }
+
 ###
 POST {{HOST}}/users HTTP/1.1
 Authorization: Bearer {{AUTH}}
@@ -25,34 +27,64 @@ content-type: application/json
 }
 
 ###
-
-#MAIN REGISTRATION for NODEJS VERSION
 POST {{HOST}}/users/reg HTTP/1.1
 content-type: application/json
     
 {
-"email":"test@ucode.ai",
+"email":"test1@ucode.ai",
 "password":"123456",
-"firstname":"uCode",
-"lastname":"Test",
+"firstname":"uCode2",
+"lastname":"Test2",
 "usertype":"0",
-"contactNumber":"601764082501"
+"contactNumber":"601764082502"
 }
-###
-#MAIN REGISTRATION for Java Spring boot
-POST {{HOST}}/reg HTTP/1.1
-content-type: application/json
- 
-{
-"country":"my",
-"password":"123456",
-"name":"Kalma",
-"lastname":"Test",
-"usertype":"0",
-"contactNumber":"60176408250"
-}
-###
 
+###   
+POST {{HOST}}/users/emailOtp HTTP/1.1
+content-type: application/json
+
+{
+    "email":"test1@ucode.ai"
+}
+###
+POST {{HOST}}/users/verifyEmailOtp HTTP/1.1
+content-type: application/json
+
+{
+    "email":"test1@ucode.ai",
+    "otp":"324990"
+}
+
+###
+POST {{HOST}}/users/resetPasswordInit HTTP/1.1
+content-type: application/json
+
+{
+    "email":"test1@ucode.ai"
+}
+
+###
+POST {{HOST}}/users/resetPasswordFinish HTTP/1.1
+content-type: application/json
+
+{
+    "email":"test1@ucode.ai",
+    "otp":"807892",
+    "newPassword":"1234567"
+}
+
+### 
+POST {{HOST}}/users/changePassword HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{AUTH}}
+
+{
+    "oldPassword":"1234567",
+    "newPassword":"123456"
+}
+
+
+###
 GET {{HOST}}/users? HTTP/1.1
 Authorization: Bearer {{AUTH}}
 

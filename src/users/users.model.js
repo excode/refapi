@@ -1,6 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
+const crypto = require('crypto');
 
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
@@ -8,30 +9,35 @@ const {queryFormatter,queryBuilder_string,
     queryBuilder_array,
     queryBuilder_range_array} = require("../../common/functions/queryutilMongo")
 const usersSchema = new Schema({
-    	lastname : { type: String,required:true,default:'',maxLength:50,minLength:1},
-			usertype : { type: Number,required:true,default:0},
-			emailOTP : { type: String},
-			firstname : { type: String},
-			password : { type: String},
-			contactNumber : { type: String,required:true,default:'',unique: true ,maxLength:20,minLength:8},
-			email : { type: String,required:true,default:'',unique: true },
-			emailOTPExpires : { type: Number},
-			createBy : { type: String},
-			createAt : { type: Date,required:true},
-			updateBy : { type: String},
-			updateAt : { type: Date},
-            webPassword : {type:String,default:0},
-            webPasswordExpires : {type:Number,default:0},
-            joinDate : {type:Number,default:0},
-            syncDocs : {type: Array,default:  funcs.docsList()},
-            sync:{type:Number,default:0},
-            tcode : { type: String,default:''},
-            tlock : {type:String,default:0},
-            joinDate : {type:Number,default:0},
-            syncDocs : {type: Array,default:  funcs.docsList()},
-            webAccess:{type:Number,default:0},
-            enableReset: {type:Number,default:0},
-            lastLoginDate : {type:Number,default:0}
+    lastname : { type: String,required:true,default:'',maxLength:50,minLength:1},
+    usertype : { type: Number,required:true,default:0},
+    emailOTP : { type: String},
+    firstname : { type: String},
+    password : { type: String},
+    contactNumber : { type: String,required:true,default:'',unique: true ,maxLength:20,minLength:8},
+    email : { type: String,required:true,default:'',unique: true },
+    emailOTPExpires : { type: Number},
+    createBy : { type: String},
+    createAt : { type: Date,required:true},
+    updateBy : { type: String},
+    updateAt : { type: Date},
+    webPassword : {type:String,default:0},
+    webPasswordExpires : {type:Number,default:0},
+    joinDate : {type:Number,default:0},
+    syncDocs : {type: Array,default:  funcs.docsList()},
+    sync:{type:Number,default:0},
+    tcode : { type: String,default:''},
+    tlock : {type:String,default:0},
+    joinDate : {type:Number,default:0},
+    syncDocs : {type: Array,default:  funcs.docsList()},
+    webAccess:{type:Number,default:0},
+    enableReset: {type:Number,default:0},
+    lastLoginDate : {type:Number,default:0},
+    emailVerified: { type: Boolean, default: false }, 
+    forgotPasswordOtp: { type: String }, 
+    forgotPasswordExpires: { type: Date }, 
+    emailVerifyOtp: { type: String } ,
+    emailVerifyOtpExpires: { type: Date },
 });
 
 usersSchema.virtual('id').get(function () {
@@ -123,6 +129,144 @@ exports.createUsers = (usersData) => {
     });
 };
 
+exports.createEmailVerifyOtp = (email) => {
+    return new Promise((resolve, reject) => {
+        Users.findOne({email: email}).exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else if (!user) {
+                reject(new Error('User not found'));
+            } else {
+                // Generate a random 6 digit number for OTP
+                const otp = Math.floor(100000 + Math.random() * 900000);
+                // Set OTP expiry time to 5 minutes from now
+                const expiry = new Date();
+                expiry.setMinutes(expiry.getMinutes() + 5);
+
+                user.emailVerifyOtp = otp;
+                user.emailVerifyOtpExpires = expiry;
+
+                user.save(function (err, updatedUser) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(updatedUser);
+                    }
+                });
+            }
+        });
+    });
+};
+
+exports.verifyEmailOtp = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        Users.findOne({email: email}).exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else if (!user) {
+                reject(new Error('No user found with this email'));
+            } else if (user.emailVerifyOtp !== otp) {
+                reject(new Error('Invalid OTP'));
+            } else if (user.emailVerifyOtpExpires < Date.now()) {
+                reject(new Error('OTP has expired'));
+            } else {
+                user.emailVerified = true;
+                user.save(function(err) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(user);
+                    }
+                });
+            }
+        });
+    });
+};
+
+exports.resetPasswordInit = (email) => {
+    return new Promise((resolve, reject) => {
+        let randomOtp = Math.floor(100000 + Math.random() * 900000); // Generate 6 digit OTP
+        let otpExpiry = new Date();
+        otpExpiry.setMinutes(otpExpiry.getMinutes() + 5); // OTP expires after 5 minutes
+
+        Users.findOneAndUpdate({email: email}, {
+            forgotPasswordOtp: randomOtp,
+            forgotPasswordExpires: otpExpiry
+        }, {new: true}).exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else if (!user) {
+                reject(new Error('No user with this email found!'));
+            } else {
+                resolve(user);
+            }
+        });
+    });
+};
+
+exports.resetPasswordFinish = (email, otp, newPassword) => {
+    return new Promise((resolve, reject) => {
+        Users.findOne({email: email}).exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else if (!user) {
+                reject(new Error('No user with this email found!'));
+            } else if (otp !== user.forgotPasswordOtp) {
+                reject(new Error('Invalid OTP!'));
+            } else if (new Date() > user.forgotPasswordExpires) {
+                reject(new Error('OTP expired!'));
+            } else {
+                let salt = crypto.randomBytes(16).toString('base64');
+                let hash = crypto.createHmac('sha512', salt).update(newPassword).digest("base64");
+                newPassword = salt + "$" + hash;
+
+                Users.findOneAndUpdate({email: email}, {
+                    password: newPassword,
+                    forgotPasswordOtp: null,
+                    forgotPasswordExpires: null
+                }, {new: true}).exec(function (err, user) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(user);
+                    }
+                });
+            }
+        });
+    });
+};
+exports.changePassword = (email, oldPassword, newPassword) => {
+    return new Promise((resolve, reject) => {
+        Users.findOne({email: email}).exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else if (!user) {
+                reject(new Error('User not found'));
+            } else {
+                let passwordFields = user.password.split('$');
+                let salt = passwordFields[0];
+                let hash = crypto.createHmac('sha512', salt).update(oldPassword).digest("base64");
+
+                if (hash === passwordFields[1]) {
+                    let newSalt = crypto.randomBytes(16).toString('base64');
+                    let newHash = crypto.createHmac('sha512', newSalt).update(newPassword).digest("base64");
+                    newPassword = newSalt + "$" + newHash;
+
+                    user.password = newPassword;
+                    user.save(function (err, saved) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(saved);
+                        }
+                    });
+                } else {
+                    reject(new Error('Old password is incorrect'));
+                }
+            }
+        });
+    });
+};
 exports.list = (perPage, page , query ) => {
         var _query={};
         let sortBy='_id'
