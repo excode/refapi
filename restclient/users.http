@@ -1,13 +1,13 @@
 @HOST = https://winmarchant.azurewebsites.net
-@HOST = http://localhost:8080
+@HOST2= http://localhost:8080
 @AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6IkY2REZCZHE4WmpxK3phZE1BeHN2UlE9PSIsImlhdCI6MTcxMzM0MzcxOH0.f8Y9xsgTYOXENtPDQJP8xFN8hsO6uyY794RVkdboIc8
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
-POST {{HOST}}/auth HTTP/1.1
+POST {{HOST2}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"founder@mypaaa.com",
+"email":"sakib@ucode.ai",
 "password":"123456"
 }
 ###
@@ -31,12 +31,12 @@ POST {{HOST}}/users/reg HTTP/1.1
 content-type: application/json
     
 {
-"email":"test@ucode.ai",
+"email":"sakib@ucode.ai",
 "password":"123456",
 "firstname":"uCode",
 "lastname":"Test",
 "usertype":"0",
-"contactNumber":"601764082501"
+"contactNumber":"60176408252"
 }
 ###
 #MAIN REGISTRATION for Java Spring boot

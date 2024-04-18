@@ -25,7 +25,7 @@ exports.hasAuthValidFields = (req, res, next) => {
   }
 };
 exports.isPasswordAndUserMatch = (req, res, next) => {
-  UserModel.findByContactNumber(req.body.email.trim()).then(async(user) => {
+  UserModel.findByEmail(req.body.email.trim()).then(async(user) => {
     console.log(user)
     if (!user) {
       res.status(404).send({ errors: "Invalid Login information 1" });
