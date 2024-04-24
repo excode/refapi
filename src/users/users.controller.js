@@ -7,12 +7,14 @@ const SellModel = require('../sell/sell.model');
 const HierarchyModel = require('../hierarchy/hierarchy.model');
 const crypto = require('crypto');
   const funcs =  require("../../common/functions/funcs");
+  const email = require("../../common/functions/email");
   
 exports.reg = (req, res) => {
 
     req.body.createBy="REG"
 req.body.createAt=funcs.getTime()
-         
+password=funcs.randomNumber(6); 
+req.body.password=  password.toString()  
 // Hashing  password data 
 if (req.body.password) {
     let salt = crypto.randomBytes(16).toString('base64');
@@ -21,8 +23,19 @@ if (req.body.password) {
 }
     UsersModel.createUsers(req.body)
           .then((result) => {
-                  
-            res.status(200).send({id: result.id});
+            const contents = {
+                name: req.body.firstname,
+                code: password,
+                product_url: ""
+            };
+            email.sendEmail(req.body.email, "ucode-1", contents).then(done => {
+                res.status(200).send("User Registered.Please Check Email for Password");
+            }).catch((err1) => {
+                console.log(err1);
+                mes = funcs.handleValidationError(err1);
+                res.status(400).json({ errors: err1 });
+            });
+           
 
           }).catch((err)=>{
              
@@ -36,7 +49,8 @@ if (req.body.password) {
             req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
         req.body.id=req.jwt.id
-        req.body.password=req.body.email
+        password=funcs.randomNumber(6); 
+req.body.password=  password.toString() 
 // Hashing  password data 
 if (req.body.password) {
     let salt = crypto.randomBytes(16).toString('base64');
@@ -45,8 +59,20 @@ if (req.body.password) {
 }
             UsersModel.createUsers(req.body)
                   .then((result) => {
-                          
-                    res.status(200).send({id: result.id});
+                    const contents = {
+                        name: req.body.firstname,
+                        code: password,
+                        product_url: ""
+                    };
+                    email.sendEmail(req.body.email, "ucode-1", contents).then(done => {
+                        res.status(200).send({id: result.id,Message: "User Registered.Please Check Email for Password"}
+                           );
+                    }).catch((err1) => {
+                        console.log(err1);
+                        mes = funcs.handleValidationError(err1);
+                        res.status(400).json({ errors: err1 });
+                    }); 
+                    //res.status(200).send({id: result.id});
  
                   }).catch((err)=>{
                      
@@ -59,9 +85,27 @@ if (req.body.password) {
 
 exports.createEmailVerifyOtp = (req, res) => {
     console.log("email:"+req.body.email)
-    UsersModel.createEmailVerifyOtp(req.body.email)
+    // Generate a random 6 digit number for OTP
+    let otp = Math.floor(100000 + Math.random() * 900000);
+    // Set OTP expiry time to 5 minutes from now
+    const expiredate = new Date();
+    expiredate.setMinutes(expiredate.getMinutes() + 5);
+    UsersModel.createEmailVerifyOtp(req.body.email,otp,expiredate)
         .then((result) => {
-            res.status(200).send(result.emailVerifyOtp);
+            const contents = {
+                name: result.firstname,
+                code: otp,
+                product_url: ""
+            };
+            email.sendEmail(req.body.email, "ucode-1", contents).then(done => {
+                res.status(200).send({Message: "Send verify Email Otp"}
+                   );
+            }).catch((err1) => {
+                console.log(err1);
+                mes = funcs.handleValidationError(err1);
+                res.status(400).json({ errors: err1 });
+            }); 
+            //res.status(200).send(result.emailVerifyOtp);
         }).catch((err) => {
             res.status(400).json({ err: err });
         });
@@ -77,9 +121,25 @@ exports.verifyEmailOtp = (req, res) => {
 };
 
 exports.resetPasswordInit = (req, res) => {
-    UsersModel.resetPasswordInit(req.body.email)
+    let randomOtp = Math.floor(100000 + Math.random() * 900000); 
+        let otpExpiredate = new Date();
+        otpExpiredate.setMinutes(otpExpiredate.getMinutes() + 5); 
+    UsersModel.resetPasswordInit(req.body.email,randomOtp,otpExpiredate)
         .then((result) => {
-            res.status(200).send(result.forgotPasswordOtp);
+            const contents = {
+                name: result.firstname,
+                code: randomOtp,
+                product_url: ""
+            };
+            email.sendEmail(req.body.email, "ucode-1", contents).then(done => {
+                res.status(200).send({Message: "Send Forgot Password Email Otp"}
+                   );
+            }).catch((err1) => {
+                console.log(err1);
+                mes = funcs.handleValidationError(err1);
+                res.status(400).json({ errors: err1 });
+            }); 
+            //res.status(200).send(result.forgotPasswordOtp);
         }).catch((err) => {
             res.status(400).json({ err: err });
         });

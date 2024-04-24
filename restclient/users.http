@@ -7,8 +7,8 @@ POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"commodo1@ucode.ai8",
-"password":"commodo1@ucode.ai8"
+"email":"wegagit687@idsho.com",
+"password":"123456"
 }
 
 ### 
@@ -24,25 +24,32 @@ content-type: application/json
 "email":"commodo1@ucode.ai8"
 }
 
-###
+### 
 POST {{HOST}}/users/reg HTTP/1.1
 content-type: application/json
     
 {
-"email":"test@ucode.ai",
-"password":"123456",
+"email":"wegagit687@idsho.com",
 "firstname":"uCode2",
 "lastname":"Test2",
 "usertype":"0",
-"contactNumber":"601764082501"
+"contactNumber":"601764082504"
 }
-###
-POST {{HOST}}/users/verifyEmailOtp HTTP/1.1
+
+###   
+POST {{HOST}}/users/emailOtp HTTP/1.1
 content-type: application/json
 
 {
-    "email":"test1@ucode.ai",
-    "otp":"324990"
+    "email":"wegagit687@idsho.com"
+}
+###
+PATCH {{HOST}}/users/verifyEmailOtp HTTP/1.1
+content-type: application/json
+
+{
+    "email":"wegagit687@idsho.com",
+    "otp":"261313"
 }
 
 ###
@@ -50,21 +57,21 @@ POST {{HOST}}/users/resetPasswordInit HTTP/1.1
 content-type: application/json
 
 {
-    "email":"test1@ucode.ai"
+    "email":"wegagit687@idsho.com"
 }
 
 ###
-POST {{HOST}}/users/resetPasswordFinish HTTP/1.1
+PATCH {{HOST}}/users/resetPasswordFinish HTTP/1.1
 content-type: application/json
 
 {
-    "email":"test1@ucode.ai",
-    "otp":"807892",
-    "newPassword":"1234567"
+    "email":"wegagit687@idsho.com",
+    "otp":"561047",
+    "newPassword":"123456"
 }
 
 ### 
-POST {{HOST}}/users/changePassword HTTP/1.1
+PATCH {{HOST}}/users/changePassword HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{AUTH}}
 

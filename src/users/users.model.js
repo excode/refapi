@@ -129,7 +129,7 @@ exports.createUsers = (usersData) => {
     });
 };
 
-exports.createEmailVerifyOtp = (email) => {
+exports.createEmailVerifyOtp = (email,otp,expiredate) => {
     return new Promise((resolve, reject) => {
         Users.findOne({email: email}).exec(function (err, user) {
             if (err) {
@@ -137,19 +137,16 @@ exports.createEmailVerifyOtp = (email) => {
             } else if (!user) {
                 reject(new Error('User not found'));
             } else {
-                // Generate a random 6 digit number for OTP
-                const otp = Math.floor(100000 + Math.random() * 900000);
-                // Set OTP expiry time to 5 minutes from now
-                const expiry = new Date();
-                expiry.setMinutes(expiry.getMinutes() + 5);
+                
 
                 user.emailVerifyOtp = otp;
-                user.emailVerifyOtpExpires = expiry;
+                user.emailVerifyOtpExpires = expiredate;
 
                 user.save(function (err, updatedUser) {
                     if (err) {
                         reject(err);
                     } else {
+                        
                         resolve(updatedUser);
                     }
                 });
@@ -185,15 +182,13 @@ exports.verifyEmailOtp = (email, otp) => {
     });
 };
 
-exports.resetPasswordInit = (email) => {
+exports.resetPasswordInit = (email,randomOtp,otpExpiredate) => {
     return new Promise((resolve, reject) => {
-        let randomOtp = Math.floor(100000 + Math.random() * 900000); // Generate 6 digit OTP
-        let otpExpiry = new Date();
-        otpExpiry.setMinutes(otpExpiry.getMinutes() + 5); // OTP expires after 5 minutes
+        
 
         Users.findOneAndUpdate({email: email}, {
             forgotPasswordOtp: randomOtp,
-            forgotPasswordExpires: otpExpiry
+            forgotPasswordExpires: otpExpiredate
         }, {new: true}).exec(function (err, user) {
             if (err) {
                 reject(err);
