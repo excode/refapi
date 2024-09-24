@@ -16,10 +16,9 @@ let  db_name = env.DB_NAME|| "winandwings";
             "ADMIN_USER": 2,
             "SUPER_ADMIN": 1
         },
-        "postmark":"feffdb2f-233d-44a1-984b-a2a361394b85",
+        "postmark":env.POSTMARK,
         "dbConfig":"mongodb+srv://"+user+":"+pass+"@"+host+"/"+db_name+"?retryWrites=true&w=majority", 
-        //let url ="mongodb+srv://mypaaa:MYpaaaHelpMeAllah*^@cluster1.omck1.mongodb.net/winandwings?retryWrites=true&w=majority";
-        //"dbConfig":"mongodb://"+host+":"+port+"/winandwings", 
+        
         "dbOptions":{
             useNewUrlParser: true,
             useUnifiedTopology: true,

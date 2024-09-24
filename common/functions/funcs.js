@@ -136,6 +136,59 @@ exports.levelConfig =()=>{
     }
   }
 };
+exports.pairConfig =()=>{
+  return {
+    bonusFrequency: {
+      type: Number,
+      required:true,
+      default:1,//[1 monthly,2=quartly]
+    },
+    name: {
+      type: String,
+      required:true
+    },
+    reward: {
+      type: Number,
+      required:true
+    },
+    from: {
+      type: Number,
+      required:true
+    },
+    to: {
+      type: Number,
+      required:true
+    }
+  }
+};
+exports.walletConfig =()=>{
+  return {
+    level: {
+      type: Number,
+      required:true,
+      default:0,//[1 monthly,2=quartly]
+    },
+    reward: {
+      type: Number,
+      required:true
+    }
+  }
+};
+exports.walletConfigData =()=> [
+  {level:0,reward:10},
+  {level:1,reward:10},
+  {level:2,reward:10},
+  {level:3,reward:10},
+  {level:4,reward:10}
+];
+
+exports.pairConfigData =()=> [
+  {name:'Pro',from:1000,to:10000,reward:1,bonusFrequency:1},
+  {name:'Gold',from:10001,to:50000,reward:1.5,bonusFrequency:1},
+  {name:'Diamond',from:50001,to:1000000,reward:3.0,bonusFrequency:1},
+  {name:'Platinum',from:1000001,to:500000000,reward:6.0,bonusFrequency:1}
+];
+
 exports.levelConfigData =()=> [
     {name:'Basic',from:1000,to:10000,reward:1},
     {name:'Gold',from:10001,to:50000,reward:1.5},

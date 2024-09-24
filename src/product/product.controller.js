@@ -34,6 +34,7 @@ const ProductModel = require('./product.model');
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
       req.query={...req.query,createBy:req.jwt.email}
+      
        /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -62,7 +63,7 @@ const ProductModel = require('./product.model');
           });
   };
   exports.listAll = (req, res ) => {
-    req.query={...req.query}
+    req.query={...req.query,createBy:req.jwt.email}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -139,7 +140,10 @@ exports.listSuggestions = (req, res ) => {
   exports.patchById = (req, res) => {
       req.body.updateBy=req.jwt.email  
         req.body.updateAt=funcs.getTime()
-      let filter ={}
+      let filter ={
+
+      }
+      filter['createBy'] = req.jwt.email
       /*
     IMPORTANT
      
@@ -184,6 +188,46 @@ exports.listSuggestions = (req, res ) => {
    */
   
   req_.body.levelConfig=levelConfig;
+  console.log(req_.body)
+    ProductModel.patchProduct(req.params.productId, req_.body,filter)
+        .then((result) => {
+            res.status(204).send({});
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+
+};
+exports.updatePairConfig = (req, res) => {
+    let levelConfig=req.body;
+    let req_={body:{}};
+    req_.body.updateBy=req.jwt.email  
+    req_.body.updateAt=funcs.getTime()
+    let filter ={
+        createBy:req.jwt.email 
+    }
+
+  
+  req_.body.pairConfig=levelConfig;
+  console.log(req_.body)
+    ProductModel.patchProduct(req.params.productId, req_.body,filter)
+        .then((result) => {
+            res.status(204).send({});
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+
+};
+exports.updateWalletConfig = (req, res) => {
+    let levelConfig=req.body;
+    let req_={body:{}};
+    req_.body.updateBy=req.jwt.email  
+    req_.body.updateAt=funcs.getTime()
+    let filter ={
+        createBy:req.jwt.email 
+    }
+
+  
+  req_.body.walletConfig=levelConfig;
   console.log(req_.body)
     ProductModel.patchProduct(req.params.productId, req_.body,filter)
         .then((result) => {

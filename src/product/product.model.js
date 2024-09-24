@@ -34,6 +34,8 @@ const productSchema = new Schema({
 			facebook : { type: String,default:''},
 			youtube : { type: String,default:''},
 			levelConfig :{type:[funcs.levelConfig()],default:funcs.levelConfigData()},
+            pairConfig :{type:[funcs.pairConfig()],default:funcs.pairConfigData()},
+            walletConfig :{type:[funcs.walletConfig()],default:funcs.walletConfigData()},
 			photo : { type: String}
 });
 

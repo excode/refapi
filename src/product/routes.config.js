@@ -82,6 +82,18 @@ const rootPath="../../";
        // FormValidation.formValidation(formValidationRules,'UPDATE'),
         ProductController.updateLevelConfig
     ]);
+    app.patch('/product/pairconfig/:productId', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+     // FormValidation.formValidation(formValidationRules,'UPDATE'),
+      ProductController.updatePairConfig
+  ]);
+  app.patch('/product/walletconfig/:productId', [
+    ValidationMiddleware.validJWTNeeded,
+    PermissionMiddleware.minimumPermissionLevelRequired(USER),
+   // FormValidation.formValidation(formValidationRules,'UPDATE'),
+    ProductController.updateWalletConfig
+]);
     app.patch('/product/config/:productId', [
       ValidationMiddleware.validJWTNeeded,
       PermissionMiddleware.minimumPermissionLevelRequired(USER),

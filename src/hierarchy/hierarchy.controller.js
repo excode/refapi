@@ -1,5 +1,6 @@
 const HierarchyModel = require('./hierarchy.model');
 var ObjectId = require('mongodb').ObjectID;
+var mongoose = require('mongoose');
   const funcs =  require("../../common/functions/funcs");
   
   exports.insert = (req, res) => {
@@ -23,7 +24,13 @@ var ObjectId = require('mongodb').ObjectID;
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-      req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    //  console.log(req.jwt.productId)
+      if(req.jwt.productId){
+
+        req.query={...req.query,forced_productid: req.jwt.productId.map(pid =>  mongoose.Types.ObjectId(pid))}
+      }else{
+        req.query={...req.query,forced_productid: null}
+      }
       //req.query={...req.query,createBy:req.jwt.email,createBy_mode:'equals'}
       //req.query={...req.query,createBy:req.jwt.email}
 

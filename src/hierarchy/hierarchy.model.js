@@ -19,7 +19,9 @@ const hierarchySchema = new Schema({
     distributor : { type:Boolean,required:true,default:false},
     contactNumber : { type: String,required:true,default:''},
     productid : {type: Schema.Types.ObjectId, ref: 'Product'},
-    introducer : { type: String,required:true,default:''}
+    introducer : { type: String,required:true,default:''},
+    position : { type: String,default:'N'},
+    upline : { type: String,default:'N'}
 });
 
 hierarchySchema.virtual('id').get(function () {
