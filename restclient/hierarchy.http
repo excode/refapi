@@ -83,7 +83,7 @@ Authorization: Bearer {{AUTH_F}}
 content-type: application/json
 project_code:66efa1fcfb844876e472f02b
 ### createBy,createAt,username, productid, parentUsername
-GET {{HOST}}/hierarchy/all/level2/?productId=66e665de966efc2edaa97cf0&xI=angie HTTP/1.1
+GET {{HOST}}/hierarchy/all/level3/?productId=66e665de966efc2edaa97cf0&xI=angie3 HTTP/1.1
 Authorization: Bearer {{AUTH_F}}
 content-type: application/json
 project_code:66efa1fcfb844876e472f02b

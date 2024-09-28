@@ -516,6 +516,7 @@ else {
         console.error('Error fetching introduced users:', error);
         return [];
     }
+
 }
 
 
@@ -616,6 +617,44 @@ exports.getUsersIntroducedBy2=async(introducerName,productId, currentLevel = 1, 
         // Recursively fetch users introduced by each user in this level
         for (let user of introducedUsers) {
             const children = await this.getUsersIntroducedBy2(user.contactNumber,productId, currentLevel + 1, maxLevel);
+            if (children) {
+                node.children.push(children);
+            }
+        }
+
+        return node;
+    } catch (error) {
+        console.error('Error fetching introduced users:', error);
+        return [];
+    }
+}
+
+exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 1, maxLevel = 5)=> {
+    
+    if (currentLevel > maxLevel) return null;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find users introduced by the current introducer
+        const introducedUsers = await Hierarchy.find({ introducer: introducerName,productid:productid });
+        /*
+    key: '0',
+    label: 'Documents',
+    data: 'Documents Folder',
+    icon: 'pi pi-fw pi-inbox',
+        */
+        const node = {
+            key:"k-"+introducerName,
+            icon: 'pi pi-fw pi-inbox',
+            data: "Level: "+currentLevel,
+            label: introducerName || 'Unknown', // Use a field for the name, adjust as needed
+            //title: currentUser.name || 'Unknown Title', // Use the position field for the title
+           children:[],
+        };
+       
+
+        // Recursively fetch users introduced by each user in this level
+        for (let user of introducedUsers) {
+            const children = await this.getUsersIntroducedBy3(user.contactNumber,productId, currentLevel + 1, maxLevel);
             if (children) {
                 node.children.push(children);
             }

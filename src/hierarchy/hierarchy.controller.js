@@ -277,13 +277,37 @@ exports.listSuggestions = (req, res ) => {
 
         username=req.query.xI
     }
-    let key=username+"_level_"+req.query.productId??"";
+    let key=username+"_level2_"+req.query.productId??"";
     let cVal=myCache.get(key)
     if(cVal){
         console.log("Cached+"+key)
         res.status(200).send(cVal);
     }else{
         HierarchyModel.getUsersIntroducedBy(username,req.query.productId)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
+  exports.list_level3 = (req, res) => {
+
+    let username=req.jwt.username
+   
+    if(req.query.xI!=undefined){
+
+        username=req.query.xI
+    }
+    let key=username+"_level3_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached_"+key)
+        res.status(200).send(cVal);
+    }else{
+        HierarchyModel.getUsersIntroducedBy3(username,req.query.productId)
 
           .then((result)=>{
             myCache.set( key, result, 60*30 )
