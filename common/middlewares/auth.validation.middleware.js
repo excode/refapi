@@ -27,10 +27,10 @@ exports.validRefreshNeeded = (req, res, next) => {
 
 exports.validJWTNeeded = (req, res, next) => {
   let my_secret=secret;
-  if(req.headers["project-code"]){
-    my_secret=req.headers["project-code"];
+  if(req.headers["project_code"]){
+    my_secret=req.headers["project_code"];
   }
-  console.log(my_secret)
+ // console.log(my_secret)
   if (req.headers["authorization"]) {
     try {
       let authorization = req.headers["authorization"].split(" ");
