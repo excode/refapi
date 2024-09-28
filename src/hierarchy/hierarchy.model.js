@@ -498,7 +498,7 @@ else {
 
         // Recursively fetch users introduced by each user in this level
         for (let user of introducedUsers) {
-            users.push({id:user._id,level:currentLevel,username:user.contactNumber,parent:introducerName});
+            users.push({id:user._id,level:currentLevel,username:user.contactNumber,parentId:introducerName});
             await this.getUsersIntroducedBy(user.contactNumber,productId, currentLevel + 1, maxLevel, users);
         }
 
