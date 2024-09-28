@@ -9,9 +9,15 @@ const rootPath="../../";
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
     {ctrl:'distributor',format:'boolean',required:true},
-{ctrl:'contactNumber',format:'phone',required:true},
-{ctrl:'productid',format:'',required:true},
-{ctrl:'introducer',format:'phone',required:true}
+    {ctrl:'contactNumber',format:'phone',required:true},
+    {ctrl:'productid',format:'',required:true},
+    {ctrl:'introducer',format:'phone',required:true}
+  ];
+  const formValidationRules1=[
+    {ctrl:'username',format:'',required:true},
+    {ctrl:'parentUsername',format:'',required:true},
+    {ctrl:'productid',format:'',required:true},
+
   ];
   exports.routesConfig = function (app) {
       app.post('/hierarchy', [
@@ -27,6 +33,21 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           HierarchyController.list
       ]);
+      app.get('/hierarchy/ref', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.list_projects
+    ]);
+    app.get('/hierarchy/all/level', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_level
+  ]);
+    app.get('/hierarchy/all/org_chart', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_chart
+    ]);
       app.get('/hierarchy/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -52,6 +73,13 @@ const rootPath="../../";
           ValidationMiddleware.validJWTNeeded,
           PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
           HierarchyController.removeById
+      ]);
+
+      app.post('/hierarchy/addNew', [
+        ValidationMiddleware.validJWTNeeded,
+        FormValidation.formValidation(formValidationRules1),
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.addNewUser
       ]);
   };
   

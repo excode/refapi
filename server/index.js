@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Expose-Headers", "Content-Length");
   res.header(
     "Access-Control-Allow-Headers",
-    "Accept, Authorization, Content-Type, X-Requested-With, Range"
+    "Accept, Authorization, Content-Type, X-Requested-With, Range,project-code,project_code"
   );
   if (req.method === "OPTIONS") {
     return res.send(200);
@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Expose-Headers", "Content-Length");
   res.header(
     "Access-Control-Allow-Headers",
-    "Accept, Authorization, Content-Type, X-Requested-With, Range"
+    "Accept, Authorization, Content-Type, X-Requested-With, Range,project-code,project_code"
   );
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);

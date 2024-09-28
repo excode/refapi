@@ -29,10 +29,10 @@ POST {{HOST}}/users/reg HTTP/1.1
 content-type: application/json
     
 {
-"email":"wegagit687@idsho.com",
-"firstname":"uCode2",
-"lastname":"Test2",
-"usertype":"0",
+"email":"excode.net@gmail.com",
+"firstname":"Kalam Azad",
+"lastname":"Azad",
+"usertype":"1",
 "contactNumber":"601764082504"
 }
 
@@ -41,7 +41,7 @@ POST {{HOST}}/users/emailOtp HTTP/1.1
 content-type: application/json
 
 {
-    "email":"wegagit687@idsho.com"
+    "email":"excode.net@gmail.com"
 }
 ###
 PATCH {{HOST}}/users/verifyEmailOtp HTTP/1.1
@@ -57,7 +57,7 @@ POST {{HOST}}/users/resetPasswordInit HTTP/1.1
 content-type: application/json
 
 {
-    "email":"wegagit687@idsho.com"
+    "email":"excode.net@gmail.com"
 }
 
 ###
@@ -65,8 +65,8 @@ PATCH {{HOST}}/users/resetPasswordFinish HTTP/1.1
 content-type: application/json
 
 {
-    "email":"wegagit687@idsho.com",
-    "otp":"561047",
+    "email":"excode.net@gmail.com",
+    "otp":"419977",
     "newPassword":"123456"
 }
 

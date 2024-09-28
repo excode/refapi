@@ -1,12 +1,14 @@
 const HierarchyModel = require('./hierarchy.model');
 var ObjectId = require('mongodb').ObjectID;
 var mongoose = require('mongoose');
+const NodeCache = require( "node-cache" );
+const myCache = new NodeCache();
   const funcs =  require("../../common/functions/funcs");
   
   exports.insert = (req, res) => {
-            req.body.createBy=req.jwt.email  
+        req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
-        req.body.id=req.jwt.email
+        //req.body.id=req.jwt.email
         
             HierarchyModel.createHierarchy(req.body)
                   .then((result) => {
@@ -31,6 +33,7 @@ var mongoose = require('mongoose');
       }else{
         req.query={...req.query,forced_productid: null}
       }
+
       //req.query={...req.query,createBy:req.jwt.email,createBy_mode:'equals'}
       //req.query={...req.query,createBy:req.jwt.email}
 
@@ -61,6 +64,36 @@ var mongoose = require('mongoose');
               res.status(400).json( {err:err} );
           });
   };
+  exports.list_projects = (req, res ) => {
+    let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
+    let page = 0;
+  
+    if(req.query.productId){
+
+      req.query={...req.query,productid: mongoose.Types.ObjectId(req.query.productId)}
+    }
+    if(req.jwt.username && req.query.xI==undefined){
+
+        req.query={...req.query,introducer: req.jwt.username}
+      }else{
+        req.query={...req.query,introducer: req.query.xI}
+      }
+    
+   
+    if (req.query) {
+        if (req.query.page) {
+            req.query.page = parseInt(req.query.page);
+            page = Number.isInteger(req.query.page) ? req.query.page : 0;
+        }
+    }
+    HierarchyModel.list(limit, page,req.query)
+        .then((result) => {
+            res.status(200).send(result);
+        }).catch((err)=>{
+           
+            res.status(400).json( {err:err} );
+        });
+};
   exports.listAll = (req, res ) => {
     req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
     /*
@@ -167,20 +200,7 @@ exports.listSuggestions = (req, res ) => {
   exports.removeById = (req, res) => {
     let filter ={}
     filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
-      /*
-    IMPORTANT
-     
-    you can put predefined condition here  based on user and role  
-    for example 
-    filter['createBy'] = req.jwt.email
-    filter['organizationId'] = req.JWT.userOrganization
-
-    you can also put condition based on user role
-    like 
-    if(req.JWT.userType>1) 
-    filter['organizationId'] = req.JWT.userOrganization //  I
-    }
-     */
+    
     HierarchyModel.removeById(req.params.hierarchyId,filter)
           .then((result)=>{
               res.status(204).send({});
@@ -188,7 +208,67 @@ exports.listSuggestions = (req, res ) => {
               res.status(400).json( {err:err} );
           });
   };
+  exports.addNewUser = (req, res) => {
+    req.body.createBy=req.jwt.email  
+    req.body.createAt=funcs.getTime()
+    console.log(req.body)
+    HierarchyModel.addNewUser(req.body)
+
+          .then((result)=>{
+              res.status(204).send({});
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
    
+
+  exports.list_chart = (req, res) => {
+    let username=req.jwt.username
+    
+    if(req.query.xI!=undefined){
+
+        username=req.query.xI
+    }
+    let key=username+"_chart_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+    HierarchyModel.buildHierarchy(username,req.query.productId)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
+  exports.list_level = (req, res) => {
+
+    let username=req.jwt.username
+   
+    if(req.query.xI!=undefined){
+
+        username=req.query.xI
+    }
+    let key=username+"_level_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+        HierarchyModel.getUsersIntroducedBy2(username,req.query.productId)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
   
 
     

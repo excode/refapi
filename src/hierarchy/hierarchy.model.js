@@ -1,6 +1,6 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
-var ObjectId = require('mongodb').ObjectID;
+//var ObjectId = require('mongodb').ObjectID;
 const funcs =  require("../../common/functions/funcs");
 jwt = require("jsonwebtoken");
 const jwtSecret = require("../../common/config/env.config.js").jwt_secret
@@ -12,16 +12,19 @@ const {queryFormatter,queryBuilder_string,
 const hierarchySchema = new Schema({
     updateBy : { type: String},
     updateAt : { type: Date},
-    createBy : { type: String,required:true,default:''},
-    createAt : { type: Date,required:true},
+    createBy : { type: String,default:''},
+    createAt : { type: Date},
     walletbalance : { type: Number,required:true,default:0},
     rewardbalance : { type: Number,required:true,default:0},
     distributor : { type:Boolean,required:true,default:false},
     contactNumber : { type: String,required:true,default:''},
     productid : {type: Schema.Types.ObjectId, ref: 'Product'},
-    introducer : { type: String,required:true,default:''},
-    position : { type: String,default:'N'},
-    upline : { type: String,default:'N'}
+    introducer : { type: String,default:''},
+    position : { type: String,default:''},
+    upline : { type: String,default:''},
+    leftChild:{ type: String,default:null},
+    rightChild:{ type: String,default:null},
+    lastPositionPlacement:{ type: String,default:null},
 });
 
 hierarchySchema.virtual('id').get(function () {
@@ -118,7 +121,7 @@ exports.list = (perPage, page , query ) => {
           }
           if(query.productid){
       
-              query.productid = new ObjectId( query.productid);
+              query.productid = mongoose.Types.ObjectId( query.productid);
               let productid_ = {productid:query.productid}
                 _query = { ..._query, ...productid_ };
           }
@@ -331,7 +334,7 @@ exports.isIntroduction = (Seller,Buyer,ProductId,req,isDistributor=0) => {
   };
 
   exports.getUserWinBalance = (userId, productId ) => {
-    const uId = ObjectId(productId);
+    const uId = mongoose.Types.ObjectId(productId);
     const _query={productid:uId,contactNumber:userId};
     console.log("STEP 1111");
     console.log(_query);
@@ -376,3 +379,242 @@ exports.isIntroduction = (Seller,Buyer,ProductId,req,isDistributor=0) => {
     });
  });
 };
+
+async function placeUserRecursively(introducer,productId,parentUsername, newUser,checkFirst="") {
+    let product_id= mongoose.Types.ObjectId( productId);
+    
+    try {
+      // Find the parent user by username
+      const query={ contactNumber: parentUsername,productid:product_id }
+      const introquery={ contactNumber: introducer,productid:product_id }
+      const parentUser = await Hierarchy.findOne(query);
+  
+      if (!parentUser) {    
+        console.log(query);       
+        console.log('Parent user not found');
+        return;
+      }
+      let lastPositionPlacement=parentUser.lastPositionPlacement??"L";
+      if(checkFirst==""){
+        checkFirst=lastPositionPlacement=="L"?"R":"L";
+      }
+    let positionPriority=['leftChild','rightChild']
+    if(checkFirst=="R"){
+        positionPriority=['rightChild','leftChild'];
+    }
+
+      const query2={ contactNumber: newUser.contactNumber,productid:product_id }
+      const User = await Hierarchy.findOne(query2);
+  
+      if (User) {    
+        console.log(query2);       
+        console.log('Username Already available');
+        return;
+      }
+  
+      // Try to place the user in the left position
+      if (!parentUser[positionPriority[0]]) {
+        let position = positionPriority[0]=='leftChild'?"L":"R"
+        parentUser.updateBy = newUser.createBy;
+        parentUser.updateAt = newUser.createAt;
+        parentUser[positionPriority[0]] = newUser.contactNumber;
+        parentUser.lastPositionPlacement=position;
+        newUser.introducer = introducer;
+        newUser.position = position;
+        newUser.upline = parentUser.contactNumber;
+        const intoUser = await Hierarchy.findOne(introquery);
+        intoUser.lastPositionPlacement=position;
+        await intoUser.save();
+       // console.log(newUser)
+        //console.log(parentUser)
+        await newUser.save();
+        await parentUser.save();
+        console.log(`User placed on the ${position} of ${parentUser.contactNumber}`);
+        return;
+      } else if (!parentUser[positionPriority[1]]) {
+        let position = positionPriority[1]=='leftChild'?"L":"R"
+        parentUser[positionPriority[1]]  = newUser.contactNumber;
+        parentUser.updateBy = newUser.createBy;
+        parentUser.updateAt = newUser.createAt;
+        parentUser.lastPositionPlacement=position;
+        newUser.introducer = introducer;
+        newUser.position = position;
+        newUser.upline = parentUser.contactNumber;
+        const intoUser = await Hierarchy.findOne(introquery);
+        intoUser.lastPositionPlacement=position;
+        await intoUser.save();
+        await newUser.save();
+        await parentUser.save();
+        console.log(`User placed on the ${position} of ${parentUser.contactNumber}`);
+        return;
+      } 
+      
+      // If both left and right positions are occupied, recursively try to place the user under the left child
+else {
+     let netxPosition = checkFirst=='L'?"R":"L"
+     let netxPositionFiled = checkFirst=='L'?"rightChild":"leftChild"
+        await placeUserRecursively(introducer,productId,parentUser[netxPositionFiled], newUser,netxPosition);
+  
+      }
+  
+    } catch (error) {
+      console.error('Error placing user recursively:', error);
+    }
+  }
+  
+  // Function to add a new user to the MLM system
+  exports.addNewUser=async(data) =>{
+    const {createBy,createAt,username, productid, parentUsername}=data;
+    try {
+      // Create the new user object
+      const newUser = new Hierarchy({
+        createBy : createBy,
+        createAt : createAt,
+        walletbalance : 0,
+        rewardbalance : 0,
+        distributor : false,
+        contactNumber : username,
+        productid : productid,
+        introducer : parentUsername,
+      });
+  
+      
+      await placeUserRecursively(parentUsername,productid,parentUsername, newUser);
+    } catch (error) {
+      console.error('Error adding new user:', error);
+    }
+  }
+  
+
+  exports.getUsersIntroducedBy=async(introducerName,productId, currentLevel = 1, maxLevel = 5, users = [])=> {
+    if (currentLevel > maxLevel) return users;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find users introduced by the current introducer
+        const introducedUsers = await Hierarchy.find({ introducer: introducerName,productid:productid });
+
+        // Add the introduced users to the list
+       
+
+        // Recursively fetch users introduced by each user in this level
+        for (let user of introducedUsers) {
+            users.push({id:user._id,level:currentLevel,username:user.contactNumber,parent:introducerName});
+            await this.getUsersIntroducedBy(user.contactNumber,productId, currentLevel + 1, maxLevel, users);
+        }
+
+        return users;
+    } catch (error) {
+        console.error('Error fetching introduced users:', error);
+        return [];
+    }
+}
+
+
+exports.getBinaryData=async(userId,productId, currentLevel = 1, maxLevel = 10, binaryUsers = [])=> {
+    if (currentLevel > maxLevel || !userId) return binaryUsers;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find the current user by userId
+        const currentUser = await Hierarchy.findOne({contactNumber:userId,productid:productid});
+
+        if (!currentUser) {
+            console.log(`User not found at level ${currentLevel}`);
+            return binaryUsers;
+        }
+
+        // Add the current user to the list
+        binaryUsers.push(currentUser);
+
+        console.log(`Fetched user at level ${currentLevel} - ${currentUser._id}`);
+
+        // Recursively fetch left and right children
+        if (currentUser.leftChild) {
+            await getBinaryData(currentUser.leftChild,productId, currentLevel + 1, maxLevel, binaryUsers);
+        }
+        if (currentUser.rightChild) {
+            await getBinaryData(currentUser.rightChild,productId, currentLevel + 1, maxLevel, binaryUsers);
+        }
+
+        return binaryUsers;
+    } catch (error) {
+        console.error('Error fetching binary data:', error);
+        return [];
+    }
+}
+
+exports.buildHierarchy=async(userId,productId, currentLevel = 1, maxLevel = 5)=> {
+    if (currentLevel > maxLevel || !userId) return null;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find the current user by userId
+
+        const currentUser = await Hierarchy.findOne({contactNumber:userId,productid:productid});
+
+        if (!currentUser) {
+            console.log(`User not found at level ${currentLevel}`);
+            return null;
+        }
+
+        // Construct the hierarchical node with id, name, and title (adjust fields as needed)
+        const node = {
+            id: currentUser._id.toString(),
+            name: currentUser.contactNumber || 'Unknown', // Use a field for the name, adjust as needed
+            //title: currentUser.name || 'Unknown Title', // Use the position field for the title
+           left:[],
+           right:[]
+        };
+
+        // Recursively fetch children from leftChild and rightChild
+        if (currentUser.leftChild) {
+            const leftChildNode = await this.buildHierarchy(currentUser.leftChild,productId, currentLevel + 1, maxLevel);
+            if (leftChildNode) {
+                node.left.push(leftChildNode);
+            }
+        }
+
+        if (currentUser.rightChild) {
+            const rightChildNode = await this.buildHierarchy(currentUser.rightChild,productId, currentLevel + 1, maxLevel);
+            if (rightChildNode) {
+                node.right.push(rightChildNode);
+            }
+        }
+
+        // Return the node with its children
+        return node;
+    } catch (error) {
+        console.error('Error building hierarchy:', error);
+        return null;
+    }
+}
+
+
+exports.getUsersIntroducedBy2=async(introducerName,productId, currentLevel = 1, maxLevel = 5)=> {
+    
+    if (currentLevel > maxLevel) return null;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find users introduced by the current introducer
+        const introducedUsers = await Hierarchy.find({ introducer: introducerName,productid:productid });
+
+        const node = {
+            name: introducerName || 'Unknown', // Use a field for the name, adjust as needed
+            //title: currentUser.name || 'Unknown Title', // Use the position field for the title
+           children:[],
+           level:currentLevel
+        };
+       
+
+        // Recursively fetch users introduced by each user in this level
+        for (let user of introducedUsers) {
+            const children = await this.getUsersIntroducedBy2(user.contactNumber,productId, currentLevel + 1, maxLevel);
+            if (children) {
+                node.children.push(children);
+            }
+        }
+
+        return node;
+    } catch (error) {
+        console.error('Error fetching introduced users:', error);
+        return [];
+    }
+}

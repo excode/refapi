@@ -26,13 +26,18 @@ exports.validRefreshNeeded = (req, res, next) => {
 };
 
 exports.validJWTNeeded = (req, res, next) => {
+  let my_secret=secret;
+  if(req.headers["project-code"]){
+    my_secret=req.headers["project-code"];
+  }
+  console.log(my_secret)
   if (req.headers["authorization"]) {
     try {
       let authorization = req.headers["authorization"].split(" ");
       if (authorization[0] !== "Bearer") {
         return res.status(401).send();
       } else {
-        req.jwt = jwt.verify(authorization[1], secret);
+        req.jwt = jwt.verify(authorization[1], my_secret);
 
         return next();
       }
