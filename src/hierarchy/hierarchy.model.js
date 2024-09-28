@@ -489,8 +489,17 @@ else {
   exports.getUsersIntroducedBy=async(introducerName,productId, currentLevel = 1, maxLevel = 5, users = [])=> {
     if (currentLevel > maxLevel) return users;
     let productid =  mongoose.Types.ObjectId(productId);
+    if(users.length==0){
+        users.push({
+            "id": "",
+            "level": 0,
+            "username": introducerName,
+            "parentId": ""
+          })
+    }
     try {
         // Find users introduced by the current introducer
+
         const introducedUsers = await Hierarchy.find({ introducer: introducerName,productid:productid });
 
         // Add the introduced users to the list
