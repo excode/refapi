@@ -700,6 +700,7 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
             id: currentUser._id.toString(),
             name: currentUser.contactNumber || 'Unknown', // Use a field for the name, adjust as needed
             leftTotal: currentUser.infoData.leftTotal || '0', 
+            position:currentUser.position || 'L', 
             rightTotal: currentUser.infoData.rightTotal || '0',
             leftCurrent: currentUser.infoData.leftCurrent || '0', 
             rightCurrent: currentUser.infoData.rightCurrent || '0', // Use a field for the name, adjust as needed
@@ -707,23 +708,22 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
            children:[],
     
         };
-
+        let newLevel=currentLevel + 1
         // Recursively fetch children from leftChild and rightChild
         if (currentUser.leftChild) {
-            const leftChildNode = await this.buildHierarchy2(currentUser.leftChild,productId, currentLevel + 1, maxLevel);
+            const leftChildNode = await this.buildHierarchy2(currentUser.leftChild,productId, newLevel, maxLevel);
             if (leftChildNode) {
                 node.children.push(leftChildNode);
-            }else{
-                node.children.push({});
             }
         }
 
         if (currentUser.rightChild) {
-            const rightChildNode = await this.buildHierarchy2(currentUser.rightChild,productId, currentLevel + 1, maxLevel);
+            const rightChildNode = await this.buildHierarchy2(currentUser.rightChild,productId, newLevel, maxLevel);
             if (rightChildNode) {
+                if(node.children.length==0){
+                    node.children.push({})  
+                }
                 node.children.push(rightChildNode);
-            }else{
-                node.children.push({});
             }
         }
 
