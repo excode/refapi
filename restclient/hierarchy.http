@@ -78,7 +78,7 @@ project_code:66efa1fcfb844876e472f02b
 
 
 ### createBy,createAt,username, productid, parentUsername
-GET {{HOST}}/hierarchy/all/org_chart/?productId=66e665de966efc2edaa97cf0&xI=ahmad HTTP/1.1
+GET {{HOST}}/hierarchy/all/org_chart2/?productId=66e665de966efc2edaa97cf0&xI=ahmad HTTP/1.1
 Authorization: Bearer {{AUTH_F}}
 content-type: application/json
 project_code:66efa1fcfb844876e472f02b

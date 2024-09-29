@@ -682,7 +682,7 @@ exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 0, 
     }
 }
 
-exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=> {
+exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 2)=> {
     if (currentLevel > maxLevel || !userId) return null;
     let productid =  mongoose.Types.ObjectId(productId);
     try {
