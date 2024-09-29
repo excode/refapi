@@ -726,6 +726,9 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
                 node.children.push(rightChildNode);
             }
         }
+        if(node.children.length==1){
+            node.children.push({})  
+        }
 
         // Return the node with its children
         return node;
