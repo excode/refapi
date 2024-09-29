@@ -58,6 +58,11 @@ app.get('/hierarchy/all/level3', [
       PermissionMiddleware.minimumPermissionLevelRequired(USER),
       HierarchyController.list_chart
     ]);
+    app.get('/hierarchy/all/org_chart2', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_chart2
+    ]);
       app.get('/hierarchy/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),

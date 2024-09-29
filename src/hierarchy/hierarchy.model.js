@@ -681,3 +681,56 @@ exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 0, 
         return [];
     }
 }
+
+exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=> {
+    if (currentLevel > maxLevel || !userId) return null;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find the current user by userId
+
+        const currentUser = await Hierarchy.findOne({contactNumber:userId,productid:productid});
+
+        if (!currentUser) {
+            console.log(`User not found at level ${currentLevel}`);
+            return null;
+        }
+
+        // Construct the hierarchical node with id, name, and title (adjust fields as needed)
+        const node = {
+            id: currentUser._id.toString(),
+            name: currentUser.contactNumber || 'Unknown', // Use a field for the name, adjust as needed
+            leftTotal: currentUser.infoData.leftTotal || '0', 
+            rightTotal: currentUser.infoData.rightTotal || '0',
+            leftCurrent: currentUser.infoData.leftCurrent || '0', 
+            rightCurrent: currentUser.infoData.rightCurrent || '0', // Use a field for the name, adjust as needed
+            //title: currentUser.name || 'Unknown Title', // Use the position field for the title
+           children:[],
+    
+        };
+
+        // Recursively fetch children from leftChild and rightChild
+        if (currentUser.leftChild) {
+            const leftChildNode = await this.buildHierarchy2(currentUser.leftChild,productId, currentLevel + 1, maxLevel);
+            if (leftChildNode) {
+                node.children.push(leftChildNode);
+            }else{
+                node.children.push({});
+            }
+        }
+
+        if (currentUser.rightChild) {
+            const rightChildNode = await this.buildHierarchy2(currentUser.rightChild,productId, currentLevel + 1, maxLevel);
+            if (rightChildNode) {
+                node.children.push(rightChildNode);
+            }else{
+                node.children.push({});
+            }
+        }
+
+        // Return the node with its children
+        return node;
+    } catch (error) {
+        console.error('Error building hierarchy:', error);
+        return null;
+    }
+}
