@@ -563,7 +563,7 @@ exports.getBinaryData=async(userId,productId, currentLevel = 1, maxLevel = 10, b
     }
 }
 
-exports.buildHierarchy=async(userId,productId, currentLevel = 1, maxLevel = 5)=> {
+exports.buildHierarchy=async(userId,productId, currentLevel = 1, maxLevel = 3)=> {
     if (currentLevel > maxLevel || !userId) return null;
     let productid =  mongoose.Types.ObjectId(productId);
     try {
