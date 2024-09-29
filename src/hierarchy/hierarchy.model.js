@@ -9,7 +9,17 @@ const {queryFormatter,queryBuilder_string,
     queryBuilder_date,
     queryBuilder_array,
     queryBuilder_range_array} = require("../../common/functions/queryutilMongo")
-const hierarchySchema = new Schema({
+    const infoSchema = new Schema({
+        leftTotal:{ type: Number,default:null},
+        rightTotal:{ type: Number,default:null},
+        leftCurrent:{ type: Number,default:null},
+        rightCurrent:{ type: Number,default:null},
+        total:{ type: Number,default:null},
+        totalCurrent:{ type: Number,default:null},
+        currentMonth:{ type: Number,default:null},
+        currentYear:{ type: Number,default:null}
+    });
+    const hierarchySchema = new Schema({
     updateBy : { type: String},
     updateAt : { type: Date},
     createBy : { type: String,default:''},
@@ -25,6 +35,7 @@ const hierarchySchema = new Schema({
     leftChild:{ type: String,default:null},
     rightChild:{ type: String,default:null},
     lastPositionPlacement:{ type: String,default:null},
+    infoData:{type:infoSchema,default:null}
 });
 
 hierarchySchema.virtual('id').get(function () {
@@ -569,6 +580,10 @@ exports.buildHierarchy=async(userId,productId, currentLevel = 1, maxLevel = 5)=>
         const node = {
             id: currentUser._id.toString(),
             name: currentUser.contactNumber || 'Unknown', // Use a field for the name, adjust as needed
+            leftTotal: currentUser.infoData.leftTotal || '0', 
+            rightTotal: currentUser.infoData.rightTotal || '0',
+            leftCurrent: currentUser.infoData.leftCurrent || '0', 
+            rightCurrent: currentUser.infoData.rightCurrent || '0', // Use a field for the name, adjust as needed
             //title: currentUser.name || 'Unknown Title', // Use the position field for the title
            left:[],
            right:[]
