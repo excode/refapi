@@ -29,11 +29,13 @@ const {queryFormatter,queryBuilder_string,
     distributor : { type:Boolean,required:true,default:false},
     contactNumber : { type: String,required:true,default:''},
     productid : {type: Schema.Types.ObjectId, ref: 'Product'},
+    category : {type: String,default:''},
     introducer : { type: String,default:''},
     position : { type: String,default:''},
     upline : { type: String,default:''},
     leftChild:{ type: String,default:null},
     rightChild:{ type: String,default:null},
+
     lastPositionPlacement:{ type: String,default:null},
     infoData:{type:infoSchema,default:null}
 });
@@ -90,7 +92,18 @@ exports.findOne = (query) => {
     });
 };
 exports.createHierarchy = (hierarchyData) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   uplineCheck =await Users.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    let   regCheck =await Users.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(regCheck ) {
+        reject("user already exists");
+        return;
+    }
     
     const hierarchy = new Hierarchy(hierarchyData);
     hierarchy.save(function (err, saved) {
@@ -660,7 +673,7 @@ exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 0, 
         const node = {
             key:"k-"+introducerName,
             icon: 'pi pi-fw pi-inbox',
-            data: currentLevel==0?"":" lvl:"+currentLevel,
+            data: currentLevel==0?"":" lvl "+currentLevel,
             label: introducerName || 'Unknown', // Use a field for the name, adjust as needed
             //title: currentUser.name || 'Unknown Title', // Use the position field for the title
            children:[],

@@ -26,6 +26,12 @@ const rootPath="../../";
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.insert
       ]);
+      app.post('/hierarchy/reg', [
+       // ValidationMiddleware.validJWTNeeded,
+        FormValidation.formValidation(formValidationRules),
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.insert
+      ]);
       
       
       app.get('/hierarchy', [
@@ -89,7 +95,13 @@ app.get('/hierarchy/all/level3', [
           PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
           HierarchyController.removeById
       ]);
-
+      
+      app.post('/hierarchy/addNew/reg', [
+        // ValidationMiddleware.validJWTNeeded,
+         FormValidation.formValidation(formValidationRules1),
+         PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.addNewUser
+       ]);
       app.post('/hierarchy/addNew', [
         ValidationMiddleware.validJWTNeeded,
         FormValidation.formValidation(formValidationRules1),
