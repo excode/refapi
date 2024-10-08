@@ -7,7 +7,7 @@ let  user = env.DB_USER || "winandwings";
 let  pass = env.DB_PASSWORD|| "123456";
 let  db_name = env.DB_NAME|| "winandwings";
     module.exports = {
-        "port": 8080,
+        "port": env.PORT ||8080,
         "jwt_secret": "654321",
         "jwt_expiration_in_seconds": 6000,
         "environment": "dev",

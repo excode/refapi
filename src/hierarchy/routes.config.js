@@ -16,8 +16,7 @@ const rootPath="../../";
   const formValidationRules1=[
     {ctrl:'username',format:'',required:true},
     {ctrl:'parentUsername',format:'',required:true},
-    {ctrl:'productid',format:'',required:true},
-
+    {ctrl:'productid',format:'',required:true}
   ];
   exports.routesConfig = function (app) {
       app.post('/hierarchy', [
@@ -98,9 +97,21 @@ app.get('/hierarchy/all/level3', [
       
       app.post('/hierarchy/addNew/reg', [
         // ValidationMiddleware.validJWTNeeded,
-         FormValidation.formValidation(formValidationRules1),
-         PermissionMiddleware.minimumPermissionLevelRequired(USER),
-         HierarchyController.addNewUser
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.addNewUser2
+       ]);
+       app.post('/hierarchy/check/reg', [
+        // ValidationMiddleware.validJWTNeeded,
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.addNewUserCheck
+       ]);
+       app.post('/hierarchy/placement/reg', [
+        // ValidationMiddleware.validJWTNeeded,
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.placement
        ]);
       app.post('/hierarchy/addNew', [
         ValidationMiddleware.validJWTNeeded,

@@ -209,19 +209,54 @@ exports.listSuggestions = (req, res ) => {
           });
   };
   exports.addNewUser = (req, res) => {
-    req.body.createBy=req.jwt.email  
+    req.body.createBy="AlifPay" 
     req.body.createAt=funcs.getTime()
     console.log(req.body)
+    //res.status(200).send(req.body);
+    //return;
     HierarchyModel.addNewUser(req.body)
 
           .then((result)=>{
-              res.status(204).send({});
+              res.status(200).send(result);
           }).catch((err)=>{
               res.status(400).json( {err:err} );
           });
   };
-   
+  exports.addNewUser2 = (req, res) => {
+    req.body.createBy="AlifPay" 
+    req.body.createAt=funcs.getTime()
+    console.log(req.body)
+    //res.status(200).send(req.body);
+    //return;
+    HierarchyModel.createHierarchy(req.body)
 
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
+  exports.addNewUserCheck = (req, res) => {
+   
+    HierarchyModel.addNewUserCheck(req.body)
+
+          .then((result)=>{
+              res.status(200).json({data:result});
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
+  exports.placement = (req, res) => {
+   
+    HierarchyModel.placement(req.body)
+
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
+  
   exports.list_chart = (req, res) => {
     let username=req.jwt.username
     

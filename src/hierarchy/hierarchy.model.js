@@ -94,12 +94,12 @@ exports.findOne = (query) => {
 exports.createHierarchy = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
-    let   uplineCheck =await Users.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
     if(!uplineCheck ) {
         reject("introducer not exists");
         return;
     }
-    let   regCheck =await Users.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
     if(regCheck ) {
         reject("user already exists");
         return;
@@ -112,6 +112,83 @@ exports.createHierarchy = (hierarchyData) => {
         }
         resolve(saved)
     });
+    });
+};
+exports.addNewUserCheck = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(regCheck ) {
+        reject("user already exists");
+        return;
+    }
+    resolve("OK")
+   
+    });
+};
+
+exports.placement = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   introCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    if(!introCheck ) {
+        reject("introducer not");
+        return;
+    }
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(!regCheck ) {
+        reject("user not exists");
+        return;
+    }
+    let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.upline,productid:productID})
+    if(!uplineCheck ) {
+        reject("upline not exists");
+        return;
+    }
+    let introUsername=hierarchyData.introducer.toLowerCase();
+    let iUpline =hierarchyData.upline.toLowerCase();
+    let nxUpline = uplineCheck["upline"].toLowerCase()
+    let sameFamily = introUsername == iUpline ;
+    if(!sameFamily){
+        sameFamily = introUsername == nxUpline  ;
+    }
+    if(!sameFamily){
+        sameFamily = await checkUplines(introUsername,nxUpline,productID) ;
+    }
+    if(!sameFamily){
+        reject("Not from same family");
+        return;
+    }
+
+    //await checkUplines(hierarchyData.introducer)
+    let left =uplineCheck["leftChild"]??""
+    let right =uplineCheck["rightChild"]??""
+    if(hierarchyData.position=="L" &&  left!=""){
+        reject("Left position already occupied "+left);
+        return;
+    }
+    if(hierarchyData.position=="R" && right!="") {
+        reject("Right position already occupied "+right);
+        return;
+    }
+    if(hierarchyData.position=="L"){
+        uplineCheck.leftChild = hierarchyData.contactNumber
+    }else if(hierarchyData.position=="R"){
+        uplineCheck.rightChild = hierarchyData.contactNumber
+    }
+    regCheck.upline = uplineCheck.contactNumber;
+    regCheck.position=hierarchyData.position;
+    await uplineCheck.save();
+    await regCheck.save();
+
+     
+    resolve("OK")
+   
     });
 };
 
@@ -750,3 +827,53 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
         return null;
     }
 }
+
+async function checkUplines(root,upline,productId) {
+   
+    
+    try {
+    
+      const introquery={ contactNumber: upline,productid:productId }
+      const parentUser = await Hierarchy.findOne(introquery);
+  
+      if (!parentUser || parentUser["upline"]==="") {    
+        console.log(introquery);   
+        console.log(parentUser);        
+        console.log('Parent user not found');
+        return false;
+      }else{
+        if(parentUser["upline"].toLowerCase()==root.toLowerCase()){
+            return true;
+        }else{
+            return await checkUplines(root,parentUser["upline"],productId)
+        }
+      }
+    } catch (error) {
+        console.error('Error adding new user:', error);
+        return false;
+      }
+      
+  }
+  
+  // Function to add a new user to the MLM system
+  exports.addNewUser=async(data) =>{
+    const {createBy,createAt,username, productid, parentUsername}=data;
+    try {
+      // Create the new user object
+      const newUser = new Hierarchy({
+        createBy : createBy,
+        createAt : createAt,
+        walletbalance : 0,
+        rewardbalance : 0,
+        distributor : false,
+        contactNumber : username,
+        productid : productid,
+        introducer : parentUsername,
+      });
+  
+      
+      await placeUserRecursively(parentUsername,productid,parentUsername, newUser);
+    } catch (error) {
+      console.error('Error adding new user:', error);
+    }
+  }
