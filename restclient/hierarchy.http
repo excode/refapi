@@ -117,8 +117,8 @@ content-type: application/json
 }
 ###
 
-POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
-Authorization: Bearer {{AUTH}}
+POST {{HOST}}/hierarchy/addNew/reward HTTP/1.1
+
 content-type: application/json
 
 {
@@ -127,4 +127,18 @@ content-type: application/json
     "productid":"66e665de966efc2edaa97cf0",
     "upline":"lean",
     "position":"L"
+}
+
+
+###
+
+POST {{HOST}}/hierarchy/check/reg HTTP/1.1
+Authorization: Bearer {{AUTH}}
+content-type: application/json
+
+{
+    "contactNumber":"ffff",
+    "introducer":"ahmad",
+    "productid":"66e665de966efc2edaa97cf0",
+    "category":"FP260"
 }

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
 jwt = require("jsonwebtoken");
 const jwtSecret = require("../../common/config/env.config.js").jwt_secret
+const RewardModel = require('../../src/reward/reward.model.js');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -110,6 +111,41 @@ exports.createHierarchy = (hierarchyData) => {
         if (err) {
             return reject(err);
         }
+        
+        resolve(saved)
+    });
+    });
+};
+exports.createHierarchyAlifPay = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(regCheck ) {
+        reject("user already exists");
+        return;
+    }
+    
+    const hierarchy = new Hierarchy(hierarchyData);
+    hierarchy.save(async function (err, saved) {
+        if (err) {
+            return reject(err);
+        }
+        let rewards =[];
+        if(hierarchyData.category=="AlifPay FinTech Parner"){
+            //"afia","phang2320","66e665de966efc2edaa97cf0","2",[],10
+             rewards = this.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
+        }else{
+             rewards = this.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,1,[],5);
+        }
+        if(rewards.length>0){
+            await RewardModel.InsertMany(rewards)
+        }
+        
         resolve(saved)
     });
     });
@@ -185,8 +221,7 @@ exports.placement = (hierarchyData) => {
     regCheck.position=hierarchyData.position;
     await uplineCheck.save();
     await regCheck.save();
-
-     
+    await this.updatePlacements(hierarchyData.contactNumber,iUpline,productID,hierarchyData.position)
     resolve("OK")
    
     });
@@ -876,4 +911,127 @@ async function checkUplines(root,upline,productId) {
     } catch (error) {
       console.error('Error adding new user:', error);
     }
+  }
+
+
+  exports.rewardUplines=async(root,upline,productId,amount,rewards=[],limit=10) =>{
+   
+    
+    try {
+    
+      const introquery={ contactNumber: upline,productid:productId }
+      const parentUser = await Hierarchy.findOne(introquery);
+  
+      if (!parentUser || parentUser["upline"]==="") {    
+        console.log(introquery);   
+        console.log(parentUser);        
+        console.log('Parent user not found');
+        return rewards;
+      }else{
+        const time = funcs.getTime();
+        
+        if(rewards.length==0){
+            let sponsorReward=amount==2?50:15;
+            const reward1={
+            
+                createBy : 'ALIF-PAY',
+                createAt : time,
+                level :0 ,
+                amount : sponsorReward,
+                status : 0,
+                productid : productId,
+                contactNumber :  parentUser["upline"],
+                ref : "",
+                sourceContactNumber : root,
+                particular : "Sponsor reward",
+                type : ""
+        
+             };
+        rewards.push(reward1);
+        }
+        let level =rewards.length;
+        const reward={
+            
+                createBy : 'ALIF-PAY',
+                createAt : time,
+                level :level ,
+                amount : amount,
+                status : 0,
+                productid : productId,
+                contactNumber :  parentUser["upline"],
+                ref : "",
+                sourceContactNumber : root,
+                particular : "Level reward:"+level,
+                type : ""
+        
+        };
+        rewards.push(reward);
+        if(rewards.length<=limit){
+            const rewards_= await this.rewardUplines(root,parentUser["upline"],productId,amount,rewards,limit)
+            return rewards_
+        }else{
+            return rewards
+        }
+
+      }
+    } catch (error) {
+       // console.error('Error adding new user:', error);
+        return rewards;
+      }
+      
+  }
+  function checkInteger(value) {
+    // Check if value is a valid integer using Number.isInteger()
+    if (Number.isInteger(value)) {
+      return value;
+    }
+    // If not an integer, return 0
+    return 0;
+  }
+  
+  exports.updatePlacements=async(root,upline,productId,position="L") =>{
+   
+    
+    try {
+        let upline_="leftChild";
+        let all="leftTotal";
+        let current="leftCurrent";
+  
+       if(position=="R"){
+           upline_="rightChild";
+           all="rightTotal";
+           current="rightCurrent";
+       }
+
+      const introquery={ [upline_]: upline,productid:productId }
+      console.log(introquery)
+      const parentUser = await Hierarchy.findOne(introquery);
+      
+      if (!parentUser) {    
+        
+        return;
+      }else{
+        
+        const allTime=checkInteger(parentUser.infoData[all])+1;
+        const currentCount = checkInteger(parentUser.infoData[current])+1;
+        //console.log(parentUser.infoData[all]+"  "+allTime)
+        //console.log(parentUser.infoData[current]+" "+currentCount)
+        let info =parentUser["infoData"].toObject();;
+        //console.log(info)
+        let infoData = {...info,[all]:allTime,[current]:currentCount}
+        parentUser.infoData = infoData;
+       // console.log("XXXX")
+       // console.log(infoData)
+        //console.log("XXXX")
+        parentUser.save();
+         await this.updatePlacements(root,parentUser["upline"],productId,position);
+      
+        
+
+      }
+    } catch (error) {
+        console.error('Error adding new user:', error);
+        return null;
+      }
+      
   }

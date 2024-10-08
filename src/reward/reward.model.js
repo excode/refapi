@@ -315,4 +315,14 @@ exports.removeById = (rewardId,extraField={}) => {
 
 
 
-    
+exports.InsertMany = (rewards) => {
+    return new Promise((resolve, reject) => {
+        Reward.insertMany(rewards, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve("done");
+            }
+        });
+    });
+};

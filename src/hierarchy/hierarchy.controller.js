@@ -376,5 +376,19 @@ exports.listSuggestions = (req, res ) => {
         }
   };
   
+  exports.addNewUser3 = (req, res) => {
+    req.body.createBy="AlifPay" 
+    req.body.createAt=funcs.getTime()
+    console.log(req.body)
+    //res.status(200).send(req.body);
+    //return;
+    //root,upline,productId,amount,rewards=[],limit=10
+    HierarchyModel.updatePlacements("afia","cjtan","66e665de966efc2edaa97cf0","L")
 
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
     
