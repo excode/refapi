@@ -116,40 +116,7 @@ exports.createHierarchy = (hierarchyData) => {
     });
     });
 };
-exports.createHierarchyAlifPay = (hierarchyData) => {
-    return new Promise(async(resolve, reject) => {
-    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
-    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
-    if(!uplineCheck ) {
-        reject("introducer not exists");
-        return;
-    }
-    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
-    if(regCheck ) {
-        reject("user already exists");
-        return;
-    }
-    
-    const hierarchy = new Hierarchy(hierarchyData);
-    hierarchy.save(async function (err, saved) {
-        if (err) {
-            return reject(err);
-        }
-        let rewards =[];
-        if(hierarchyData.category=="AlifPay FinTech Parner"){
-            //"afia","phang2320","66e665de966efc2edaa97cf0","2",[],10
-             rewards = this.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
-        }else{
-             rewards = this.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,1,[],5);
-        }
-        if(rewards.length>0){
-            await RewardModel.InsertMany(rewards)
-        }
-        
-        resolve(saved)
-    });
-    });
-};
+
 exports.addNewUserCheck = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
@@ -922,7 +889,7 @@ async function checkUplines(root,upline,productId) {
       const introquery={ contactNumber: upline,productid:productId }
       const parentUser = await Hierarchy.findOne(introquery);
   
-      if (!parentUser || parentUser["upline"]==="") {    
+      if (!parentUser || parentUser["contactNumber"]==="") {    
         console.log(introquery);   
         console.log(parentUser);        
         console.log('Parent user not found');
@@ -940,11 +907,11 @@ async function checkUplines(root,upline,productId) {
                 amount : sponsorReward,
                 status : 0,
                 productid : productId,
-                contactNumber :  parentUser["upline"],
-                ref : "",
+                contactNumber :  parentUser["contactNumber"],
+                ref : "Sponsor",
                 sourceContactNumber : root,
                 particular : "Sponsor reward",
-                type : ""
+                type : "0"
         
              };
         rewards.push(reward1);
@@ -958,11 +925,11 @@ async function checkUplines(root,upline,productId) {
                 amount : amount,
                 status : 0,
                 productid : productId,
-                contactNumber :  parentUser["upline"],
-                ref : "",
+                contactNumber :  parentUser["contactNumber"],
+                ref : "Level",
                 sourceContactNumber : root,
                 particular : "Level reward:"+level,
-                type : ""
+                type : "0"
         
         };
         rewards.push(reward);
@@ -1035,3 +1002,39 @@ async function checkUplines(root,upline,productId) {
       }
       
   }
+
+  exports.createHierarchyAlifPay = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(regCheck ) {
+        reject("user already exists");
+        return;
+    }
+    
+    const hierarchy = new Hierarchy(hierarchyData);
+    hierarchy.save(async function (err, saved) {
+        if (err) {
+            return reject(err);
+        }
+        let rewards =[];
+        if(hierarchyData.category=="AlifPay FinTech Partner"){
+            //"afia","phang2320","66e665de966efc2edaa97cf0","2",[],10
+             rewards =await exports.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
+        }else{
+             rewards =await exports.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,1,[],5);
+        }
+        console.log(rewards);
+        if(rewards.length>0){
+            await RewardModel.InsertMany(rewards)
+        }
+        
+        resolve(saved)
+    });
+    });
+};

@@ -97,10 +97,10 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"kalam3133311",
-    "introducer":"ahmad",
+    "contactNumber":"afia",
+    "introducer":"stellatan",
     "productid":"66e665de966efc2edaa97cf0",
-    "category":"FP260"
+    "category":"AlifPay FinTech Partner"
 }
 
 ###

@@ -228,7 +228,7 @@ exports.listSuggestions = (req, res ) => {
     console.log(req.body)
     //res.status(200).send(req.body);
     //return;
-    HierarchyModel.createHierarchy(req.body)
+    HierarchyModel.createHierarchyAlifPay(req.body)
 
           .then((result)=>{
               res.status(200).send(result);
