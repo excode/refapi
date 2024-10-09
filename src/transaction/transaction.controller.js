@@ -1,5 +1,5 @@
 const TransactionModel = require('./transaction.model');
-var ObjectId = require('mongodb').ObjectID;
+const mongoose = require('../../common/services/mongoose.service').mongoose;
   const funcs =  require("../../common/functions/funcs");
   
   exports.insert = (req, res) => {
