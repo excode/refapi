@@ -54,7 +54,7 @@ const funcs =  require("../../common/functions/funcs");
   };
   exports.listAll = (req, res ) => {
     //req.query={...req.query,createBy: req.jwt.email,createBy_mode:'equals'};
-    req.query={...req.query,productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -76,7 +76,7 @@ const funcs =  require("../../common/functions/funcs");
         });
 };
 exports.listSuggestions = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
@@ -101,10 +101,10 @@ exports.listSuggestions = (req, res ) => {
   
   exports.getById = (req, res) => {
     let filter ={}
-   // filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+   // filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
 
     if(req.jwt.productid){
-        filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+        filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
     }
       /*
     IMPORTANT
@@ -157,7 +157,7 @@ exports.listSuggestions = (req, res ) => {
   
   exports.removeById = (req, res) => {
     let filter ={}
-    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
       /*
     IMPORTANT
      

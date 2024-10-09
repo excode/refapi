@@ -38,9 +38,9 @@ exports.list = (req, res) => {
   let limit =
     req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
   let page = 0;
-  //req.query={...req.query,force_productid:new ObjectId(req.jwt.productId[1]),productid_mode:'equals'}
+  //req.query={...req.query,force_productid:mongoose.Types.ObjectId(req.jwt.productId[1]),productid_mode:'equals'}
   //req.query={...req.query,productid:req.jwt.productId[1],productid_mode:'equals'}
-  req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -70,7 +70,7 @@ exports.list = (req, res) => {
 };
 
 exports.listAll = (req, res) => {
-  req.query={...req.query,force_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  req.query={...req.query,force_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -93,7 +93,7 @@ exports.listAll = (req, res) => {
     });
 };
 exports.listSuggestions = (req, res) => {
-  req.query={...req.query,force_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  req.query={...req.query,force_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
@@ -119,9 +119,9 @@ exports.listSuggestions = (req, res) => {
 
 exports.getById = (req, res) => {
   let filter = {};
-  //filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  //filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
   if(req.jwt.productid){
-    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
 }
   /*
     IMPORTANT
@@ -149,7 +149,7 @@ exports.patchById = (req, res) => {
   req.body.updateBy = req.jwt.email;
   req.body.updateAt = funcs.getTime();
   let filter = {};
-  filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
   /*
     IMPORTANT
      
@@ -175,7 +175,7 @@ exports.patchById = (req, res) => {
 
 exports.removeById = (req, res) => {
   let filter = {};
-  filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
   /*
     IMPORTANT
      

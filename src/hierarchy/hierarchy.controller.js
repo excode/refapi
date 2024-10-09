@@ -1,5 +1,5 @@
 const HierarchyModel = require('./hierarchy.model');
-var ObjectId = require('mongodb').ObjectID;
+//const mongoose = require('../../common/services/mongoose.service').mongoose;
 var mongoose = require('mongoose');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
@@ -95,7 +95,7 @@ const myCache = new NodeCache();
         });
 };
   exports.listAll = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -117,7 +117,7 @@ const myCache = new NodeCache();
         });
 };
 exports.listSuggestions = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
@@ -144,7 +144,7 @@ exports.listSuggestions = (req, res ) => {
     let filter ={}
 
     if(req.jwt.productId){
-        filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+        filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
     }
 
    
@@ -173,7 +173,7 @@ exports.listSuggestions = (req, res ) => {
       req.body.updateBy=req.jwt.email  
         req.body.updateAt=funcs.getTime()
       let filter ={}
-      filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+      filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
       /*
     IMPORTANT
      
@@ -199,7 +199,7 @@ exports.listSuggestions = (req, res ) => {
   
   exports.removeById = (req, res) => {
     let filter ={}
-    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
     
     HierarchyModel.removeById(req.params.hierarchyId,filter)
           .then((result)=>{

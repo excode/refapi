@@ -1,7 +1,7 @@
 const RedeemModel = require("./redeem.model");
 var ObjectId = require('mongodb').ObjectID;
 const funcs = require("../../common/functions/funcs");
-
+const mongoose = require('../../common/services/mongoose.service').mongoose;
 exports.insert = (req, res) => {
   req.body.createBy = req.jwt.email;
   req.body.createAt = funcs.getTime();
@@ -41,7 +41,7 @@ exports.list = (req, res) => {
   let limit =
     req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
   let page = 0;
-  req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   
   //req.query = { ...req.query, id: req.jwt.id };
   /*
@@ -73,7 +73,7 @@ exports.list = (req, res) => {
 };
 exports.listAll = (req, res) => {
   //req.query={...req.query,createBy:req.jwt.email}
-  req.query={...req.query,productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  req.query={...req.query,productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -98,7 +98,7 @@ exports.listAll = (req, res) => {
 exports.listSuggestions = (req, res) => {
   
   req.query={...req.query,createBy:req.jwt.email}
-  //req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+  //req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
   /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
@@ -125,11 +125,11 @@ exports.listSuggestions = (req, res) => {
 exports.getById = (req, res) => {
   let filter = {};
   //filter['createBy'] = req.jwt.email
-  //filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  //filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
 
 
   if(req.jwt.productid){
-    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
 }
   /*
     IMPORTANT
@@ -159,7 +159,7 @@ exports.patchById = (req, res) => {
   
   let filter = {};
   //filter['createBy'] = req.jwt.email
-  filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
   /*
     IMPORTANT
      
@@ -186,7 +186,7 @@ exports.patchById = (req, res) => {
 exports.removeById = (req, res) => {
   let filter = {};
   //filter['createBy'] = req.jwt.email
-  filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+  filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
   /*
     IMPORTANT
      

@@ -1,5 +1,6 @@
 const RewardModel = require('./reward.model');
-var ObjectId = require('mongodb').ObjectID;
+//var ObjectId = require('mongodb').ObjectID;
+const mongoose = require('../../common/services/mongoose.service').mongoose;
 const funcs =  require("../../common/functions/funcs");
   
   exports.insert = (req, res) => {
@@ -33,7 +34,7 @@ const funcs =  require("../../common/functions/funcs");
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-      req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+      req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
        /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -62,8 +63,8 @@ const funcs =  require("../../common/functions/funcs");
           });
   };
   exports.listAll = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
-    //req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new mongoose.Types.ObjectId(pid))}
+    //req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
@@ -85,8 +86,8 @@ const funcs =  require("../../common/functions/funcs");
         });
 };
 exports.listSuggestions = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
-    // req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+    // req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
     /*
     IMPORTANT
     HERE  "serach" query parameter is reserved for keword searh  
@@ -111,10 +112,10 @@ exports.listSuggestions = (req, res ) => {
   
   exports.getById = (req, res) => {
     let filter ={}
-    //filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    //filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
 
     if(req.jwt.productid){
-        filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+        filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
     }
     /*
       /*
@@ -142,7 +143,7 @@ exports.listSuggestions = (req, res ) => {
       req.body.updateBy=req.jwt.email  
         req.body.updateAt=funcs.getTime()
       let filter ={}
-      filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+      filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
       /*
       /*
     IMPORTANT
@@ -169,7 +170,7 @@ exports.listSuggestions = (req, res ) => {
   
   exports.removeById = (req, res) => {
     let filter ={}
-    filter['productid']= {"in":req.jwt.productId.map(pid => new ObjectId(pid))};
+    filter['productid']= {"in":req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))};
     /*
       /*
     IMPORTANT

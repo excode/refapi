@@ -1,5 +1,6 @@
 @HOST = https://winmarchant.azurewebsites.net
-@HOST = http://localhost:8080
+
+@HOST_ = http://localhost:8082
 @AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMGQyMzUwNGM4NGRjZTcxOTc5NTIiLCJlbWFpbCI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsImxhc3RuYW1lIjoiIiwiY29udGFjdE51bWJlciI6ImZvdW5kZXJAbXlwYWFhLmNvbSIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbXSwicmVmcmVzaEtleSI6IkY2REZCZHE4WmpxK3phZE1BeHN2UlE9PSIsImlhdCI6MTcxMzM0MzcxOH0.f8Y9xsgTYOXENtPDQJP8xFN8hsO6uyY794RVkdboIc8
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
@@ -7,8 +8,8 @@ POST {{HOST}}/auth HTTP/1.1
 content-type: application/json
 
 {
-"email":"wegagit687@idsho.com",
-"password":"123456"
+"email":"excode.net@gmail.com",
+"password":"701299"
 }
 
 ### 
@@ -48,8 +49,8 @@ PATCH {{HOST}}/users/verifyEmailOtp HTTP/1.1
 content-type: application/json
 
 {
-    "email":"wegagit687@idsho.com",
-    "otp":"261313"
+    "email":"excode.net@gmail.com",
+    "otp":"161830"
 }
 
 ###
@@ -61,12 +62,12 @@ content-type: application/json
 }
 
 ###
-PATCH {{HOST}}/users/resetPasswordFinish HTTP/1.1
+PATCH {{HOST_}}/users/resetPasswordFinish HTTP/1.1
 content-type: application/json
 
 {
     "email":"excode.net@gmail.com",
-    "otp":"419977",
+    "otp":"890409",
     "newPassword":"123456"
 }
 

@@ -1,6 +1,7 @@
 const PromotionModel = require('./promotion.model');
 
   const funcs =  require("../../common/functions/funcs");
+  const mongoose = require('../../common/services/mongoose.service').mongoose;
   
   exports.insert = (req, res) => {
         req.body.createBy=req.jwt.email  
@@ -85,7 +86,7 @@ const PromotionModel = require('./promotion.model');
         });
 };
 exports.listSuggestions = (req, res ) => {
-    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => new ObjectId(pid))}
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
 
     /*
     IMPORTANT

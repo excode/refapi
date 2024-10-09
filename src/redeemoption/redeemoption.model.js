@@ -102,7 +102,7 @@ exports.list = (perPage, page , query ) => {
       
           if(query.productid){
       
-              query.productid = new ObjectId( query.productid);
+              query.productid = mongoose.Types.ObjectId( query.productid);
               let productid_ = {productid:query.productid}
                 _query = { ..._query, ...productid_ };
           }

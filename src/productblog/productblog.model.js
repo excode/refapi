@@ -1,6 +1,6 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
-var ObjectId = require('mongodb').ObjectID;
+
 const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
@@ -129,7 +129,7 @@ exports.list = (perPage, page , query ) => {
     
       if(query.productid){
   
-          query.productid = new ObjectId( query.productid);
+          query.productid = mongoose.Types.ObjectId( query.productid);
           let productid_ = {productid:query.productid}
             _query = { ..._query, ...productid_ };
       }
