@@ -290,6 +290,31 @@ exports.list = (perPage, page , query ) => {
         _query={..._query,...introducer_}
     }
 
+    if(query.upline){
+        let upline_= queryBuilder_string(query,'upline');
+        _query={..._query,...upline_}
+    }
+
+
+    if(query.leftChild){
+        let leftChild_= queryBuilder_string(query,'leftChild');
+        _query={..._query,...leftChild_}
+    }
+    if(query.position){
+        let position_= queryBuilder_string(query,'position');
+        _query={..._query,...position_}
+    }
+    if(query.rightChild){
+        let rightChild_= queryBuilder_string(query,'rightChild');
+        _query={..._query,...rightChild_}
+    }
+
+    if(query.category){
+        let category_= queryBuilder_string(query,'category');
+        _query={..._query,...category_}
+    }
+
+
         if(query.sortBy){
             sortBy = query.sortBy;
         }
