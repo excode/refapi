@@ -11,14 +11,18 @@ const {queryFormatter,queryBuilder_string,
     queryBuilder_array,
     queryBuilder_range_array} = require("../../common/functions/queryutilMongo")
     const infoSchema = new Schema({
-        leftTotal:{ type: Number,default:null},
-        rightTotal:{ type: Number,default:null},
-        leftCurrent:{ type: Number,default:null},
-        rightCurrent:{ type: Number,default:null},
-        total:{ type: Number,default:null},
-        totalCurrent:{ type: Number,default:null},
-        currentMonth:{ type: Number,default:null},
-        currentYear:{ type: Number,default:null}
+        leftTotal:{ type: Number,default:0},
+        rightTotal:{ type: Number,default:0},
+        leftCurrent:{ type: Number,default:0},
+        rightCurrent:{ type: Number,default:0},
+        total:{ type: Number,default:0},
+        totalCurrent:{ type: Number,default:0},
+        currentMonth:{ type: Number,default:0},
+        currentYear:{ type: Number,default:0},
+        placementDone:{ type: Boolean,default:false},
+        placementRequired:{ type: Boolean,default:false},
+        price:{ type: Number,default:0},
+        category:{ type: String,default:"FP"},
     });
     const hierarchySchema = new Schema({
     updateBy : { type: String},
@@ -1041,14 +1045,28 @@ async function checkUplines(root,upline,productId) {
         reject("user already exists");
         return;
     }
-    
+    let infoData={
+        price:260,
+        category:"FP",
+        placementRequired:true,
+        placementDone:false,
+    }
+    if(hierarchyData.price==50){
+        infoData={
+            price:50,
+            category:"FC",
+            placementRequired:false,
+            placementDone:false,
+        }
+    }
+    hierarchyData["infoData"] =infoData;
     const hierarchy = new Hierarchy(hierarchyData);
     hierarchy.save(async function (err, saved) {
         if (err) {
             return reject(err);
         }
         let rewards =[];
-        if(hierarchyData.category=="AlifPay FinTech Partner"){
+        if(hierarchyData.price==260){
             //"afia","phang2320","66e665de966efc2edaa97cf0","2",[],10
              rewards =await exports.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
         }else{
