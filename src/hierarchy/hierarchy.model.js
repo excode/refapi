@@ -816,11 +816,11 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
         const node = {
             id: currentUser._id.toString(),
             name: currentUser.contactNumber || 'Unknown', // Use a field for the name, adjust as needed
-            leftTotal: currentUser.infoData.leftTotal || '0', 
+            leftTotal: currentUser.infoData?.leftTotal || '0', 
             position:currentUser.position || 'L', 
-            rightTotal: currentUser.infoData.rightTotal || '0',
-            leftCurrent: currentUser.infoData.leftCurrent || '0', 
-            rightCurrent: currentUser.infoData.rightCurrent || '0', // Use a field for the name, adjust as needed
+            rightTotal: currentUser.infoData?.rightTotal || '0',
+            leftCurrent: currentUser.infoData?.leftCurrent || '0', 
+            rightCurrent: currentUser.infoData?.rightCurrent || '0', // Use a field for the name, adjust as needed
             //title: currentUser.name || 'Unknown Title', // Use the position field for the title
            children:[],
     

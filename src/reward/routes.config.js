@@ -33,6 +33,11 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           RewardController.list
       ]);
+      app.get('/reward/3rdparty', [
+        ValidationMiddleware.validJWTNeeded2,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        RewardController.list
+    ]);
       app.get('/reward/dash', [
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -43,6 +48,7 @@ const rootPath="../../";
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
         RewardController.listAll
     ]);
+
     app.get('/reward/suggestions', [   //  Required to Fill UI Component like Auto Complete , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -53,6 +59,11 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           RewardController.getById
       ]);
+      app.get('/reward/3rdparty/:rewardId', [
+        ValidationMiddleware.validJWTNeeded2,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        RewardController.getById
+    ]);
       app.patch('/reward/:rewardId', [
           ValidationMiddleware.validJWTNeeded,
           PermissionMiddleware.minimumPermissionLevelRequired(USER),

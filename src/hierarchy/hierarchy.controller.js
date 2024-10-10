@@ -3,8 +3,8 @@ const HierarchyModel = require('./hierarchy.model');
 var mongoose = require('mongoose');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
-  const funcs =  require("../../common/functions/funcs");
-  
+const funcs =  require("../../common/functions/funcs");
+const  env  = process.env;
   exports.insert = (req, res) => {
         req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
@@ -26,12 +26,24 @@ const myCache = new NodeCache();
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-    //  console.log(req.jwt.productId)
+    
       if(req.jwt.productId){
 
         req.query={...req.query,forced_productid: req.jwt.productId.map(pid =>  mongoose.Types.ObjectId(pid))}
       }else{
         req.query={...req.query,forced_productid: null}
+      }
+
+      console.log("*** ITS CHECKINF***")
+      if(req.headers["project_code"]){
+        let project_code =req.headers["project_code"];
+        let products_ids = env[project_code]
+        if(products_ids){
+         
+        let array = JSON.parse(products_ids);
+        console.log(Array.isArray(array))
+        req.query={...req.query,'introducer':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+        }
       }
 
       //req.query={...req.query,createBy:req.jwt.email,createBy_mode:'equals'}
@@ -303,6 +315,28 @@ exports.listSuggestions = (req, res ) => {
           });
         }
   };
+  exports.list_chart2_u = (req, res) => {
+    let username="ahmad";// req.jwt.username
+    if(req.query.xI!=undefined && req.query.xI!=""){
+
+      username=req.query.xI
+  }
+    let key=username+"_chart2_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+    HierarchyModel.buildHierarchy2(username,req.query.productId)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
   exports.list_level = (req, res) => {
 
     let username=req.jwt.username
@@ -359,6 +393,27 @@ exports.listSuggestions = (req, res ) => {
 
         username=req.query.xI
     }
+    let key=username+"_level3_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached_"+key)
+        res.status(200).send(cVal);
+    }else{
+        HierarchyModel.getUsersIntroducedBy3(username,req.query.productId)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
+  exports.list_level_m = (req, res) => {
+
+    let username=req.jwt.username
+   
+    
     let key=username+"_level3_"+req.query.productId??"";
     let cVal=myCache.get(key)
     if(cVal){

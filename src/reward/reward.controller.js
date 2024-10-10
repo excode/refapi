@@ -2,7 +2,7 @@ const RewardModel = require('./reward.model');
 //var ObjectId = require('mongodb').ObjectID;
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const funcs =  require("../../common/functions/funcs");
-  
+const  env  = process.env;
   exports.insert = (req, res) => {
             req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
@@ -34,8 +34,20 @@ const funcs =  require("../../common/functions/funcs");
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-      req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
-       /*
+      
+      if(req.headers["project_code"]){
+        let project_code =req.headers["project_code"];
+        let products_ids = env[project_code]
+        if(products_ids){
+         
+        let array = JSON.parse(products_ids);
+        console.log(Array.isArray(array))
+        req.query={...req.query,'introducer':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+        }
+      }else{
+        req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+      }
+      /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
         for example 

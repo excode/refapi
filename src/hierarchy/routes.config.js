@@ -43,6 +43,11 @@ const rootPath="../../";
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.list_projects
     ]);
+    app.get('/hierarchy/ref/u', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_projects
+  ]);
     app.get('/hierarchy/all/level', [
       ValidationMiddleware.validJWTNeeded,
       PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -58,6 +63,11 @@ app.get('/hierarchy/all/level3', [
   PermissionMiddleware.minimumPermissionLevelRequired(USER),
   HierarchyController.list_level3
 ]);
+app.get('/hierarchy/all/level3/u', [
+  ValidationMiddleware.validJWTNeeded,
+  PermissionMiddleware.minimumPermissionLevelRequired(USER),
+  HierarchyController.list_level_m
+]);
     app.get('/hierarchy/all/org_chart', [
       ValidationMiddleware.validJWTNeeded,
       PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -67,6 +77,11 @@ app.get('/hierarchy/all/level3', [
       ValidationMiddleware.validJWTNeeded,
       PermissionMiddleware.minimumPermissionLevelRequired(USER),
       HierarchyController.list_chart2
+    ]);
+    app.get('/hierarchy/all/org_chart2/u', [
+      ValidationMiddleware.validJWTNeeded,
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_chart2_u
     ]);
       app.get('/hierarchy/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,

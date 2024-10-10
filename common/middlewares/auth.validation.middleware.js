@@ -49,3 +49,29 @@ exports.validJWTNeeded = (req, res, next) => {
     return res.status(401).send();
   }
 };
+exports.validJWTNeeded2 = (req, res, next) => {
+  let my_secret=secret;
+  if(req.headers["project_code"]){
+    my_secret=req.headers["project_code"];
+  }
+ // console.log(my_secret)
+  if (req.headers["authorization"]) {
+    try {
+      let authorization = req.headers["authorization"].split(" ");
+      if (authorization[0] !== "Bearer") {
+        return res.status(401).send();
+      } else {
+        req.jwt = jwt.verify(authorization[1], my_secret);
+
+        return next();
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(403).send();
+    }
+  } else {
+    return res.status(401).send();
+  }
+};
+
+
