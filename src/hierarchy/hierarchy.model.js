@@ -151,6 +151,11 @@ exports.placement = (hierarchyData) => {
     if(!regCheck ) {
         reject("user not exists");
         return;
+    }else{
+       if(regCheck.infoData.placementDone){
+        reject("user already  exists");
+        return;
+       }
     }
     let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.upline,productid:productID})
     if(!uplineCheck ) {
@@ -168,6 +173,9 @@ exports.placement = (hierarchyData) => {
         sameFamily = await checkUplines(introUsername,nxUpline,productID) ;
     }
     if(!sameFamily){
+        console.log(introUsername)
+        console.log(iUpline)
+        console.log(nxUpline)
         reject("Not from same family");
         return;
     }
@@ -189,6 +197,7 @@ exports.placement = (hierarchyData) => {
         uplineCheck.rightChild = hierarchyData.contactNumber
     }
     regCheck.upline = uplineCheck.contactNumber;
+    regCheck.infoData.placementDone = true;
     regCheck.position=hierarchyData.position;
     await uplineCheck.save();
     await regCheck.save();

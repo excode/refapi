@@ -327,7 +327,7 @@ exports.listSuggestions = (req, res ) => {
         }
   };
   exports.list_chart2_u = (req, res) => {
-    let username="ahmad";// req.jwt.username
+    let username=req.jwt.username
     if(req.query.xI!=undefined && req.query.xI!=""){
 
       username=req.query.xI
