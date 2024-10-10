@@ -45,10 +45,10 @@ exports.list = (req, res) => {
   console.log(req.jwt)
   if(req.headers["project_code"]){
     let project_code =req.headers["project_code"];
-    let products_ids = env[project_code]
+    let products_ids = env["P_"+project_code]
     if(products_ids){
      
-    let array = ["66e78d6e54ced7123a184796","66e65f1e2f3ef81b47544c76","66e665de966efc2edaa97cf0"];//  JSON.parse(products_ids);
+    let array =  JSON.parse(products_ids);
     console.log(Array.isArray(array))
     req.query={...req.query,'contactNumber_mode':'equals','contactNumber':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
     }
