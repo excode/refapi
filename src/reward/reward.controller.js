@@ -34,10 +34,12 @@ const  env  = process.env;
   exports.list = (req, res ) => {
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
-      
+      console.log("OUTSIDE")
       if(req.headers["project_code"]){
+        console.log("IN-SIDE")
         let project_code =req.headers["project_code"];
         let products_ids = env[project_code]
+        console.log(products_ids)
         if(products_ids){
          
         let array =  ["66e78d6e54ced7123a184796","66e65f1e2f3ef81b47544c76","66e665de966efc2edaa97cf0"];// JSON.parse(products_ids);

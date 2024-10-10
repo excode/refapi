@@ -42,6 +42,7 @@ exports.list = (req, res) => {
   let limit =
     req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
   let page = 0;
+  console.log(req.jwt)
   if(req.headers["project_code"]){
     let project_code =req.headers["project_code"];
     let products_ids = env[project_code]
