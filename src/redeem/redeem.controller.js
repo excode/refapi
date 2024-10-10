@@ -49,7 +49,7 @@ exports.list = (req, res) => {
      
     let array = JSON.parse(products_ids);
     console.log(Array.isArray(array))
-    req.query={...req.query,'contactNumber':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+    req.query={...req.query,'contactNumber_mode':'equals','contactNumber':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
     }
   }else{
     req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}

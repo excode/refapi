@@ -42,7 +42,7 @@ const  env  = process.env;
          
         let array = JSON.parse(products_ids);
         console.log(Array.isArray(array))
-        req.query={...req.query,'introducer':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+        req.query={...req.query,'introducer_mode':'equals','introducer':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
         }
       }
 
@@ -457,4 +457,71 @@ exports.listSuggestions = (req, res ) => {
               res.status(400).json( {err:err} );
           });
   };
-    
+  
+
+  exports.listWallets = (req, res ) => {
+    let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
+    let page = 0;
+  
+    if(req.jwt.productId){
+
+      req.query={...req.query,forced_productid: req.jwt.productId.map(pid =>  mongoose.Types.ObjectId(pid))}
+    }else{
+      req.query={...req.query,forced_productid: null}
+    }
+
+    console.log("*** ITS CHECKINF***")
+    if(req.headers["project_code"]){
+      let project_code =req.headers["project_code"];
+      let products_ids = env[project_code]
+      if(products_ids){
+       
+      let array = JSON.parse(products_ids);
+      console.log(Array.isArray(array))
+      req.query={...req.query,'contactNumber':req.jwt.username,'contactNumber_mode':'equals', forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+      }
+    }
+ 
+     console.log(req.query)
+    if (req.query) {
+        if (req.query.page) {
+            req.query.page = parseInt(req.query.page);
+            page = Number.isInteger(req.query.page) ? req.query.page : 0;
+        }
+    }
+    HierarchyModel.list2(limit, page,req.query)
+        .then((result) => {
+            res.status(200).send(result);
+        }).catch((err)=>{
+           
+            res.status(400).json( {err:err} );
+        });
+};
+
+
+exports.syncWallet = (req, res ) => {
+
+  console.log("*** ITS CHECKINF***")
+  if(req.headers["project_code"]){
+    let project_code =req.headers["project_code"];
+    let products_ids = env[project_code]
+    if(products_ids){
+     
+    let array = JSON.parse(products_ids);
+    console.log(Array.isArray(array))
+    req.query={...req.query,'contactNumber':req.jwt.username, forced_productid: array.map(pid => mongoose.Types.ObjectId(pid))}
+   
+  
+   }
+  }
+
+  
+  
+  HierarchyModel.processRewardsAndUpdateWallet(req.jwt.username, req.body.productid)
+      .then((result) => {
+          res.status(200).send(result);
+      }).catch((err)=>{
+         
+          res.status(400).json( {err:err} );
+      });
+};

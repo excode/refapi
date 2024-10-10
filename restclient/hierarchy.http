@@ -147,3 +147,16 @@ content-type: application/json
     "productid":"66e665de966efc2edaa97cf0",
     "category":"FP260"
 }
+
+###
+
+POST {{HOST}}/hierarchy/sync HTTP/1.1
+Authorization: Bearer {{AUTH}}
+project_code:66efa1fcfb844876e472f02b
+content-type: application/json
+
+{
+    
+    "productid":"66e665de966efc2edaa97cf0"
+ 
+}

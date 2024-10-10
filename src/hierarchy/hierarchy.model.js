@@ -1090,3 +1090,216 @@ async function checkUplines(root,upline,productId) {
     });
     });
 };
+
+
+exports.list2 = (perPage, page , query ) => {
+
+    var _query={};
+    let sortBy='_id'
+    let sortDirection=-1
+    
+if(query.updateBy){
+    let updateBy_= queryBuilder_string(query,'updateBy');
+    _query={..._query,...updateBy_}
+}
+
+
+    if(query.updateAt){
+        let updateAt_= queryBuilder_date(query,'updateAt');
+        _query={..._query,...updateAt_}
+    }
+    if(query.updateAt_array){
+        let updateAt_a= queryBuilder_range_array(query,'updateAt',"date");
+        _query={..._query,...updateAt_a}
+    }
+
+    if(query.forced_productid){
+
+ 
+        let productID_= {productid:{$in:query.forced_productid}}
+          _query={..._query,...productID_}
+      
+         //console.log(productID_)
+      }
+      if(query.productid){
+  
+          query.productid = mongoose.Types.ObjectId( query.productid);
+          let productid_ = {productid:query.productid}
+            _query = { ..._query, ...productid_ };
+      }
+
+
+
+if(query.createBy){
+    let createBy_= queryBuilder_string(query,'createBy');
+    _query={..._query,...createBy_}
+}
+
+
+    if(query.createAt){
+        let createAt_= queryBuilder_date(query,'createAt');
+        _query={..._query,...createAt_}
+    }
+    if(query.createAt_array){
+        let createAt_a= queryBuilder_range_array(query,'createAt',"date");
+        _query={..._query,...createAt_a}
+    }
+
+
+
+if(query.walletbalance!=null ){
+  if(!isNaN(query.walletbalance)){
+    let walletbalance_= queryBuilder_number(query,'walletbalance');
+    _query={..._query,...walletbalance_}
+ }
+}
+if(query.walletbalance_array){
+    let walletbalance_a= queryBuilder_range_array(query,'walletbalance',"number");
+    _query={..._query,...walletbalance_a}
+}
+
+
+
+if(query.rewardbalance!=null ){
+  if(!isNaN(query.rewardbalance)){
+    let rewardbalance_= queryBuilder_number(query,'rewardbalance');
+    _query={..._query,...rewardbalance_}
+ }
+}
+if(query.rewardbalance_array){
+    let rewardbalance_a= queryBuilder_range_array(query,'rewardbalance',"number");
+    _query={..._query,...rewardbalance_a}
+}
+
+
+
+if(query.distributor!=null){
+    _query['distributor'] = query.distributor 
+}
+        
+
+if(query.contactNumber){
+    let contactNumber_= queryBuilder_string(query,'contactNumber');
+    _query={..._query,...contactNumber_}
+}
+
+
+if(query.introducer){
+    let introducer_= queryBuilder_string(query,'introducer');
+    _query={..._query,...introducer_}
+}
+
+if(query.upline){
+    let upline_= queryBuilder_string(query,'upline');
+    _query={..._query,...upline_}
+}
+
+
+if(query.leftChild){
+    let leftChild_= queryBuilder_string(query,'leftChild');
+    _query={..._query,...leftChild_}
+}
+if(query.position){
+    let position_= queryBuilder_string(query,'position');
+    _query={..._query,...position_}
+}
+if(query.rightChild){
+    let rightChild_= queryBuilder_string(query,'rightChild');
+    _query={..._query,...rightChild_}
+}
+
+if(query.category){
+    let category_= queryBuilder_string(query,'category');
+    _query={..._query,...category_}
+}
+
+
+    if(query.sortBy){
+        sortBy = query.sortBy;
+    }
+    if(query.sortDirection){
+        sortDirection = query.sortDirection;
+    }
+    var sortBoj={[sortBy]:sortDirection};
+    console.log(_query)
+    return new Promise((resolve, reject) => {
+
+    Hierarchy.find(_query)
+        .populate({path:'productid',select:'_id productname'})
+        .limit(perPage)
+        .sort(sortBoj)
+        .skip(perPage * page)
+        .exec(function (err, hierarchy) {
+            if (err) {
+                reject(err);
+            } else {
+               // Hierarchy.countDocuments(_query).exec().then((total)=>{
+                   // const promises = { docs: hierarchy , count: total ,perpage:perPage,page:page };
+                    resolve(hierarchy);
+               // }).catch((err2)=>{
+                   // reject(err2);
+               // })
+            }
+        })
+});
+};
+
+
+
+
+exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
+   
+    const Reward = mongoose.model('Reward'); // Reward collection
+    const Hierarchy = mongoose.model('Hierarchy');
+    const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    var product_id = mongoose.Types.ObjectId(productid)
+    // Step 1: Aggregate the sum of all rewards where status is false
+    const matched={contactNumber:contactNumber,productid:product_id, status: false };
+    const rewardAggregation = await Reward.aggregate([
+      { $match: matched },
+      { $group: { _id: null, totalPoints: { $sum: '$amount' } } }
+    ]).session(session);
+
+    if (rewardAggregation.length === 0) {
+      console.log("No rewards to process.");
+      return;
+    }
+
+    const totalRewardPoints = rewardAggregation[0].totalPoints;
+
+    // Step 2: Update the Reward Wallet (Hierarchy) collection with the summation
+    const result = await Hierarchy.updateOne(
+        {contactNumber:contactNumber,productid:product_id}, // Replace with the actual ID
+      { $inc: { rewardbalance: totalRewardPoints } } // Increment by the sum of points
+    ).session(session);
+
+    if (result.nModified === 0) {
+      throw new Error('Failed to update the reward wallet.');
+    }
+
+    // Step 3: Update the status of rewards to true for the ones considered in summation
+    const updateResult = await Reward.updateMany(
+        matched,
+      { $set: { status: true } }
+    ).session(session);
+
+    if (updateResult.modifiedCount === 0) {
+     console.log('No rewards were updated.');
+    }
+
+    // Step 4: Commit the transaction if everything is successful
+    await session.commitTransaction();
+    console.log('Reward points successfully added to the wallet and status updated.');
+
+  } catch (error) {
+    // If anything goes wrong, abort the transaction
+    await session.abortTransaction();
+    console.error('Transaction failed, changes reverted.', error);
+  } finally {
+    session.endSession();
+  }
+}
+

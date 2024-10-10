@@ -38,6 +38,11 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(USER),
           HierarchyController.list
       ]);
+      app.get('/hierarchy/wallets', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.listWallets
+    ]);
       app.get('/hierarchy/ref', [
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -145,6 +150,12 @@ app.get('/hierarchy/all/level3/u', [
         FormValidation.formValidation(formValidationRules1),
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.addNewUser
+      ]);
+      app.post('/hierarchy/sync', [
+        ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.syncWallet
       ]);
   };
   
