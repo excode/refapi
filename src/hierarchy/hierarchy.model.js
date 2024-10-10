@@ -144,7 +144,7 @@ exports.placement = (hierarchyData) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
     let   introCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
     if(!introCheck ) {
-        reject("introducer not");
+        reject("introducer not exists");
         return;
     }
     let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})

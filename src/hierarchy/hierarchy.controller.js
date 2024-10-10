@@ -268,6 +268,17 @@ exports.listSuggestions = (req, res ) => {
               res.status(400).json( {err:err} );
           });
   };
+  exports.placement2 = (req, res) => {
+    req.body.introducer = req.jwt.username;
+    HierarchyModel.placement(req.body)
+
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
+  
   
   exports.list_chart = (req, res) => {
     let username=req.jwt.username
