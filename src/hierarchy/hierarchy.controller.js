@@ -459,9 +459,18 @@ exports.listSuggestions = (req, res ) => {
   };
   
 
-  exports.listWallets = (req, res ) => {
+  exports.listWallets = async(req, res ) => {
     let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
     let page = 0;
+    let username=req.jwt.username
+    let key=username+"_claim_reward";
+    let product_id="66e665de966efc2edaa97cf0";
+    let cVal=myCache.get(key)
+    if(!cVal){
+      myCache.set( key, true, 60*15 )
+      console.log("DONE CLAIMED")
+      await HierarchyModel.processRewardsAndUpdateWallet(username, product_id)
+    }
   
     if(req.jwt.productId){
 

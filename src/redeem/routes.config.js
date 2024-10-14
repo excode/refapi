@@ -15,13 +15,25 @@ const formValidationRules = [
   { ctrl: "total", format: "number", required: true },
   { ctrl: "sellerNumber", format: "phone", required: true },
 ];
+const formValidationRules2 = [
+ 
+  { ctrl: "quantity", format: "number", required: true },
+
+];
 exports.routesConfig = function (app) {
   app.post("/redeem", [
     ValidationMiddleware.validJWTNeeded,
     FormValidation.formValidation(formValidationRules),
     PermissionMiddleware.minimumPermissionLevelRequired(USER),
-    RedeemController.insert,
+    RedeemController.insert
   ]);
+    app.post("/redeem/alifpay", [
+      ValidationMiddleware.validJWTNeeded,
+  
+      FormValidation.formValidation(formValidationRules2),
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      RedeemController.redeemAlifPay,
+    ]);
 
   app.get("/redeem", [
     ValidationMiddleware.validJWTNeeded,

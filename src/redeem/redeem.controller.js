@@ -5,10 +5,25 @@ const  env  = process.env;
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 exports.insert = (req, res) => {
   req.body.createBy = req.jwt.email;
+  req.body.contactNumber = req.jwt.username;
   req.body.createAt = funcs.getTime();
  // req.body.id = req.jwt.id;
 
   RedeemModel.createRedeem(req.body)
+    .then((result) => {
+      res.status(200).send({ id: result.id });
+    })
+    .catch((err) => {
+      res.status(400).json({ err: err });
+    });
+};
+exports.redeemAlifPay = (req, res) => {
+  req.body.createBy = req.jwt.email;
+  req.body.contactNumber = req.jwt.username;
+  req.body.createAt = funcs.getTime();
+ // req.body.id = req.jwt.id;
+
+  RedeemModel.createRedeemAlifPay(req.body)
     .then((result) => {
       res.status(200).send({ id: result.id });
     })

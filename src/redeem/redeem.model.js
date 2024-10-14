@@ -1,6 +1,8 @@
 const mongoose = require("../../common/services/mongoose.service").mongoose;
 const Schema = mongoose.Schema;
 var ObjectId = require('mongodb').ObjectID;
+const HierarchyModle = require("../../src/hierarchy/hierarchy.model")
+const  env  = process.env;
 const {
   queryFormatter,
   queryBuilder_string,
@@ -20,7 +22,8 @@ const redeemSchema = new Schema({
   unitprice: { type: Number, required: true, default: 0 },
   total: { type: Number, required: true, default: 0 },
   contactNumber: { type: String, required: true, default: "" },
-  sellerNumber: { type: String, required: true, default: "" }
+  sellerNumber: { type: String, required: true, default: "" },
+  processed: { type: Boolean, default: false }
 });
 
 redeemSchema.virtual("id").get(function () {
@@ -88,6 +91,9 @@ exports.findOne = (query) => {
 };
 
 exports.createRedeem = (redeemData) => {
+
+  const productid=redeemData.productid;
+  
   return new Promise((resolve, reject) => {
     const redeem = new Redeem(redeemData);
     redeem.save(function (err, saved) {
@@ -98,6 +104,68 @@ exports.createRedeem = (redeemData) => {
     });
   });
 };
+exports.createRedeemAlifPay = async (redeemData) => {
+  const productid = env.ALIF_PAY_PRODUCT;
+  const redeemid = env.ALIF_PAY_REDEEM;
+  const amount = redeemData.quantity;
+  const contactNumber = redeemData.contactNumber;
+  const seller = env.ALIF_PAY_SELLER;
+  const pid = mongoose.Types.ObjectId(productid);
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const Hierarchy = mongoose.model('Hierarchy');
+    const Redeem = mongoose.model('Redeem'); // Ensure Redeem model is imported or defined properly
+    const matched = { contactNumber: contactNumber, productid: pid };
+
+    // Step 1: Find the user's wallet and check if the reward balance is sufficient
+    const wallet = await Hierarchy.findOne(matched).session(session); // Correct usage of session
+    if (!wallet || wallet.rewardbalance < amount) {
+      throw new Error("Insufficient reward balance.");
+    }
+
+    // Step 2: Deduct the redeem amount from rewardBalance
+    await Hierarchy.updateOne(
+      matched,
+      { $inc: { rewardbalance: -amount } },
+      { session }
+    );
+
+    // Step 3: Insert a new record into the Redeem collection
+    const newRedeemRecord = await Redeem.create(
+      [{
+        contactNumber: contactNumber,
+        productid: productid,
+        redeemproductid: redeemid,
+        quantity: amount,
+        total: amount,
+        createAt: new Date(),
+        createBy: redeemData.createBy,
+        unitprice: 1,
+        sellerNumber: seller,
+      }],
+      { session } // Pass session in options
+    );
+
+    // Commit the transaction
+    await session.commitTransaction();
+
+    // Return or log success
+    console.log("Redeem record created successfully.");
+    return newRedeemRecord;
+  } catch (error) {
+    // Abort the transaction in case of error
+    await session.abortTransaction();
+    console.error("Transaction aborted due to error: ", error.message);
+    throw error; // Re-throw the error so that the caller knows it failed
+  } finally {
+    session.endSession();
+  }
+};
+
 
 exports.latestRedeem = () => {
   const numberOfLatestRedeem = 5;

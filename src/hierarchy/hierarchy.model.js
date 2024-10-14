@@ -23,6 +23,7 @@ const {queryFormatter,queryBuilder_string,
         placementRequired:{ type: Boolean,default:false},
         price:{ type: Number,default:0},
         category:{ type: String,default:"FP"},
+        directReferral:{ Number: String,default:0},
     });
     const hierarchySchema = new Schema({
     updateBy : { type: String},
