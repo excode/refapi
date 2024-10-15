@@ -115,7 +115,7 @@ exports.createRedeemAlifPay = async (redeemData) => {
 
   const session = await mongoose.startSession();
   if (amount < min) {
-    throw new Error("Minimum redeem amout is "+min );
+    throw new Error("Minimum redeem amount is "+min );
   }
   try {
     session.startTransaction();
