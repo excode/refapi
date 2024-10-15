@@ -628,7 +628,7 @@ else {
   }
   
 
-  exports.getUsersIntroducedBy=async(introducerName,productId, currentLevel = 1, maxLevel = 5, users = [])=> {
+  exports.getUsersIntroducedBy=async(introducerName,productId, currentLevel = 1, maxLevel = 10, users = [])=> {
     if (currentLevel > maxLevel) return users;
     let productid =  mongoose.Types.ObjectId(productId);
     if(users.length==0){
@@ -744,7 +744,7 @@ exports.buildHierarchy=async(userId,productId, currentLevel = 1, maxLevel = 3)=>
 }
 
 
-exports.getUsersIntroducedBy2=async(introducerName,productId, currentLevel = 0, maxLevel = 5)=> {
+exports.getUsersIntroducedBy2=async(introducerName,productId, currentLevel = 0, maxLevel = 10)=> {
     
     if (currentLevel > maxLevel) return null;
     let productid =  mongoose.Types.ObjectId(productId);
@@ -775,7 +775,7 @@ exports.getUsersIntroducedBy2=async(introducerName,productId, currentLevel = 0, 
     }
 }
 
-exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 0, maxLevel = 5)=> {
+exports.getUsersIntroducedBy3=async(introducerName,productId, currentLevel = 0, maxLevel = 10)=> {
     
     if (currentLevel > maxLevel) return null;
     let productid =  mongoose.Types.ObjectId(productId);
