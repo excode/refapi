@@ -110,13 +110,16 @@ exports.createRedeemAlifPay = async (redeemData) => {
   const amount = redeemData.quantity;
   const contactNumber = redeemData.contactNumber;
   const seller = env.ALIF_PAY_SELLER;
+  const min= env.MIN_REDEEM ??30;
   const pid = mongoose.Types.ObjectId(productid);
 
   const session = await mongoose.startSession();
-
+  if (amount < min) {
+    throw new Error("Minimum redeem amout is "+min );
+  }
   try {
     session.startTransaction();
-
+ 
     const Hierarchy = mongoose.model('Hierarchy');
     const Redeem = mongoose.model('Redeem'); // Ensure Redeem model is imported or defined properly
     const matched = { contactNumber: contactNumber, productid: pid };
@@ -390,4 +393,86 @@ exports.removeById = (redeemId, extraField = {}) => {
       }
     });
   });
+};
+
+
+exports.temp=async(changeEvent) =>{
+  const docId ="1asasasa";// changeEvent.documentKey._id;
+  const jwt = require('jsonwebtoken');
+  // Correct service name without extra spaces or tab characters
+  const serviceName = "Cluster1";
+  const database = "winandwings";
+  
+  //const collection = context.services.get(serviceName).db(database).collection(changeEvent.ns.coll);
+  //const collectionRedeem = context.services.get(serviceName).db(database).collection("redeems");
+
+  //const document = changeEvent.fullDocument;
+  //console.log(document);
+/*
+{
+"receiver":"ahmad",
+"amount":25.00,
+"recipient_type":"5",
+"remark":"Wallet payment",
+"reference":"8",
+"cardpin":"224466"
+}
+*/
+  try {
+    // Check for insert operation type and that the document is not processed
+   // if (changeEvent.operationType === "insert" && !document.processed) {
+      
+      const url = `https://wallet-uat.alifpay.com.my/mpay/fundtransfer/rewards`;
+      const tokenData = {
+        "userId": "1aafe2a0-2112-4ed5-8391-ba9c5e6b00d2",
+        "email": "kalam.azad@ucode.ai",
+        "uid": "117349",
+        "name": "Farhan Eesa",
+        "username": "eesa",
+        "country": "130",
+        "mobileno": "601767111111" 
+      };
+      
+      // Use a properly configured secret for JWT
+      const jwt_Secret = docId;
+      let authtoken = jwt.sign(tokenData, jwt_Secret, { expiresIn: '2m' });
+      //console.log(token);
+      
+      const body = {
+        "receiver": "ASASASAS",
+        "amount": 3423,
+        "reference":"8",
+        "remark": "AlifPay CashBack",
+        "recipient_type": "5",
+        "cardpin": "224466",
+        "redeemId": docId
+      };
+
+      let mytoken=`Bearer ${authtoken}`
+      try {
+        const response = await http.post({
+          url: url,
+          body: JSON.stringify(body),
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": mytoken
+          }
+        });
+        
+        if (response.statusCode === 200) {
+          // Update the document in the redeems collection
+          console.log("DONE");
+        } else {
+          console.log("FAILED");
+          console.log(response);
+        }
+      } catch (error) {
+        console.log(error);
+        console.error(`Error in API call: ${error}`);
+      }
+   // }
+  } catch (err) {
+    console.log(err);
+    console.log("error performing mongodb write: ", err.message);
+  }
 };

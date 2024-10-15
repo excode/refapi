@@ -1,4 +1,4 @@
-@HOST = http://localhost:8080
+@HOST = http://localhost:8082
 @AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGVhYjUzZjZlMTMzMzBhZTQzYTBlMDYiLCJlbWFpbCI6InRlc3RAdWNvZGUuYWkiLCJmaXJzdG5hbWUiOiJ1Q29kZSIsImxhc3RuYW1lIjoiVGVzdCIsImNvbnRhY3ROdW1iZXIiOiI2MDE3NjQwODI1MCIsIndlYkFjY2VzcyI6MSwicHJvZHVjdElkIjpbIjY1N2U4MDg2NTZjMzA2MjcxN2FmY2Q3MCIsIjY1N2U3ZWI3NWUxZjBhMjRiNzAyNjJiYyIsIjY1N2U3OTY2NWUxZjQ2MjAyYjMyMjliOSJdLCJyZWZyZXNoS2V5IjoiOFJtNkk3N0JrYm1yWnNLZnlidHBBdz09IiwiaWF0IjoxNzA1NTY0NTYzfQ.866Nm61XNnS5LJejEO946vmsrvMWmmnqYufWpg-AgK0
 @TESTID = testID
 //LOGIN ENDPOINT TO GET AUTH TOKEN
@@ -65,3 +65,10 @@ content-type: application/json
 ###
 DELETE {{HOST}}/redeem/{{TESTID}} http/1.1
 Authorization: Bearer {{AUTH}} 
+###
+POST {{HOST}}/redeem/temp http/1.1
+content-type: application/json
+
+{
+
+}

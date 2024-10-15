@@ -81,4 +81,7 @@ exports.routesConfig = function (app) {
     PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
     RedeemController.removeById,
   ]);
+
+
+  
 };

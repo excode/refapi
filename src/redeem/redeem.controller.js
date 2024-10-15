@@ -22,13 +22,13 @@ exports.redeemAlifPay = (req, res) => {
   req.body.contactNumber = req.jwt.username;
   req.body.createAt = funcs.getTime();
  // req.body.id = req.jwt.id;
-
+  
   RedeemModel.createRedeemAlifPay(req.body)
     .then((result) => {
       res.status(200).send({ id: result.id });
     })
     .catch((err) => {
-      res.status(400).json({ err: err });
+      res.status(400).json({ err: err.message || "An error occurred" });
     });
 };
 
@@ -237,3 +237,17 @@ exports.removeById = (req, res) => {
       res.status(400).json({ err: err });
     });
 };
+
+
+exports.temp = (req, res) => {
+  
+  RedeemModel.temp({})
+    .then((result) => {
+      res.status(204).send(result);
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(400).json({ err: err });
+    });
+};
+
