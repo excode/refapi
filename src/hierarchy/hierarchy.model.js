@@ -868,7 +868,88 @@ exports.buildHierarchy2=async(userId,productId, currentLevel = 1, maxLevel = 3)=
         return null;
     }
 }
+exports.buildHierarchyCount=async(userId,productId,left=0,right=0, currentLevel = 1, maxLevel = 3)=> {
+    if (currentLevel > maxLevel || !userId) return null;
+    let productid =  mongoose.Types.ObjectId(productId);
+    try {
+        // Find the current user by userId
 
+        const currentUser = await Hierarchy.findOne({contactNumber:userId,productid:productid});
+
+        if (!currentUser) {
+            console.log(`User not found at level ${currentLevel}`);
+            return null;
+        }
+
+        // Construct the hierarchical node with id, name, and title (adjust fields as needed)
+       
+        let newLevel=currentLevel + 1
+        // Recursively fetch children from leftChild and rightChild
+        if (currentUser.leftChild) {
+            left=left+1;
+            const leftChildNode = await this.buildHierarchyCount(currentUser.leftChild,productId,left,right,newLevel);
+            
+        }
+
+        if (currentUser.rightChild) {
+            right=right+1;
+           
+            const rightChildNode = await this.buildHierarchyCount(currentUser.rightChild,productId, left,right,newLevel);
+            
+        }
+
+        
+
+        // Return the node with its children
+        return node;
+    } catch (error) {
+        console.error('Error building hierarchy:', error);
+        return null;
+    }
+}
+const countChildren = async (username,productId) => {
+  let count = 0;
+ // let productid =  mongoose.Types.ObjectId(productId);
+
+ const query={contactNumber:{ $regex: new RegExp('^' + username + '$', 'i') },productid:productId};
+ //console.log(query)
+  const user = await Hierarchy.findOne(query);
+  if (!user) {
+    return count;
+  }
+
+ 
+  if (user.leftChild) {
+    count += 1; // Count the left child
+    count += await countChildren(user.leftChild,productId); // Recursively count left child's downline
+  }
+
+  // Count users in the right subtree
+  if (user.rightChild) {
+    count += 1; // Count the right child
+    count += await countChildren(user.rightChild,productId); // Recursively count right child's downline
+  }
+
+  return count;
+ 
+};
+
+exports.countLeftAndRightDownline = async (username,productid) => {
+    const query={contactNumber:username,productid:productid};
+    //console.log(query)
+    const user =  await Hierarchy.findOne(query);
+    if (!user) {
+      console.log(`User ${username} not found`);
+      return;
+    }
+  
+    // Get the count of downline for left and right side
+    const leftCount = await countChildren(user.leftChild,productid);
+    const rightCount = await countChildren(user.rightChild,productid);
+  
+    console.log(`User ${username} has ${leftCount} users on the left and ${rightCount} users on the right.`);
+    return {left:leftCount,right:rightCount}
+  };
 async function checkUplines(root,upline,productId) {
    
     
