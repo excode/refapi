@@ -348,6 +348,30 @@ exports.listSuggestions = (req, res ) => {
           });
         }
   };
+  exports.list_chart2_count= (req, res) => {
+    let username="ahmad"
+    if(req.query.xI!=undefined && req.query.xI!=""){
+
+      username=req.query.xI
+  }
+    let key=username+"_chart2_"+req.query.productId??"";
+    let cVal= false;//myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+      let pid= mongoose.Types.ObjectId(env.ALIF_PAY_PRODUCT)
+    HierarchyModel.countLeftAndRightDownline(username,pid)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+  console.log(err)
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
   exports.list_level = (req, res) => {
 
     let username=req.jwt.username

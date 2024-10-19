@@ -160,3 +160,16 @@ content-type: application/json
     "productid":"66e665de966efc2edaa97cf0"
  
 }
+###
+
+GET {{HOST}}/hierarchy/all/org_chart2/count HTTP/1.1
+
+content-type: application/json
+
+{
+    "contactNumber":"kalam",
+    "introducer":"ahmad",
+    "productid":"66e665de966efc2edaa97cf0",
+    "upline":"lean",
+    "position":"L"
+}
