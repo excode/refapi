@@ -125,7 +125,7 @@ exports.createHierarchy = (hierarchyData) => {
 exports.addNewUserCheck = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
-    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
     if(!uplineCheck ) {
         reject("introducer not exists");
         return;
