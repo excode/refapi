@@ -44,7 +44,8 @@ const queryBuilder_string=(query,name)=>{
         if(mode=="startsWith"){
             _query[name] = new RegExp('^'+value,'i');
         }else if(mode=="equals"){
-            _query[name] =value;
+            // /^Azad$/
+            _query[name] = new RegExp('^'+value+'$','i');;
         }else if(mode=="notEquals"){
             _query[name]  = { $ne: value } ;
         }else if(mode=="endsWith"){
