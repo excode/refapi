@@ -173,3 +173,15 @@ content-type: application/json
     "upline":"lean",
     "position":"L"
 }
+
+
+###
+
+POST {{HOST}}/hierarchy/addNew/reward/check HTTP/1.1
+content-type: application/json
+
+{
+    "contactNumber":"alwinsuccess",
+    "introducer":"safinatee",
+    "productid":"66e665de966efc2edaa97cf0"
+}
