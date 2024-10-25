@@ -132,6 +132,12 @@ app.get('/hierarchy/all/level3/u', [
          //PermissionMiddleware.minimumPermissionLevelRequired(USER),
          HierarchyController.addNewUser3
        ]);
+       app.post('/hierarchy/addNew/reward/check', [
+        // ValidationMiddleware.validJWTNeeded,
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.rewardCheck
+       ]);
        app.post('/hierarchy/check/reg', [
         // ValidationMiddleware.validJWTNeeded,
          //FormValidation.formValidation(formValidationRules1),

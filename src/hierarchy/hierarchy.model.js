@@ -1005,10 +1005,11 @@ async function checkUplines(root,upline,productId) {
    
     
     try {
-    
+    console.log(root)
       const introquery={ contactNumber: upline,productid:productId }
+      console.log(introquery)
       const parentUser = await Hierarchy.findOne(introquery);
-  
+       
       if (!parentUser || parentUser["contactNumber"]==="") {    
         console.log(introquery);   
         console.log(parentUser);        
@@ -1054,7 +1055,7 @@ async function checkUplines(root,upline,productId) {
         };
         rewards.push(reward);
         if(rewards.length<=limit){
-            const rewards_= await this.rewardUplines(root,parentUser["upline"],productId,amount,rewards,limit)
+            const rewards_= await this.rewardUplines(root,parentUser["introducer"],productId,amount,rewards,limit)
             return rewards_
         }else{
             return rewards
@@ -1385,3 +1386,29 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
   }
 }
 
+
+
+
+exports.checkHierarchyAlifPay = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    console.log({"introducer":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    
+    
+  
+        let rewards =[];
+       
+             rewards =await exports.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
+       
+        console.log(rewards);
+        
+        //await RewardModel.InsertMany(rewards)
+        //resolve(saved)
+    });
+   
+};
