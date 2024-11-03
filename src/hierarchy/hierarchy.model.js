@@ -143,7 +143,7 @@ exports.addNewUserCheck = (hierarchyData) => {
 exports.placement = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
-    let   introCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    let   introCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
     if(!introCheck ) {
         reject("introducer not exists");
         return;
@@ -1091,7 +1091,8 @@ async function checkUplines(root,upline,productId) {
            current="rightCurrent";
        }
 
-      const introquery={ [upline_]: upline,productid:productId }
+      //const introquery={ [upline_]: upline,productid:productId }
+      const introquery={ 'contactNumber': upline,productid:productId }
       console.log(introquery)
       const parentUser = await Hierarchy.findOne(introquery);
       
@@ -1112,7 +1113,7 @@ async function checkUplines(root,upline,productId) {
        // console.log(infoData)
         //console.log("XXXX")
         parentUser.save();
-         await this.updatePlacements(root,parentUser["upline"],productId,position);
+         await this.updatePlacements(root,parentUser["upline"],productId,parentUser["position"]);
       
         
 
@@ -1412,3 +1413,106 @@ exports.checkHierarchyAlifPay = (hierarchyData) => {
     });
    
 };
+
+
+
+exports.placement3 = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+        reject("introducer not exists");
+        return;
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    let   introCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
+    if(!introCheck ) {
+        console.log(hierarchyData.introducer)
+        reject("introducer not exists");
+        return;
+    }
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(!regCheck ) {
+        reject("user not exists");
+        return;
+    }else{
+       //if(regCheck.infoData.placementDone){
+       // reject("user already  exists");
+       // return;
+       //}
+    }
+    let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.upline,productid:productID})
+    if(!uplineCheck ) {
+        reject("upline not exists");
+        return;
+    }
+    let introUsername=hierarchyData.introducer.toLowerCase();
+    let iUpline =hierarchyData.upline.toLowerCase();
+    let nxUpline = uplineCheck["upline"].toLowerCase()
+    let sameFamily = introUsername == iUpline ;
+    if(!sameFamily){
+        sameFamily = introUsername == nxUpline  ;
+    }
+    if(!sameFamily){
+        sameFamily = await checkUplines(introUsername,nxUpline,productID) ;
+    }
+    if(!sameFamily){
+        console.log(introUsername)
+        console.log(iUpline)
+        console.log(nxUpline)
+        reject("Not from same family");
+        return;
+    }
+
+    
+    await this.updatePlacements(hierarchyData.contactNumber,iUpline,productID,hierarchyData.position)
+    resolve("OK")
+   
+    });
+};
+
+
+exports.updatePlacements_=async(root,upline,productId,position="L") =>{
+   
+    
+    try {
+        let upline_="leftChild";
+        let all="leftTotal";
+        let current="leftCurrent";
+  
+       if(position=="R"){
+           upline_="rightChild";
+           all="rightTotal";
+           current="rightCurrent";
+       }
+
+      //const introquery={ [upline_]: upline,productid:productId }
+      const introquery={ 'contactNumber': upline,productid:productId }
+      console.log(introquery)
+      const parentUser = await Hierarchy.findOne(introquery);
+      
+      if (!parentUser) {    
+        
+        return;
+      }else{
+        
+        const allTime=checkInteger(parentUser.infoData[all])+1;
+        const currentCount = checkInteger(parentUser.infoData[current])+1;
+        //console.log(parentUser.infoData[all]+"  "+allTime)
+        //console.log(parentUser.infoData[current]+" "+currentCount)
+        let info =parentUser["infoData"].toObject();;
+        console.log(info)
+        let infoData = {...info,[all]:allTime,[current]:currentCount}
+        parentUser.infoData = infoData;
+
+       // console.log("XXXX")
+        console.log(infoData)
+        console.log("======="+parentUser["position"]+"=========")
+       //parentUser.save();
+         await this.updatePlacements_(root,parentUser["upline"],productId,parentUser["position"]);
+      
+        
+
+      }
+    } catch (error) {
+        console.error('Error adding new user:', error);
+        return null;
+      }
+      
+  }

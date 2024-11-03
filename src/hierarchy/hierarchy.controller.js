@@ -574,3 +574,14 @@ exports.rewardCheck = (req, res) => {
             res.status(400).json( {err:err} );
         });
 };
+
+exports.placement3 = (req, res) => {
+ // req.body.introducer = req.jwt.username;
+  HierarchyModel.placement3(req.body)
+
+        .then((result)=>{
+            res.status(200).send(result);
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+};

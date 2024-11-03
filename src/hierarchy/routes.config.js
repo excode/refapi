@@ -168,6 +168,13 @@ app.get('/hierarchy/all/level3/u', [
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.syncWallet
       ]);
+
+      app.post('/hierarchy/placement/reg/u2', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.placement3
+      ]);
   };
   
     
