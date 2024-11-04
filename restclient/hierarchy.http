@@ -102,7 +102,7 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"azad18",
+    "contactNumber":"azad19",
     "introducer":"afia",
     "productid":"66e665de966efc2edaa97cf0",
     "category":"FP"
