@@ -102,10 +102,10 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"afia",
-    "introducer":"stellatan",
+    "contactNumber":"azad18",
+    "introducer":"afia",
     "productid":"66e665de966efc2edaa97cf0",
-    "category":"AlifPay FinTech Partner"
+    "category":"FP"
 }
 
 ###

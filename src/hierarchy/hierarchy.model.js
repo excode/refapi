@@ -23,7 +23,7 @@ const {queryFormatter,queryBuilder_string,
         placementRequired:{ type: Boolean,default:false},
         price:{ type: Number,default:0},
         category:{ type: String,default:"FP"},
-        directReferral:{ Number: String,default:0},
+        directReferral:{ type: Number,default:0},
     });
     const hierarchySchema = new Schema({
     updateBy : { type: String},
@@ -1128,7 +1128,7 @@ async function checkUplines(root,upline,productId) {
   exports.createHierarchyAlifPay = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
-    let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
+    let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
     if(!uplineCheck ) {
         reject("introducer not exists");
         return;
@@ -1143,6 +1143,7 @@ async function checkUplines(root,upline,productId) {
         category:"FP",
         placementRequired:true,
         placementDone:false,
+        directReferral:0
     }
     if(hierarchyData.price==50){
         infoData={
@@ -1150,6 +1151,7 @@ async function checkUplines(root,upline,productId) {
             category:"FC",
             placementRequired:false,
             placementDone:false,
+            directReferral:0
         }
     }
     hierarchyData["infoData"] =infoData;
@@ -1159,6 +1161,18 @@ async function checkUplines(root,upline,productId) {
             return reject(err);
         }
         let rewards =[];
+
+        /** */
+        let info = uplineCheck["infoData"]
+        let directReferral=info["directReferral"]??0;
+        //let infoData = {...info,"directReferral": directReferral+1}
+        //console.log(infoData)
+        uplineCheck.infoData.directReferral = directReferral+1;
+      
+        uplineCheck.save();
+
+
+        /**/
         if(hierarchyData.price==260){
             //"afia","phang2320","66e665de966efc2edaa97cf0","2",[],10
              rewards =await exports.rewardUplines(hierarchyData.contactNumber,hierarchyData.introducer,hierarchyData.productid,2,[],10);
