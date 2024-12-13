@@ -585,3 +585,21 @@ exports.placement3 = (req, res) => {
             res.status(400).json( {err:err} );
         });
 };
+
+
+exports.rewardMerchantPurchase=(req, res)=>{
+  //storeCreatedBy,merchat_username,customer,productId,amount
+
+    const storeCreatedBy =req.body.storeCreatedBy;
+    const merchat_username =req.body.merchat_username;
+    const customer =req.body.customer;
+    const productId =req.body.productId;
+    const amount =req.body.amount;
+    HierarchyModel.rewardMerchantPurchase(storeCreatedBy,merchat_username,customer,productId,amount)
+
+        .then((result)=>{
+            res.status(200).send(result);
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+}

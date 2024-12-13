@@ -175,6 +175,13 @@ app.get('/hierarchy/all/level3/u', [
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.placement3
       ]);
+
+      app.post('/hierarchy/reward/purchase', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardMerchantPurchase
+      ]);
   };
   
     

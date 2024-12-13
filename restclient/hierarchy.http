@@ -1,4 +1,5 @@
-@HOST = http://localhost:8082
+@HOST = https://winmarchant.azurewebsites.net
+@HOSTL = http://localhost:8082
 @AUTH = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMTFlYjRmMC1kYzdlLTQzNTUtODQxMS0wNDZhNGEzNWI0YjAiLCJlbWFpbCI6ImthemFkNzlAZ21haWwuY29tIiwidWlkIjoiMTQxOTk3IiwibmFtZSI6Ik1EIEFidWwgS2FsYW0gQXphZCIsInVzZXJuYW1lIjoia2FsYW0iLCJjb3VudHJ5IjoiMTMwIiwibW9iaWxlbm8iOiI2MDE3NjcwMTk0NiIsInVzZXJUeXBlIjoyLCJyZWZyZXNoS2V5IjoiQW5vbWh2eG5RMGN2VVZVOER0L0IxQT09IiwiaWF0IjoxNzI5MzM0MDUzLCJleHAiOjE3MzE5MjYwNTN9.P8MgrJoSDe1hxA1ARxFobeW_3cXNr4_OiSHgTb5yl68
 @AUTH_F=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmYwZWUyOWYyMDIxZDdiNmI0MmMyNTIiLCJjb250YWN0TnVtYmVyVHlwZSI6MiwibmFtZSI6IkFmbmFuIEFobWVkIiwidXNlclR5cGUiOjQsImVtYWlsIjoiZXhjb2RlLm5ldEBnbWFpbC5jb20iLCJtb2JpbGUiOiIiLCJ2ZXJpZmllZCI6MSwiY291bnRyeSI6Im15IiwidXNlcm5hbWUiOiJhZm5hbiIsImludHJvZHVjZXIiOiJrYWxhbSIsImlhdCI6MTcyNzUwODE3OCwiZXhwIjoxNzMwMTAwMTc4fQ.S6b7rOl-5RHgrfcKZH_fwzkXdSrwgXnin3jtPCdlrPs
 //{"name":"Afnan Ahmed","mobileno":"","username":"afnan","email":"excode.net@gmail.com","userType":4,"userId":"66f0ee29f2021d7b6b42c252","introducer":"kalam","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmYwZWUyOWYyMDIxZDdiNmI0MmMyNTIiLCJjb250YWN0TnVtYmVyVHlwZSI6MiwibmFtZSI6IkFmbmFuIEFobWVkIiwidXNlclR5cGUiOjQsImVtYWlsIjoiZXhjb2RlLm5ldEBnbWFpbC5jb20iLCJtb2JpbGUiOiIiLCJ2ZXJpZmllZCI6MSwiY291bnRyeSI6Im15IiwidXNlcm5hbWUiOiJhZm5hbiIsImludHJvZHVjZXIiOiJrYWxhbSIsImlhdCI6MTcyNzUwODE3OCwiZXhwIjoxNzMwMTAwMTc4fQ.S6b7rOl-5RHgrfcKZH_fwzkXdSrwgXnin3jtPCdlrPs","refresh":"6e6yfJ0hebeG2c9ifO2i0J2I1Udz7Ib16Nbi4I2scI2n5R25cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmYwZWUyOWYyMDIxZDdiNmI0MmMyNTIiLCJjb250YWN0TnVtYmVyVHlwZSI6MiwibmFtZSI6IkFmbmFuIEFobWVkIiwidXNlclR5cGUiOjQsImVtYWlsIjoiZXhjb2RlLm5ldEBnbWFpbC5jb20iLCJtb2JpbGUiOiIiLCJ2ZXJpZmllZCI6MSwiY291bnRyeSI6Im15IiwidXNlcm5hbWUiOiJhZm5hbiIsImludHJvZHVjZXIiOiJrYWxhbSIsImlhdCI6MTcyNzUwODE3OH0.qiekT_wL7gaaWqhGK2YU4ei-AQ4vKNW84fy-r03zS8c.02"}
@@ -206,3 +207,46 @@ content-type: application/json
     "upline":"apani51",
     "position":"L"
 }
+
+###
+
+POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
+content-type: application/json
+
+{
+    "contactNumber":"soon9",
+    "introducer":"lean",
+    "productid":"66e665de966efc2edaa97cf0",
+    "upline":"phang2320",
+    "position":"R"
+}
+###
+
+POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
+content-type: application/json
+
+{
+    "contactNumber":"Joycethung",
+    "introducer":"wendy2331",
+    "productid":"66e665de966efc2edaa97cf0",
+    "upline":"Cecelialaw427",
+    "position":"R"
+}
+
+###
+#const storeCreatedBy =req.body.storeCreatedBy;
+   #const merchat_username =req.body.merchat_username;
+   # const customer =req.body.customer;
+   #const productId =req.body.productId;
+    #const amount =req.body.amount;
+POST {{HOSTL}}/hierarchy/reward/purchase HTTP/1.1
+content-type: application/json
+
+{
+    "storeCreatedBy":"kalam",
+    "merchat_username":"eesa",
+    "productId":"66e665de966efc2edaa97cf0",
+    "customer":"kalamerwe",
+    "amount":10.96
+}
+
