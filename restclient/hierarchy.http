@@ -239,14 +239,25 @@ content-type: application/json
    # const customer =req.body.customer;
    #const productId =req.body.productId;
     #const amount =req.body.amount;
+    
 POST {{HOSTL}}/hierarchy/reward/purchase HTTP/1.1
 content-type: application/json
 
 {
-    "storeCreatedBy":"kalam",
+    "storeCreatedBy":"kazad79@gmail.com",
     "merchat_username":"eesa",
     "productId":"66e665de966efc2edaa97cf0",
     "customer":"kalamerwe",
-    "amount":10.96
+    "trx_id":"6756a8aed8c1585d19d20112",
+    "storeName":"Kalam Entriprise"
 }
+###
+@TRX=675c464d4c34bb2449594aa8
+@URL=https://alifpay-merchant-uat-edc6aucnchbracbz.southeastasia-01.azurewebsites.net
+@TRX2=675ad60abc15139301867125
+@URL2=https://merchant.alifpay.com.my
+###
+GET {{URL2}}/transactions/taskcompleted/{{TRX}} HTTP/1.1
+###
 
+GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
