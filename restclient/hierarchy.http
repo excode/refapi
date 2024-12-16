@@ -244,12 +244,12 @@ POST {{HOSTL}}/hierarchy/reward/purchase HTTP/1.1
 content-type: application/json
 
 {
-    "storeCreatedBy":"kazad79@gmail.com",
-    "merchat_username":"eesa",
+    "storeCreatedBy":"tuahnusantara@gmail.com",
+    "merchat_username":"aura7",
     "productId":"66e665de966efc2edaa97cf0",
-    "customer":"kalamerwe",
-    "trx_id":"6756a8aed8c1585d19d20112",
-    "storeName":"Kalam Entriprise"
+    "customer":"ahmad",
+    "trx_id":"675c464d4c34bb2449594aa8",
+    "storeName":"Selmah Fashion"
 }
 ###
 @TRX=675c464d4c34bb2449594aa8

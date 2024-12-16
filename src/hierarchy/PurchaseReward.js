@@ -59,7 +59,8 @@ async function fetchUserDetails(storeCreatedBy) {
 async function fetchTransactionDetails(transactionId) {
     const url = `${STORE_URL}/transactions/taskcheck/${transactionId}`;
     console.log(url)
-     await axios.get(url);
+    const { data }= await axios.get(url);
+
     if (!data) throw new Error('TRX-undefined');
     return data;
 }
@@ -67,8 +68,8 @@ async function postTransactionComplete(transactionId) {
   const url = `${STORE_URL}/transactions/taskcompleted/${transactionId}`;
   console.log(url)
   const { data } = await axios.get(url);
- // if (!data) throw new Error('TRX-undefined');
-  //return data;
+   if (!data) throw new Error('TRX-undefined');
+  return data;
 }
 
 async function calculateRewards(params) {
@@ -145,7 +146,7 @@ async function calculateRewards(params) {
          };
         rewards.push(company_rewards);
     
-    
+        console.log(parentUser)
           if (!parentUser || parentUser["contactNumber"]==="") {    
             console.log(introquery);   
             console.log(parentUser);        
@@ -155,6 +156,7 @@ async function calculateRewards(params) {
           }else{
            
            if(customerUser){
+            console.log("FC Customer")
              let amount_10 =community_reward*.1;
              let amount_20 =community_reward*.2;
              amount_20=amount_20.toFixed(4);
@@ -272,7 +274,7 @@ async function calculateRewards(params) {
         }else{
          // CUSTOMER IS NOT A FINTECH/COMMUNITY PATNER 
           
-         
+         console.log("BASIC Customer")
         let amount_20 =community_reward*.2;
         amount_20=amount_20.toFixed(4);
         amount_20=Number(amount_20)
@@ -389,8 +391,8 @@ async function calculateRewards(params) {
 }
 
 async function saveRewards(rewards) {
-  //console.log(rewards)
- // const data=await RewardModel.InsertMany(rewards);
+  console.log(rewards)
+  const data=await RewardModel.InsertMany(rewards);
   return data;
     // Bulk insert rewards or other DB logic
 }
