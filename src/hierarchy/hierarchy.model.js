@@ -90,11 +90,16 @@ exports.find = (query) => {
 };
 
 exports.findOne = (query) => {
+   // console.log("SEARHING =====>")
+   // console.log(query)
     return new Promise((resolve, reject) => {
         Hierarchy.findOne(query, function(err, result) {
             if (err) {
                 reject(err);
             } else {
+                //console.log(result)
+               /// console.log("<=========")
+
                 resolve(result);
             }
         });
