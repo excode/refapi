@@ -1,6 +1,7 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 //var ObjectId = require('mongodb').ObjectID;
+
 const funcs =  require("../../common/functions/funcs");
 jwt = require("jsonwebtoken");
 const jwtSecret = require("../../common/config/env.config.js").jwt_secret
@@ -61,6 +62,7 @@ hierarchySchema.findById = function (cb) {
 };
 
 const Hierarchy = mongoose.model('Hierarchy', hierarchySchema);
+
 
 
 exports.findById = (id,extraField) => {
@@ -609,6 +611,7 @@ else {
   exports.addNewUser=async(data) =>{
     const {createBy,createAt,username, productid, parentUsername}=data;
     try {
+        username=username.toLowerCase()
       // Create the new user object
       const newUser = new Hierarchy({
         createBy : createBy,
@@ -912,7 +915,7 @@ const countChildren = async (username,productId) => {
   let count = 0;
  // let productid =  mongoose.Types.ObjectId(productId);
 
- const query={contactNumber:{ $regex: new RegExp('^' + username + '$', 'i') },productid:productId};
+ const query={contactNumber: username  ,productid:productId};
  //console.log(query)
   const user = await Hierarchy.findOne(query);
   if (!user) {
@@ -981,6 +984,8 @@ async function checkUplines(root,upline,productId) {
   // Function to add a new user to the MLM system
   exports.addNewUser=async(data) =>{
     const {createBy,createAt,username, productid, parentUsername}=data;
+    username=username.toLowerCase();
+    parentUsername=parentUsername.toLowerCase();
     try {
       // Create the new user object
       const newUser = new Hierarchy({
@@ -1079,7 +1084,7 @@ async function checkUplines(root,upline,productId) {
   }
   
   exports.updatePlacements=async(root,upline,productId,position="L") =>{
-   
+    upline=upline.toLowerCase();
     
     try {
         let upline_="leftChild";
@@ -1129,11 +1134,13 @@ async function checkUplines(root,upline,productId) {
   exports.createHierarchyAlifPay = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    hierarchyData.introducer=hierarchyData.introducer.toLowerCase();
     let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
     if(!uplineCheck ) {
         reject("introducer not exists");
         return;
     }
+    hierarchyData.contactNumber=hierarchyData.contactNumber.toLowerCase();
     let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
     if(regCheck ) {
         reject("user already exists");
@@ -1407,6 +1414,8 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
 
 exports.checkHierarchyAlifPay = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
+    hierarchyData.introducer=hierarchyData.introducer.toLowerCase();
+    hierarchyData.contactNumber=hierarchyData.contactNumber.toLowerCase();
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
     let   uplineCheck =await Hierarchy.findOne({"introducer":hierarchyData.introducer,productid:productID})
     console.log({"introducer":hierarchyData.introducer,productid:productID})
@@ -1531,3 +1540,14 @@ exports.updatePlacements_=async(root,upline,productId,position="L") =>{
       }
       
   }
+
+
+
+
+// MERCHANT REWRD 
+
+ 
+
+
+
+  
