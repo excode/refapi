@@ -234,6 +234,11 @@ async function calculateRewards(params) {
                 let query={ contactNumber: parent,productid:productId } ;
                 let introCusUser = await HM.findOne(query);
                 if(introCusUser){
+                    let compressMatched=introCusUser.infoData["directReferral"]>i;
+                    //console.log(introCusUser["contactNumber"])
+                   // console.log(introCusUser.infoData["directReferral"])
+                    //console.log(compressMatched)
+                    let cm_=introCusUser["contactNumber"]
                     let into_upline_reward={
                         createBy : 'ALIF-PAY',
                         createAt : time,
@@ -241,12 +246,13 @@ async function calculateRewards(params) {
                         amount : amount_10, //20% of community_reward
                         status : 0,
                         productid : productId,
-                        contactNumber :  introCusUser["contactNumber"],
+                        contactNumber :  compressMatched? cm_:marketing_username,
                         ref :transactionId,
                         sourceContactNumber : merchantUsername,
-                        particular : "Cashback Reward from "+customer,
+                        particular : compressMatched? "Cashback Reward from "+customer:"Cashback Reward Leftover(CM=>"+cm_+"): "+customer,
                         type : "3"
                     };
+                  
                   rewards.push(into_upline_reward);
                   parent = introCusUser["introducer"];
                 }else{
@@ -261,7 +267,7 @@ async function calculateRewards(params) {
                         contactNumber :  marketing_username,
                         ref : transactionId,
                         sourceContactNumber : merchantUsername,
-                        particular : "Cashback Reward from "+customer,
+                        particular : "Cashback Reward Leftover: "+customer,
                         type : "3"
                     };
                   rewards.push(leftover_upline_reward);
