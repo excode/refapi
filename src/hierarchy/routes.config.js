@@ -8,10 +8,10 @@ const rootPath="../../";
   const USER = config.permissionLevels.APP_USER;
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
-    {ctrl:'distributor',format:'boolean',required:true},
-    {ctrl:'contactNumber',format:'phone',required:true},
+    {ctrl:'distributor',format:'boolean',required:false},
+    {ctrl:'contactNumber',format:'text',required:true},
     {ctrl:'productid',format:'',required:true},
-    {ctrl:'introducer',format:'phone',required:true}
+    {ctrl:'introducer',format:'text',required:true}
   ];
   const formValidationRules1=[
     {ctrl:'username',format:'',required:true},

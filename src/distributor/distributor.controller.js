@@ -209,5 +209,14 @@ exports.listSuggestions = (req, res ) => {
   };
    
   
+exports.uploadfile=(req,res)=>{
+    DistributorModel.uploadFile(req)
+        .then((result) => {
+                res.status(201).send( result);
+        }).catch((err)=>{
 
+        res.status(400).json( {err :err});
+    });
+}
+        
     

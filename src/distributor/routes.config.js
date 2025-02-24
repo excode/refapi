@@ -9,14 +9,14 @@ const rootPath="../../";
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
     {ctrl:'blogTitle',format:'text',required:true},
-{ctrl:'email',format:'email',required:true},
-{ctrl:'state',format:'text',required:true},
-{ctrl:'productid',format:'',required:true},
-{ctrl:'contactNumber',format:'phone',required:true},
-{ctrl:'name',format:'text',required:true},
-{ctrl:'address',format:'text',required:true},
-{ctrl:'city',format:'text',required:true},
-{ctrl:'zipcode',format:'text',required:true,max:10,min:0}
+  {ctrl:'email',format:'email',required:true},
+  {ctrl:'state',format:'text',required:true},
+  {ctrl:'productid',format:'',required:true},
+  {ctrl:'contactNumber',format:'phone',required:true},
+  {ctrl:'name',format:'text',required:true},
+  {ctrl:'address',format:'text',required:true},
+  {ctrl:'city',format:'text',required:true},
+  {ctrl:'zipcode',format:'text',required:true,max:10,min:0}
 
   ];
   exports.routesConfig = function (app) {
@@ -59,6 +59,14 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
           DistributorController.removeById
       ]);
+       app.post('/distributor/upload/:columnName/:rowId', [
+              ValidationMiddleware.validJWTNeeded,
+              //PermissionMiddleware.productInsertPermission(),  // 
+              //PermissionMiddleware.jproductInsertLimit(),     // 
+              PermissionMiddleware.minimumPermissionLevelRequired(USER),
+              DistributorController.uploadfile
+          ]);
   };
+
   
     

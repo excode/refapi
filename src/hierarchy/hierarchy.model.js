@@ -34,7 +34,7 @@ const {queryFormatter,queryBuilder_string,
     createAt : { type: Date},
     walletbalance : { type: Number,required:true,default:0},
     rewardbalance : { type: Number,required:true,default:0},
-    distributor : { type:Boolean,required:true,default:false},
+    distributor : { type:Boolean,default:false},
     contactNumber : { type: String,required:true,default:''},
     productid : {type: Schema.Types.ObjectId, ref: 'Product'},
     category : {type: String,default:''},
@@ -988,7 +988,7 @@ async function checkUplines(root,upline,productId) {
   
   // Function to add a new user to the MLM system
   exports.addNewUser=async(data) =>{
-    const {createBy,createAt,username, productid, parentUsername}=data;
+    var {createBy,createAt,username, productid, parentUsername}=data;
     username=username.toLowerCase();
     parentUsername=parentUsername.toLowerCase();
     try {
@@ -1010,6 +1010,37 @@ async function checkUplines(root,upline,productId) {
       console.error('Error adding new user:', error);
     }
   }
+  exports.addDefaultUser=async(data) =>{
+    var {createBy,createAt,username, productid, parentUsername}=data;
+    username=username.toLowerCase();
+    parentUsername=parentUsername.toLowerCase();
+    try {
+      // Create the new user object
+      const newUser = new Hierarchy({
+        createBy : createBy,
+        createAt : createAt,
+        walletbalance : 0,
+        rewardbalance : 0,
+        distributor : true,
+        contactNumber : username,
+        productid : productid,
+        introducer : parentUsername,
+      });
+  
+      const hierarchy = new Hierarchy(newUser);
+      hierarchy.save(function (err, saved) {
+          if (err) {
+              return err;
+          }
+          
+          return saved;
+      });
+     // await placeUserRecursively(parentUsername,productid,parentUsername, newUser);
+    } catch (error) {
+      console.error('Error adding new user:', error);
+    }
+  }
+
 
 
   exports.rewardUplines=async(root,upline,productId,amount,rewards=[],limit=10) =>{

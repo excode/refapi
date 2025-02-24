@@ -1,6 +1,8 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
+
+const HierarchyModel =  require("../hierarchy/hierarchy.model");
 const UF = require('../../lib/fileUpload');
 //var ObjectId = require('mongodb').ObjectID;
 const {queryFormatter,queryBuilder_string,
@@ -96,10 +98,19 @@ exports.createProduct = (productData) => {
     return new Promise((resolve, reject) => {
     
     const product = new Product(productData);
-    product.save(function (err, saved) {
+    product.save(async function (err, saved) {
         if (err) {
             return reject(err);
         }
+        const data={
+            createAt:productData.createAt,
+            createBy:productData.createBy,
+            username:productData.createBy,
+            productid:saved._id,
+            parentUsername:""
+
+        }
+        await HierarchyModel.addDefaultUser(data);
         resolve(saved)
     });
     });

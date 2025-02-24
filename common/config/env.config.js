@@ -8,7 +8,7 @@ let  pass = env.DB_PASSWORD|| "123456";
 let  db_name = env.DB_NAME|| "winandwings";
     module.exports = {
         "port": env.PORT ||8080,
-        "jwt_secret": "654321",
+        "jwt_secret": "assdTTTThnKiJJ()_aass((09123999!!35232323",
         "jwt_expiration_in_seconds": 6000,
         "environment": "dev",
         "permissionLevels": {

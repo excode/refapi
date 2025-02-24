@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken"),
   secret = require("../config/env.config.js").jwt_secret,
   crypto = require("crypto");
-
+  const ProductModel = require("../../src/product/product.model")
 exports.verifyRefreshBodyField = (req, res, next) => {
   if (req.body && req.body.refresh_token) {
     return next();
@@ -25,7 +25,7 @@ exports.validRefreshNeeded = (req, res, next) => {
   }
 };
 
-exports.validJWTNeeded = (req, res, next) => {
+exports.validJWTNeeded = async(req, res, next) => {
   let my_secret=secret;
   if(req.headers["project_code"]){
     my_secret=req.headers["project_code"];
@@ -38,6 +38,18 @@ exports.validJWTNeeded = (req, res, next) => {
         return res.status(401).send();
       } else {
         req.jwt = jwt.verify(authorization[1], my_secret);
+        if(!req.jwt.productId){
+          let productId= await ProductModel.listIds(req.jwt.username.trim());
+          req.jwt.productId = productId;
+        }
+        if(!req.jwt.email){
+          
+          req.jwt.email = req.jwt.username.trim();
+        }
+        if(!req.jwt.contactNumber){
+          
+          req.jwt.contactNumber = req.jwt.username.trim();
+        }
 
         return next();
       }

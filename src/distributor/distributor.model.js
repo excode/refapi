@@ -1,11 +1,8 @@
-
-
-
 //var ObjectId = require('mongodb').ObjectID;
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 const funcs =  require("../../common/functions/funcs");
-
+const UF = require('../../lib/fileUpload');
 const {queryFormatter,queryBuilder_string,
     queryBuilder_number,
     queryBuilder_date,
@@ -35,7 +32,8 @@ const distributorSchema = new Schema({
 			zipcode : { type: String,required:true,default:'',maxLength:10},
 			country : { type: String,required:true,default:''},
 			productname : { type: String,required:true,default:''},
-			serviceType : { type: Number,required:true,default:0}
+			serviceType : { type: Number,required:true,default:0},
+            photo : { type: String}
             
 });
 
@@ -356,6 +354,7 @@ exports.patchDistributor = (id, distributorData,extraField={}) => {
     
     var extraQuery =queryFormatter(extraField);
     var queries = {...extraQuery,_id:id}
+    console.log(distributorData)
     return new Promise((resolve, reject) => {
         
         Distributor.findOne(queries, function (err, distributor) {
@@ -388,4 +387,27 @@ exports.removeById = (distributorId,extraField={}) => {
 
 
 
-    
+ exports.uploadFile = (req) => {
+        return new Promise(async(resolve, reject) => {
+            let colName = req.params.columnName
+           
+            let rowId = req.params.rowId
+            //let uploadedFileName =req.file.filename;
+            UF.uploadFiles(req,rowId,"distributor").then((va)=>{
+                Distributor.findById(rowId, function (err, product) {
+                    if (err) reject(err);
+                    product[colName] =va;
+                    product.save(function (err, updatedData) {
+                        if (err) return reject(err);
+                        resolve(va)
+                    });
+                });
+            }).catch((err)=>{
+           
+            reject(err);
+            });
+        
+           
+            
+        });
+};
