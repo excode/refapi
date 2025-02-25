@@ -30,7 +30,7 @@ exports.validJWTNeeded = async(req, res, next) => {
   if(req.headers["project_code"]){
     my_secret=req.headers["project_code"];
   }
- // console.log(my_secret)
+   console.log(my_secret)
   if (req.headers["authorization"]) {
     try {
       let authorization = req.headers["authorization"].split(" ");
