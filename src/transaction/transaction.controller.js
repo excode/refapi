@@ -24,7 +24,13 @@ const mongoose = require('../../common/services/mongoose.service').mongoose;
       let limit = req.query.limit && req.query.limit <= 100 ? parseInt(req.query.limit) : 10;
       let page = 0;
        //console.log(typeof req.jwt.productId[0])
-       req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+     
+
+       if (req.jwt?.productId && Array.isArray(req.jwt.productId)) {
+        req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+      }else{
+        req.query={...req.query,createBy:req.jwt.email}
+      }
       //req.query={...req.query,force_productid: req.jwt.productId}
 
        /*

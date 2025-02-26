@@ -41,6 +41,7 @@ exports.validJWTNeeded = async(req, res, next) => {
         if(!req.jwt.productId){
           //ADD PRODUCT CONDITIONS
           let productId= await ProductModel.listIds(req.jwt.username.trim());
+
           req.jwt.productId = productId;
         }
         if(!req.jwt.email){

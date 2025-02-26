@@ -40,7 +40,12 @@ exports.list = (req, res) => {
   let page = 0;
   //req.query={...req.query,force_productid:mongoose.Types.ObjectId(req.jwt.productId[1]),productid_mode:'equals'}
   //req.query={...req.query,productid:req.jwt.productId[1],productid_mode:'equals'}
-  req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+  if (req.jwt?.productId && Array.isArray(req.jwt.productId)) {
+    req.query={...req.query,forced_productid: req.jwt.productId.map(pid => mongoose.Types.ObjectId(pid))}
+  }else{
+    req.query={...req.query,createBy:req.jwt.email}
+  }
+  
   /*
         IMPORTANT
         you can put predefined condition here  based on user and role  
