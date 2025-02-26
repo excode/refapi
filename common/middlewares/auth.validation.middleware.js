@@ -39,6 +39,7 @@ exports.validJWTNeeded = async(req, res, next) => {
       } else {
         req.jwt = jwt.verify(authorization[1], my_secret);
         if(!req.jwt.productId){
+          //ADD PRODUCT CONDITIONS
           let productId= await ProductModel.listIds(req.jwt.username.trim());
           req.jwt.productId = productId;
         }
