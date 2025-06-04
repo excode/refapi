@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"alifpay143",
-    "introducer":"amiralif",
+    "contactNumber":"azmiab63",
+    "introducer":"salmisalmi45",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"aamran73",
+    "upline":"bakar63",
     "position":"L"
 }
 ###
@@ -226,10 +226,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"mansara4",
-    "introducer":"saraman5",
+    "contactNumber":"enjoyrebate66",
+    "introducer":"payrebate",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"farizsyahmi07",
+    "upline":"payrebate",
     "position":"L"
 }
 
@@ -261,3 +261,16 @@ GET {{URL2}}/transactions/taskcompleted/{{TRX}} HTTP/1.1
 ###
 
 GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
+
+###
+
+POST {{HOSTL}}/hierarchy/reward/payhub  HTTP/1.1
+content-type: application/json
+
+{
+
+    "alifPayUsername":"kalam",
+    "productId":"66e665de966efc2edaa97cf0",
+    "trx_id":"6829ebf4b90b2f0f49ed7e26",
+    "productName":"TNB Bill"
+}

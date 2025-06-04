@@ -1,5 +1,6 @@
 const HierarchyModel = require('./hierarchy.model');
 const {rewardMerchantPurchase2} = require('./PurchaseReward');
+const {rewardPayhubPurchase} = require('./PayhubReward');
 //const mongoose = require('../../common/services/mongoose.service').mongoose;
 var mongoose = require('mongoose');
 const NodeCache = require( "node-cache" );
@@ -609,6 +610,33 @@ exports.rewardMerchantPurchase=(req, res)=>{
           // Example: log the completion of the task
           console.log('Long processing completed.');
       } catch (error) {
+        console.log(error.err)
+          //console.error('Error during processing:', error);
+      }
+  })();
+
+   
+}
+exports.rewardPayhub=(req, res)=>{
+  //storeCreatedBy,merchat_username,customer,productId,amount
+
+    const alifPayUsername =req.body.alifPayUsername;
+   
+    const productId =req.body.productId;
+    const trx_id =req.body.trx_id;
+    const productName =req.body.productName;
+    res.status(200).send('PH Request received. Processing in the background.');
+
+    (async () => {
+      try {
+          // Simulate a long task with a delay
+            console.log('Long processing completed. cp-1');
+          await rewardPayhubPurchase(alifPayUsername,productId,trx_id,productName)
+          
+          // Example: log the completion of the task
+          console.log('Long processing completed.');
+      } catch (error) {
+        console.log(error)
         console.log(error.err)
           //console.error('Error during processing:', error);
       }
