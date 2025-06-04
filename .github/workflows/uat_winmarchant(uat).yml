@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - winmarchant
 on:
   push:
     branches:
-      - main
+      - uat
   workflow_dispatch:
 
 jobs:
@@ -40,11 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'uat'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -54,18 +52,11 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3DCCD71A7B9E4CC9BC0FB88F85517583 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FBD608E50E79434693A6C49CBBECAD04 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A330F2DA1DF84B06A67A9E072194E393 }}
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'winmarchant'
-          slot-name: 'Production'
+          slot-name: 'uat'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6A797049600749D6BF284FCAC71E1DA5 }}

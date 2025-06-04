@@ -8,10 +8,10 @@ const rootPath="../../";
   const USER = config.permissionLevels.APP_USER;
   const FREE = config.permissionLevels.NORMAL_USER;
   const formValidationRules=[
-    {ctrl:'distributor',format:'boolean',required:true},
-    {ctrl:'contactNumber',format:'phone',required:true},
+    {ctrl:'distributor',format:'boolean',required:false},
+    {ctrl:'contactNumber',format:'text',required:true},
     {ctrl:'productid',format:'',required:true},
-    {ctrl:'introducer',format:'phone',required:true}
+    {ctrl:'introducer',format:'text',required:true}
   ];
   const formValidationRules1=[
     {ctrl:'username',format:'',required:true},
@@ -88,6 +88,11 @@ app.get('/hierarchy/all/level3/u', [
       PermissionMiddleware.minimumPermissionLevelRequired(USER),
       HierarchyController.list_chart2_u
     ]);
+    app.get('/hierarchy/all/org_chart2/count', [
+     // ValidationMiddleware.validJWTNeeded,
+     // PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      HierarchyController.list_chart2_count
+    ]);
       app.get('/hierarchy/all', [   //  Required to Fill UI Component like Dropdown ,List , can be disabled if not required
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -127,6 +132,12 @@ app.get('/hierarchy/all/level3/u', [
          //PermissionMiddleware.minimumPermissionLevelRequired(USER),
          HierarchyController.addNewUser3
        ]);
+       app.post('/hierarchy/addNew/reward/check', [
+        // ValidationMiddleware.validJWTNeeded,
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.rewardCheck
+       ]);
        app.post('/hierarchy/check/reg', [
         // ValidationMiddleware.validJWTNeeded,
          //FormValidation.formValidation(formValidationRules1),
@@ -156,6 +167,26 @@ app.get('/hierarchy/all/level3/u', [
         //FormValidation.formValidation(formValidationRules1),
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.syncWallet
+      ]);
+
+      app.post('/hierarchy/placement/reg/u2', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.placement3
+      ]);
+
+      app.post('/hierarchy/reward/purchase', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardMerchantPurchase
+      ]);
+        app.post('/hierarchy/reward/payhub', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardPayhub
       ]);
   };
   

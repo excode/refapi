@@ -1,4 +1,6 @@
 const HierarchyModel = require('./hierarchy.model');
+const {rewardMerchantPurchase2} = require('./PurchaseReward');
+const {rewardPayhubPurchase} = require('./PayhubReward');
 //const mongoose = require('../../common/services/mongoose.service').mongoose;
 var mongoose = require('mongoose');
 const NodeCache = require( "node-cache" );
@@ -348,6 +350,30 @@ exports.listSuggestions = (req, res ) => {
           });
         }
   };
+  exports.list_chart2_count= (req, res) => {
+    let username="ahmad"
+    if(req.query.xI!=undefined && req.query.xI!=""){
+
+      username=req.query.xI
+  }
+    let key=username+"_chart2_"+req.query.productId??"";
+    let cVal= false;//myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+      let pid= mongoose.Types.ObjectId(env.ALIF_PAY_PRODUCT)
+    HierarchyModel.countLeftAndRightDownline(username,pid)
+
+          .then((result)=>{
+            myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+  console.log(err)
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
   exports.list_level = (req, res) => {
 
     let username=req.jwt.username
@@ -534,3 +560,87 @@ exports.syncWallet = (req, res ) => {
           res.status(400).json( {err:err} );
       });
 };
+
+
+exports.rewardCheck = (req, res) => {
+  req.body.createBy="AlifPay" 
+  req.body.createAt=funcs.getTime()
+  console.log(req.body)
+  //res.status(200).send(req.body);
+  //return;
+  HierarchyModel.checkHierarchyAlifPay(req.body)
+
+        .then((result)=>{
+            res.status(200).send(result);
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+};
+
+exports.placement3 = (req, res) => {
+ // req.body.introducer = req.jwt.username;
+  HierarchyModel.placement3(req.body)
+
+        .then((result)=>{
+            res.status(200).send(result);
+        }).catch((err)=>{
+            res.status(400).json( {err:err} );
+        });
+};
+
+
+
+
+exports.rewardMerchantPurchase=(req, res)=>{
+  //storeCreatedBy,merchat_username,customer,productId,amount
+
+    const storeCreatedBy =req.body.storeCreatedBy;
+    const merchat_username =req.body.merchat_username;
+    const customer =req.body.customer;
+    const productId =req.body.productId;
+    const trx_id =req.body.trx_id;
+    const storeName =req.body.storeName;
+    res.status(200).send('Request received. Processing in the background.');
+
+    (async () => {
+      try {
+          // Simulate a long task with a delay
+          await rewardMerchantPurchase2(storeCreatedBy,merchat_username,customer,productId,trx_id,storeName)
+          
+          // Example: log the completion of the task
+          console.log('Long processing completed.');
+      } catch (error) {
+        console.log(error.err)
+          //console.error('Error during processing:', error);
+      }
+  })();
+
+   
+}
+exports.rewardPayhub=(req, res)=>{
+  //storeCreatedBy,merchat_username,customer,productId,amount
+
+    const alifPayUsername =req.body.alifPayUsername;
+   
+    const productId =req.body.productId;
+    const trx_id =req.body.trx_id;
+    const productName =req.body.productName;
+    res.status(200).send('PH Request received. Processing in the background.');
+
+    (async () => {
+      try {
+          // Simulate a long task with a delay
+            console.log('Long processing completed. cp-1');
+          await rewardPayhubPurchase(alifPayUsername,productId,trx_id,productName)
+          
+          // Example: log the completion of the task
+          console.log('Long processing completed.');
+      } catch (error) {
+        console.log(error)
+        console.log(error.err)
+          //console.error('Error during processing:', error);
+      }
+  })();
+
+   
+}
