@@ -263,8 +263,10 @@ GET {{URL2}}/transactions/taskcompleted/{{TRX}} HTTP/1.1
 GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
 
 ###
+@DD =https://winmarchant.azurewebsites.net
+###
 
-POST {{HOSTL}}/hierarchy/reward/payhub  HTTP/1.1
+POST {{HOST}}/hierarchy/reward/payhub  HTTP/1.1
 content-type: application/json
 
 {

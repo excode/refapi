@@ -36,7 +36,8 @@ exports.rewardPayhubPurchase = async (
 
         // Step 4: Save Rewards
         await saveRewards(rewardsData);
-        await postTransactionComplete(transactionId);
+        
+       // await postTransactionComplete(transactionId);
 
         console.log('Rewards processed successfully.');
     } catch (err) {
