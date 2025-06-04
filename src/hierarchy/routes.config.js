@@ -182,6 +182,12 @@ app.get('/hierarchy/all/level3/u', [
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.rewardMerchantPurchase
       ]);
+        app.post('/hierarchy/reward/payhub', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardPayhub
+      ]);
   };
   
     
