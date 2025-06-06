@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"azmiab63",
+    "contactNumber":"clcarrot",
     "introducer":"salmisalmi45",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"bakar63",
+    "upline":"azmiab63",
     "position":"L"
 }
 ###
