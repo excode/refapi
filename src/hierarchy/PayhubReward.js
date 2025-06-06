@@ -263,7 +263,7 @@ async function calculateRewards(params) {
                         amount : amount_10*remain_level, //20% of community_reward
                         status : 0,
                         productid : productId,
-                        contactNumber :  customer,
+                        contactNumber :  "kalam",
                         ref : transactionId,
                         sourceContactNumber : customer,
                         particular : "PayHub Cashback Reward Leftover: "+customer,
