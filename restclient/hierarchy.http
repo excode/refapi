@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"clcarrot",
+    "contactNumber":"izahmizah77",
     "introducer":"salmisalmi45",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"azmiab63",
+    "upline":"syidamz123",
     "position":"L"
 }
 ###
@@ -226,10 +226,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"enjoyrebate66",
-    "introducer":"payrebate",
+    "contactNumber":"mozar",
+    "introducer":"suriasai",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"payrebate",
+    "upline":"haziqsje",
     "position":"L"
 }
 
@@ -266,13 +266,13 @@ GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
 @DD =https://winmarchant.azurewebsites.net
 ###
 
-POST {{HOST}}/hierarchy/reward/payhub  HTTP/1.1
+POST {{HOSTL}}/hierarchy/reward/payhub  HTTP/1.1
 content-type: application/json
 
 {
 
-    "alifPayUsername":"kalam",
+    "alifPayUsername":"manrebate",
     "productId":"66e665de966efc2edaa97cf0",
-    "trx_id":"6829ebf4b90b2f0f49ed7e26",
-    "productName":"TNB Bill"
+    "trx_id":"685509a1f759d7045cca1a59",
+    "productName":"ETMU"
 }

@@ -1394,7 +1394,8 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
     const Reward = mongoose.model('Reward'); // Reward collection
     const Hierarchy = mongoose.model('Hierarchy');
     const session = await mongoose.startSession();
-
+  const now = new Date();
+  const createdBy="SYS"
   try {
     session.startTransaction();
     var product_id = mongoose.Types.ObjectId(productid)
@@ -1405,12 +1406,35 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
       { $group: { _id: null, totalPoints: { $sum: '$amount' } } }
     ]).session(session);
 
+    // Step 2: Check if the document exists
+    let hierarchy = await Hierarchy.findOne({ contactNumber, productid: product_id }).session(session);
+    console.log(hierarchy);
+    if (!hierarchy) {
+
+      // Step 2a: Create new Hierarchy record
+      hierarchy = new Hierarchy({
+        contactNumber,
+        productid: product_id,
+        walletbalance: 0,
+        rewardbalance: 0,
+        createBy: createdBy,
+        createAt: now,
+        updateBy: createdBy,
+        updateAt: now,
+        // Other optional/default fields can be omitted, Mongoose will handle
+      });
+
+      await hierarchy.save({ session });
+    }
+     
+
     if (rewardAggregation.length === 0) {
       console.log("No rewards to process.");
       return;
     }
 
     const totalRewardPoints = rewardAggregation[0].totalPoints;
+    
 
     // Step 2: Update the Reward Wallet (Hierarchy) collection with the summation
     const result = await Hierarchy.updateOne(

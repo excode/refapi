@@ -492,8 +492,12 @@ exports.listSuggestions = (req, res ) => {
     let key=username+"_claim_reward";
     let product_id="66e665de966efc2edaa97cf0";
     let cVal=myCache.get(key)
+     if(req.jwt.provider=="alifpay"){
+
+
+     }
     if(!cVal){
-      myCache.set( key, true, 60*15 )
+      myCache.set( key, true, 60*2 )
       console.log("DONE CLAIMED")
       await HierarchyModel.processRewardsAndUpdateWallet(username, product_id)
     }
@@ -504,6 +508,7 @@ exports.listSuggestions = (req, res ) => {
     }else{
       req.query={...req.query,forced_productid: null}
     }
+    
 
     console.log("*** ITS CHECKINF***")
     if(req.headers["project_code"]){

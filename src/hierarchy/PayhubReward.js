@@ -283,6 +283,7 @@ async function calculateRewards(params) {
         let amount_20 =community_reward*.2;
         amount_20=amount_20.toFixed(4);
         amount_20=Number(amount_20)
+        /*
         const merchant_introducer_reward={
             
             createBy : 'ALIF-PAY',
@@ -298,6 +299,7 @@ async function calculateRewards(params) {
             type : "5"
     
          };
+         */
     rewards.push(merchant_introducer_reward);
     const pool_reward={
             
