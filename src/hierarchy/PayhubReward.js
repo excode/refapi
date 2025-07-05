@@ -300,7 +300,7 @@ async function calculateRewards(params) {
     
          };
          */
-    rewards.push(merchant_introducer_reward);
+    //rewards.push(merchant_introducer_reward);
     const pool_reward={
             
         createBy : 'ALIF-PAY',
