@@ -287,7 +287,8 @@ content-type: application/json
     "introducer": "kalam",
     "productid":"66e665de966efc2edaa97cf0",
     "category": "BU"
-};
+}
 
-  
-  
+###
+
+GET {{HOSTL}}/hierarchy/single/level/kalam?productId=66e665de966efc2edaa97cf0  HTTP/1.1

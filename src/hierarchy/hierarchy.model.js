@@ -675,6 +675,32 @@ else {
     }
 
 }
+exports.getUsersIntroducedBySingle=async(introducerName,productId)=> {
+    const users=[];
+    let productid =  mongoose.Types.ObjectId(productId);
+    
+    try {
+        // Find users introduced by the current introducer
+
+        const introducedUsers = await Hierarchy.find({ introducer: introducerName,productid:productid });
+
+        for (let user of introducedUsers) {
+           users.push({
+                id: user._id,
+                username: user.contactNumber,
+                parentId: introducerName,
+                userType: user.infoData?.category ?? "BU",  // this will always be overwritten
+                name: user.infoData?.name ??""               // overwrites previous line
+            });
+        }
+
+        return users;
+    } catch (error) {
+        console.error('Error fetching introduced users:', error);
+        return [];
+    }
+
+}
 
 
 exports.getBinaryData=async(userId,productId, currentLevel = 1, maxLevel = 10, binaryUsers = [])=> {

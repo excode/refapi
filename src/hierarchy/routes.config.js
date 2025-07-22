@@ -63,6 +63,11 @@ const rootPath="../../";
     PermissionMiddleware.minimumPermissionLevelRequired(USER),
     HierarchyController.list_level2
 ]);
+ app.get('/hierarchy/single/level/:username', [
+    //ValidationMiddleware.validJWTNeeded,
+    PermissionMiddleware.minimumPermissionLevelRequired(USER),
+    HierarchyController.list_level_username
+]);
 app.get('/hierarchy/all/level3', [
   ValidationMiddleware.validJWTNeeded,
   PermissionMiddleware.minimumPermissionLevelRequired(USER),

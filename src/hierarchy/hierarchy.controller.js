@@ -436,6 +436,28 @@ exports.listSuggestions = (req, res ) => {
           });
         }
   };
+  exports.list_level_username = (req, res) => {
+
+    let username=req.params.username
+   
+    
+    let key=username+"_level1_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+        HierarchyModel.getUsersIntroducedBySingle(username,req.query.productId)
+
+          .then((result)=>{
+             myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
+  
   exports.list_level3 = (req, res) => {
 
     let username=req.jwt.username
