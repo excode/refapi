@@ -689,6 +689,7 @@ exports.getUsersIntroducedBySingle=async(introducerName,productId)=> {
                 id: user._id,
                 username: user.contactNumber,
                 parentId: introducerName,
+                refCount: user.infoData?.directReferral ?? 0,  // this will always be overwritten
                 userType: user.infoData?.category ?? "BU",  // this will always be overwritten
                 name: user.infoData?.name ??""               // overwrites previous line
             });
@@ -1315,6 +1316,12 @@ async function checkUplines(root,upline,productId) {
         if (err) {
             return reject(err);
         }
+        let info = uplineCheck["infoData"]
+        let directReferral=info["directReferral"]??0;
+        
+        uplineCheck.infoData.directReferral = directReferral+1;
+      
+        uplineCheck.save();
      
         resolve(saved)
     });

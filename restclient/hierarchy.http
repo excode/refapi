@@ -283,12 +283,12 @@ POST {{HOSTL}}/hierarchy/addNewBU/reg  HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber": "excodetemp",
-    "introducer": "kalam",
+    "contactNumber": "excodetemp111",
+    "introducer": "afnan",
     "productid":"66e665de966efc2edaa97cf0",
     "category": "BU"
 }
 
 ###
 
-GET {{HOSTL}}/hierarchy/single/level/kalam?productId=66e665de966efc2edaa97cf0  HTTP/1.1
+GET {{HOSTL}}/hierarchy/single/level/ahmad?productId=66e665de966efc2edaa97cf0  HTTP/1.1
