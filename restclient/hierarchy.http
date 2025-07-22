@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"izahmizah77",
-    "introducer":"salmisalmi45",
+    "contactNumber":"jameslee3131",
+    "introducer":"flo10",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"syidamz123",
+    "upline":"cashflow",
     "position":"L"
 }
 ###
@@ -266,13 +266,13 @@ GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
 @DD =https://winmarchant.azurewebsites.net
 ###
 
-POST {{HOSTL}}/hierarchy/reward/payhub  HTTP/1.1
+POST {{HOST}}/hierarchy/reward/payhub  HTTP/1.1
 content-type: application/json
 
 {
 
-    "alifPayUsername":"manrebate",
+    "alifPayUsername":"fajrain68",
     "productId":"66e665de966efc2edaa97cf0",
-    "trx_id":"68550bedf759d7045cca1a71",
-    "productName":"CEL"
+    "trx_id":"68556f68f759d7045cca1b2d",
+    "productName":"ETNB"
 }

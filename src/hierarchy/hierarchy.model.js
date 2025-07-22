@@ -24,7 +24,7 @@ const {queryFormatter,queryBuilder_string,
         placementDone:{ type: Boolean,default:false},
         placementRequired:{ type: Boolean,default:false},
         price:{ type: Number,default:0},
-        category:{ type: String,default:"FP"},
+        category:{ type: String,default:"BU"},
         directReferral:{ type: Number,default:0},
     });
     const hierarchySchema = new Schema({
@@ -139,10 +139,16 @@ exports.addNewUserCheck = (hierarchyData) => {
         return;
     }
     let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
-    if(regCheck ) {
-        reject("user already exists");
-        return;
-    }
+   if (regCheck) {
+  // Check if infoData exists and category is "FP" (which is not allowed)
+        if (regCheck.infoData && regCheck.infoData.category === "FP") {
+            reject("User already exists and is already registered as FP");
+            return;
+        }
+
+        // Otherwise, allow (infoData.category !== "FP")
+        // e.g., category is "BU", which is allowed
+        }
     resolve("OK")
    
     });
@@ -1051,6 +1057,8 @@ async function checkUplines(root,upline,productId) {
       const introquery={ contactNumber: upline,productid:productId }
       console.log(introquery)
       const parentUser = await Hierarchy.findOne(introquery);
+      const dev_username="kalam";
+       let dev_reward=amount==2?10:2;
        
       if (!parentUser || parentUser["contactNumber"]==="") {    
         console.log(introquery);   
@@ -1077,7 +1085,23 @@ async function checkUplines(root,upline,productId) {
                 type : "0"
         
              };
-        rewards.push(reward1);
+             const reward_k={
+            
+                createBy : 'ALIF-PAY',
+                createAt : time,
+                level :0 ,
+                amount : dev_reward,
+                status : 0,
+                productid : productId,
+                contactNumber :  dev_username,
+                ref : "tech_Sponsor",
+                sourceContactNumber : root,
+                particular : "Dev reward",
+                type : "0"
+        
+             };
+           rewards.push(reward1);
+           rewards.push(reward_k);
         }
         let level =rewards.length;
         const reward={
@@ -1179,8 +1203,10 @@ async function checkUplines(root,upline,productId) {
     hierarchyData.contactNumber=hierarchyData.contactNumber.toLowerCase();
     let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
     if(regCheck ) {
-        reject("user already exists");
-        return;
+       if (regCheck.infoData && regCheck.infoData.category === "FP") {
+            reject("User already exists and is already registered as FP");
+            return;
+        }
     }
     let infoData={
         price:260,
@@ -1232,7 +1258,41 @@ async function checkUplines(root,upline,productId) {
     });
     });
 };
-
+ exports.createHierarchyAlifPayBU = (hierarchyData) => {
+    return new Promise(async(resolve, reject) => {
+    const productID= mongoose.Types.ObjectId( hierarchyData.productid)
+    hierarchyData.introducer=hierarchyData.introducer.toLowerCase();
+    let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
+    if(!uplineCheck ) {
+        reject("introducer not exists");
+        return;
+    }
+    hierarchyData.contactNumber=hierarchyData.contactNumber.toLowerCase();
+    let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
+    if(regCheck ) {
+       
+            reject("User already exists");
+            
+    }
+    let infoData={
+        price:0,
+        category:"BU",
+        placementRequired:false,
+        placementDone:false,
+        directReferral:0
+    }
+    
+    hierarchyData["infoData"] =infoData;
+    const hierarchy = new Hierarchy(hierarchyData);
+    hierarchy.save(async function (err, saved) {
+        if (err) {
+            return reject(err);
+        }
+     
+        resolve(saved)
+    });
+    });
+};
 
 exports.list2 = (perPage, page , query ) => {
 

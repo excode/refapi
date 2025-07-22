@@ -250,6 +250,20 @@ exports.listSuggestions = (req, res ) => {
               res.status(400).json( {err:err} );
           });
   };
+  exports.addNewUserBU = (req, res) => {
+    req.body.createBy="AlifPay" 
+    req.body.createAt=funcs.getTime()
+    console.log(req.body)
+    //res.status(200).send(req.body);
+    //return;
+    HierarchyModel.createHierarchyAlifPayBU(req.body)
+
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
   exports.addNewUserCheck = (req, res) => {
    
     HierarchyModel.addNewUserCheck(req.body)
