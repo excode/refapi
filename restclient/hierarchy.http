@@ -276,3 +276,18 @@ content-type: application/json
     "trx_id":"68556f68f759d7045cca1b2d",
     "productName":"ETNB"
 }
+
+###
+
+POST {{HOSTL}}/hierarchy/addNewBU/reg  HTTP/1.1
+content-type: application/json
+
+{
+    "contactNumber": "excodetemp",
+    "introducer": "kalam",
+    "productid":"66e665de966efc2edaa97cf0",
+    "category": "BU"
+};
+
+  
+  

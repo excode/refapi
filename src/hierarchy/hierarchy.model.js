@@ -1264,14 +1264,15 @@ async function checkUplines(root,upline,productId) {
     hierarchyData.introducer=hierarchyData.introducer.toLowerCase();
     let   uplineCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.introducer,productid:productID})
     if(!uplineCheck ) {
-        reject("introducer not exists");
-        return;
+       return reject("introducer not exists");
+        
     }
     hierarchyData.contactNumber=hierarchyData.contactNumber.toLowerCase();
     let   regCheck =await Hierarchy.findOne({"contactNumber":hierarchyData.contactNumber,productid:productID})
     if(regCheck ) {
        
-            reject("User already exists");
+         return   reject("User already exists");
+            
             
     }
     let infoData={
