@@ -103,10 +103,10 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"azad19",
-    "introducer":"afia",
+    "contactNumber":"andrew5345",
+    "introducer":"mfty8833",
     "productid":"66e665de966efc2edaa97cf0",
-    "category":"FP"
+    "category":"FC"
 }
 
 ###
@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"jameslee3131",
-    "introducer":"flo10",
+    "contactNumber":"azzah969",
+    "introducer":"selawat69",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"cashflow",
+    "upline":"azzah969",
     "position":"L"
 }
 ###
@@ -226,10 +226,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"mozar",
-    "introducer":"suriasai",
+    "contactNumber":"chesmyo",
+    "introducer":"flo10",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"haziqsje",
+    "upline":"cashflow",
     "position":"L"
 }
 

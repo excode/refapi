@@ -1217,8 +1217,86 @@ async function checkUplines(root,upline,productId) {
       }
       
   }
+exports.createHierarchyAlifPay = (hierarchyData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const productID = mongoose.Types.ObjectId(hierarchyData.productid);
 
-  exports.createHierarchyAlifPay = (hierarchyData) => {
+      hierarchyData.introducer = hierarchyData.introducer.toLowerCase();
+      hierarchyData.contactNumber = hierarchyData.contactNumber.toLowerCase();
+
+      const uplineCheck = await Hierarchy.findOne({ contactNumber: hierarchyData.introducer, productid: productID });
+      if (!uplineCheck) {
+        return reject("introducer not exists");
+      }
+
+      let regCheck = await Hierarchy.findOne({ contactNumber: hierarchyData.contactNumber, productid: productID });
+      
+      if (regCheck && regCheck.infoData?.category === "FP") {
+        return reject("User already exists and is already registered as FP");
+      }
+
+      // Build infoData
+      let infoData = {
+        price: hierarchyData.price,
+        category: hierarchyData.price == 50 ? "FC" : "FP",
+        placementRequired: hierarchyData.price == 260,
+        placementDone: false,
+        directReferral: 0
+      };
+
+      hierarchyData.infoData = infoData;
+
+      let hierarchy;
+
+      if (regCheck) {
+        // Update existing record
+        regCheck.introducer = hierarchyData.introducer;
+        regCheck.infoData = infoData;
+        regCheck.updatedAt = new Date();
+        hierarchy = await regCheck.save();
+      } else {
+        // Create new record
+        const newHierarchy = new Hierarchy(hierarchyData);
+        hierarchy = await newHierarchy.save();
+      }
+
+      // ✅ Update upline's referral count in both cases
+      uplineCheck.infoData = uplineCheck.infoData || {};
+      uplineCheck.infoData.directReferral = (uplineCheck.infoData.directReferral ?? 0) + 1;
+      await uplineCheck.save();
+
+      // ✅ Rewards
+      let rewards = [];
+
+      if (hierarchyData.price == 260) {
+        rewards = await exports.rewardUplines(
+          hierarchyData.contactNumber,
+          hierarchyData.introducer,
+          hierarchyData.productid,
+          2, [], 10
+        );
+      } else {
+        rewards = await exports.rewardUplines(
+          hierarchyData.contactNumber,
+          hierarchyData.introducer,
+          hierarchyData.productid,
+          1, [], 5
+        );
+      }
+
+      if (rewards.length > 0) {
+        await RewardModel.InsertMany(rewards);
+      }
+
+      return resolve(hierarchy);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
+  exports.createHierarchyAlifPay_BK = (hierarchyData) => {
     return new Promise(async(resolve, reject) => {
     const productID= mongoose.Types.ObjectId( hierarchyData.productid)
     hierarchyData.introducer=hierarchyData.introducer.toLowerCase();
@@ -1252,21 +1330,35 @@ async function checkUplines(root,upline,productId) {
         }
     }
     hierarchyData["infoData"] =infoData;
-    const hierarchy = new Hierarchy(hierarchyData);
-    hierarchy.save(async function (err, saved) {
-        if (err) {
-            return reject(err);
+    
+
+        let hierarchy;
+
+        if (regCheck) {
+            // Update existing record
+            regCheck.introducer = hierarchyData.introducer;
+            regCheck.infoData = infoData;
+            regCheck.updatedAt = new Date();
+            hierarchy = await regCheck.save();
+        } else {
+            // Create new record
+            const newHierarchy = new Hierarchy(hierarchyData);
+            hierarchy = await newHierarchy.save();
+
+            // Update upline referral count only if it's a new registration
+           
         }
+  //  const hierarchy = new Hierarchy(hierarchyData);
+    //hierarchy.save(async function (err, saved) {
+        //if (err) {
+           // return reject(err);
+        //}
+         let directReferral = uplineCheck.infoData?.directReferral ?? 0;
+            uplineCheck.infoData.directReferral = directReferral + 1;
+            await uplineCheck.save();
         let rewards =[];
 
-        /** */
-        let info = uplineCheck["infoData"]
-        let directReferral=info["directReferral"]??0;
-        //let infoData = {...info,"directReferral": directReferral+1}
-        //console.log(infoData)
-        uplineCheck.infoData.directReferral = directReferral+1;
-      
-        uplineCheck.save();
+        
 
 
         /**/
@@ -1282,7 +1374,7 @@ async function checkUplines(root,upline,productId) {
         }
         
         resolve(saved)
-    });
+   // });
     });
 };
  exports.createHierarchyAlifPayBU = (hierarchyData) => {
