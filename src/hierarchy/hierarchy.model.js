@@ -1251,7 +1251,10 @@ exports.createHierarchyAlifPay = (hierarchyData) => {
 
       if (regCheck) {
         // Update existing record
-        regCheck.introducer = hierarchyData.introducer;
+        if(regCheck.infoData!="FC"){
+            regCheck.introducer = hierarchyData.introducer;
+        }
+        
         regCheck.infoData = infoData;
         regCheck.updatedAt = new Date();
         hierarchy = await regCheck.save();
