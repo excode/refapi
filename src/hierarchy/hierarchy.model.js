@@ -1074,9 +1074,107 @@ async function checkUplines(root,upline,productId) {
     }
   }
 
+exports.rewardUplines = async (root, upline, productId, amount, rewards = [], limit = 10) => {
+  try {
+    console.log(root);
+    const introquery = { contactNumber: upline, productid: productId };
+    console.log(introquery);
+
+    const parentUser = await Hierarchy.findOne(introquery);
+    const dev_username = "kalam";
+
+    // ✅ Dev reward logic
+    let dev_reward = 2; // default
+    if (amount == 2) dev_reward = 10;   // For 260 plan
+    if (amount == 3) dev_reward = 100;   // For 1000 plan
+
+    if (!parentUser || parentUser["contactNumber"] === "") {
+      console.log(introquery);
+      console.log(parentUser);
+      console.log("Parent user not found");
+      return rewards;
+    } else {
+      const time = funcs.getTime();
+
+      // ✅ Sponsor Reward (only once at beginning)
+      if (rewards.length == 0) {
+        let sponsorReward = 15; // default for FC (50)
+
+        if (amount == 2) sponsorReward = 50;   // For 260 plan
+        if (amount == 3) sponsorReward = 150;  // For 1000 plan (adjust as needed)
+
+        const reward1 = {
+          createBy: "ALIF-PAY",
+          createAt: time,
+          level: 0,
+          amount: sponsorReward,
+          status: 0,
+          productid: productId,
+          contactNumber: parentUser["contactNumber"],
+          ref: "Sponsor",
+          sourceContactNumber: root,
+          particular: "Sponsor reward",
+          type: "0",
+        };
+
+        const reward_k = {
+          createBy: "ALIF-PAY",
+          createAt: time,
+          level: 0,
+          amount: dev_reward,
+          status: 0,
+          productid: productId,
+          contactNumber: dev_username,
+          ref: "tech_Sponsor",
+          sourceContactNumber: root,
+          particular: "Dev reward",
+          type: "0",
+        };
+
+        rewards.push(reward1);
+        rewards.push(reward_k);
+      }
+
+      // ✅ Level rewards
+      let level = rewards.length;
+      const reward = {
+        createBy: "ALIF-PAY",
+        createAt: time,
+        level: level,
+        amount: amount, // amount defines per-level reward
+        status: 0,
+        productid: productId,
+        contactNumber: parentUser["contactNumber"],
+        ref: "Level",
+        sourceContactNumber: root,
+        particular: "Level reward:" + level,
+        type: "0",
+      };
+
+      rewards.push(reward);
+
+      // ✅ Recursive call until limit
+      if (rewards.length <= limit) {
+        const rewards_ = await this.rewardUplines(
+          root,
+          parentUser["introducer"],
+          productId,
+          amount,
+          rewards,
+          limit
+        );
+        return rewards_;
+      } else {
+        return rewards;
+      }
+    }
+  } catch (error) {
+    return rewards;
+  }
+};
 
 
-  exports.rewardUplines=async(root,upline,productId,amount,rewards=[],limit=10) =>{
+  exports.rewardUplines_sep25=async(root,upline,productId,amount,rewards=[],limit=10) =>{
    
     
     try {
@@ -1217,7 +1315,98 @@ async function checkUplines(root,upline,productId) {
       }
       
   }
-exports.createHierarchyAlifPay = (hierarchyData) => {
+  exports.createHierarchyAlifPay = (hierarchyData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const productID = mongoose.Types.ObjectId(hierarchyData.productid);
+
+      hierarchyData.introducer = hierarchyData.introducer.toLowerCase();
+      hierarchyData.contactNumber = hierarchyData.contactNumber.toLowerCase();
+
+      const uplineCheck = await Hierarchy.findOne({ contactNumber: hierarchyData.introducer, productid: productID });
+      if (!uplineCheck) {
+        return reject("introducer not exists");
+      }
+
+      let regCheck = await Hierarchy.findOne({ contactNumber: hierarchyData.contactNumber, productid: productID });
+      
+      if (regCheck && regCheck.infoData?.category === "FP") {
+        return reject("User already exists and is already registered as FP");
+      }
+
+      // ✅ Build infoData
+      let infoData = {
+        price: hierarchyData.price,
+        category: hierarchyData.price == 50 ? "FC" 
+                 : hierarchyData.price == 1000 ? "F-COOP"  // New category for 1000
+                 : "FP",
+        placementRequired: hierarchyData.price == 260 || hierarchyData.price == 1000, // Placement required for 260 & 1000
+        placementDone: false,
+        directReferral: 0
+      };
+
+      hierarchyData.infoData = infoData;
+
+      let hierarchy;
+
+      if (regCheck) {
+        // Update existing record
+        if (regCheck.infoData?.category != "FC") {
+          regCheck.introducer = hierarchyData.introducer;
+        }
+        
+        regCheck.infoData = infoData;
+        regCheck.updatedAt = new Date();
+        hierarchy = await regCheck.save();
+      } else {
+        // Create new record
+        const newHierarchy = new Hierarchy(hierarchyData);
+        hierarchy = await newHierarchy.save();
+      }
+
+      // ✅ Update upline's referral count in both cases
+      uplineCheck.infoData = uplineCheck.infoData || {};
+      uplineCheck.infoData.directReferral = (uplineCheck.infoData.directReferral ?? 0) + 1;
+      await uplineCheck.save();
+
+      // ✅ Rewards
+      let rewards = [];
+
+      if (hierarchyData.price == 260) {
+        rewards = await exports.rewardUplines(
+          hierarchyData.contactNumber,
+          hierarchyData.introducer,
+          hierarchyData.productid,
+          2, [], 10
+        );
+      } else if (hierarchyData.price == 1000) {
+        rewards = await exports.rewardUplines(
+          hierarchyData.contactNumber,
+          hierarchyData.introducer,
+          hierarchyData.productid,
+          3, [], 10   // Adjust levels & depth for 1000 plan
+        );
+      } else {
+        rewards = await exports.rewardUplines(
+          hierarchyData.contactNumber,
+          hierarchyData.introducer,
+          hierarchyData.productid,
+          1, [], 5
+        );
+      }
+
+      if (rewards.length > 0) {
+        await RewardModel.InsertMany(rewards);
+      }
+
+      return resolve(hierarchy);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
+exports.createHierarchyAlifPay_sep25 = (hierarchyData) => {
   return new Promise(async (resolve, reject) => {
     try {
       const productID = mongoose.Types.ObjectId(hierarchyData.productid);

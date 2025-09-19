@@ -103,8 +103,8 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"andrew5345",
-    "introducer":"mfty8833",
+    "contactNumber":"creative",
+    "introducer":"bkhh",
     "productid":"66e665de966efc2edaa97cf0",
     "category":"FC"
 }
@@ -214,10 +214,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"azzah969",
+    "contactNumber":"odabilloinare769",
     "introducer":"selawat69",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"azzah969",
+    "upline":"anom69",
     "position":"L"
 }
 ###
