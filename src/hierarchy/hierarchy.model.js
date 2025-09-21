@@ -1086,7 +1086,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
     // ✅ Dev reward logic
     let dev_reward = 2; // default
     if (amount == 2) dev_reward = 10;   // For 260 plan
-    if (amount == 3) dev_reward = 100;   // For 1000 plan
+    if (amount == 3) dev_reward = 50;   // For 1000 plan
 
     if (!parentUser || parentUser["contactNumber"] === "") {
       console.log(introquery);
@@ -1101,7 +1101,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
         let sponsorReward = 15; // default for FC (50)
 
         if (amount == 2) sponsorReward = 50;   // For 260 plan
-        if (amount == 3) sponsorReward = 150;  // For 1000 plan (adjust as needed)
+        if (amount == 3) sponsorReward = 100;  // For 1000 plan (adjust as needed)
 
         const reward1 = {
           createBy: "ALIF-PAY",
@@ -1338,9 +1338,9 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
       let infoData = {
         price: hierarchyData.price,
         category: hierarchyData.price == 50 ? "FC" 
-                 : hierarchyData.price == 1000 ? "F-COOP"  // New category for 1000
+                 : hierarchyData.price == 500 ? "F-CROP"  // New category for 1000
                  : "FP",
-        placementRequired: hierarchyData.price == 260 || hierarchyData.price == 1000, // Placement required for 260 & 1000
+        placementRequired: hierarchyData.price == 260 || hierarchyData.price == 500, // Placement required for 260 & 1000
         placementDone: false,
         directReferral: 0
       };
@@ -1379,7 +1379,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
           hierarchyData.productid,
           2, [], 10
         );
-      } else if (hierarchyData.price == 1000) {
+      } else if (hierarchyData.price == 500) {
         rewards = await exports.rewardUplines(
           hierarchyData.contactNumber,
           hierarchyData.introducer,
