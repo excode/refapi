@@ -1101,7 +1101,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
         let sponsorReward = 15; // default for FC (50)
 
         if (amount == 2) sponsorReward = 50;   // For 260 plan
-        if (amount == 3) sponsorReward = 100;  // For 1000 plan (adjust as needed)
+        if (amount == 3) sponsorReward = 50;  // For 1000 plan (adjust as needed)
 
         const reward1 = {
           createBy: "ALIF-PAY",
