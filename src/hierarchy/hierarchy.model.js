@@ -1771,21 +1771,21 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
    
     const Reward = mongoose.model('Reward'); // Reward collection
     const Hierarchy = mongoose.model('Hierarchy');
-    const session = await mongoose.startSession();
+    //const session = await mongoose.startSession();
   const now = new Date();
   const createdBy="SYS"
   try {
-    session.startTransaction();
+    //session.startTransaction();
     var product_id = mongoose.Types.ObjectId(productid)
     // Step 1: Aggregate the sum of all rewards where status is false
     const matched={contactNumber:contactNumber,productid:product_id, status: false };
     const rewardAggregation = await Reward.aggregate([
       { $match: matched },
       { $group: { _id: null, totalPoints: { $sum: '$amount' } } }
-    ]).session(session);
+    ]);
 
     // Step 2: Check if the document exists
-    let hierarchy = await Hierarchy.findOne({ contactNumber, productid: product_id }).session(session);
+    let hierarchy = await Hierarchy.findOne({ contactNumber, productid: product_id });
     console.log(hierarchy);
     if (!hierarchy) {
 
@@ -1802,7 +1802,7 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
         // Other optional/default fields can be omitted, Mongoose will handle
       });
 
-      await hierarchy.save({ session });
+      await hierarchy.save();
     }
      
 
@@ -1818,7 +1818,7 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
     const result = await Hierarchy.updateOne(
         {contactNumber:contactNumber,productid:product_id}, // Replace with the actual ID
       { $inc: { rewardbalance: totalRewardPoints } } // Increment by the sum of points
-    ).session(session);
+    );
 
     if (result.nModified === 0) {
       throw new Error('Failed to update the reward wallet.');
@@ -1828,22 +1828,22 @@ exports.processRewardsAndUpdateWallet = async(contactNumber,productid) =>{
     const updateResult = await Reward.updateMany(
         matched,
       { $set: { status: true } }
-    ).session(session);
+    );
 
     if (updateResult.modifiedCount === 0) {
      console.log('No rewards were updated.');
     }
 
     // Step 4: Commit the transaction if everything is successful
-    await session.commitTransaction();
+    //await session.commitTransaction();
     console.log('Reward points successfully added to the wallet and status updated.');
 
   } catch (error) {
     // If anything goes wrong, abort the transaction
-    await session.abortTransaction();
+    //await session.abortTransaction();
     console.error('Transaction failed, changes reverted.', error);
   } finally {
-    session.endSession();
+    
   }
 }
 

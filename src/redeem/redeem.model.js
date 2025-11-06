@@ -113,19 +113,19 @@ exports.createRedeemAlifPay = async (redeemData) => {
   const min= env.MIN_REDEEM ??30;
   const pid = mongoose.Types.ObjectId(productid);
 
-  const session = await mongoose.startSession();
+  //const session = await mongoose.startSession();
   if (amount < min) {
     throw new Error("Minimum redeem amount is "+min );
   }
   try {
-    session.startTransaction();
+   // session.startTransaction();
  
     const Hierarchy = mongoose.model('Hierarchy');
     const Redeem = mongoose.model('Redeem'); // Ensure Redeem model is imported or defined properly
     const matched = { contactNumber: contactNumber, productid: pid };
 
     // Step 1: Find the user's wallet and check if the reward balance is sufficient
-    const wallet = await Hierarchy.findOne(matched).session(session); // Correct usage of session
+    const wallet = await Hierarchy.findOne(matched); // Correct usage of session
     if (!wallet || wallet.rewardbalance < amount) {
       throw new Error("Insufficient reward balance.");
     }
@@ -134,7 +134,7 @@ exports.createRedeemAlifPay = async (redeemData) => {
     await Hierarchy.updateOne(
       matched,
       { $inc: { rewardbalance: -amount } },
-      { session }
+     
     );
 
     // Step 3: Insert a new record into the Redeem collection
@@ -149,23 +149,23 @@ exports.createRedeemAlifPay = async (redeemData) => {
         createBy: redeemData.createBy,
         unitprice: 1,
         sellerNumber: seller,
-      }],
-      { session } // Pass session in options
+      }]
+     
     );
 
     // Commit the transaction
-    await session.commitTransaction();
+    //await session.commitTransaction();
 
     // Return or log success
     console.log("Redeem record created successfully.");
     return newRedeemRecord;
   } catch (error) {
     // Abort the transaction in case of error
-    await session.abortTransaction();
+   // await session.abortTransaction();
     console.error("Transaction aborted due to error: ", error.message);
     throw error; // Re-throw the error so that the caller knows it failed
   } finally {
-    session.endSession();
+   // session.endSession();
   }
 };
 
