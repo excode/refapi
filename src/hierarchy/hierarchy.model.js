@@ -1338,7 +1338,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
       let infoData = {
         price: hierarchyData.price,
         category: hierarchyData.price == 50 ? "FC" 
-                 : hierarchyData.price == 500 ? "F-CROP"  // New category for 1000
+                 : hierarchyData.price == 500 ? "F-COP"  // New category for 1000
                  : "FP",
         placementRequired: hierarchyData.price == 260 || hierarchyData.price == 500, // Placement required for 260 & 1000
         placementDone: false,
