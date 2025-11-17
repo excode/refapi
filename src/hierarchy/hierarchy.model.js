@@ -1082,11 +1082,21 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
 
     const parentUser = await Hierarchy.findOne(introquery);
     const dev_username = "kalam";
+    const dev_consultant = "wanarir";
 
     // ✅ Dev reward logic
-    let dev_reward = 2; // default
-    if (amount == 2) dev_reward = 10;   // For FP plan
+    let dev_reward = 5; // default
+    if (amount == 2) dev_reward = 5;   // For FP plan
     if (amount == 3) dev_reward = 50;   // For F-COP plan
+
+    let founder_reward=5;
+
+   let founders = [
+  "mohdkol",
+  "amiralif",
+  "shaharulmiza",
+  "ahmad"
+];
 
     if (!parentUser || parentUser["contactNumber"] === "") {
       console.log(introquery);
@@ -1131,8 +1141,40 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
           type: "0",
         };
 
+         const reward_c = {
+          createBy: "ALIF-PAY",
+          createAt: time,
+          level: 0,
+          amount: founder_reward,
+          status: 0,
+          productid: productId,
+          contactNumber: dev_consultant,
+          ref: "tech_consultant",
+          sourceContactNumber: root,
+          particular: "Dev reward",
+          type: "0",
+        };
         rewards.push(reward1);
+        rewards.push(reward_c);
         rewards.push(reward_k);
+       for (let founder of founders) {
+        console.log("Founder reward for "+founder);
+          let reward_f = {
+            createBy: "ALIF-PAY",
+            createAt: time,
+            level: 0,
+            amount: founder_reward,
+            status: 0,
+            productid: productId,
+            contactNumber: founder,
+            ref: "Founder_Reward",
+            sourceContactNumber: root,
+            particular: "Founder reward:" + root,
+            type: "0",
+          };
+
+            rewards.push(reward_f);
+      }
       }
 
       // ✅ Level rewards
@@ -1152,6 +1194,8 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
       };
 
       rewards.push(reward);
+
+      
 
       // ✅ Recursive call until limit
       if (rewards.length <= limit) {
@@ -1337,8 +1381,8 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
       // ✅ Build infoData
       let infoData = {
         price: hierarchyData.price,
-        category: hierarchyData.price == 50 ? "FC" 
-                 : hierarchyData.price == 500 ? "F-COP"  // New category for 1000
+        category: hierarchyData.price == env.FC_AMOUNT ? "FC" 
+                 : hierarchyData.price == env.F_COP_AMOUNT ? "F-COP"  // New category for 1000
                  : "FP",
         placementRequired: hierarchyData.price == env.FP_AMOUNT || hierarchyData.price == env.F_COP_AMOUNT, // Placement required f
         placementDone: false,
@@ -1372,7 +1416,7 @@ exports.rewardUplines = async (root, upline, productId, amount, rewards = [], li
       // ✅ Rewards
       let rewards = [];
 
-      if (hierarchyData.price == env.FC_AMOUNT) {
+      if (hierarchyData.price == env.FP_AMOUNT) {
         rewards = await exports.rewardUplines(
           hierarchyData.contactNumber,
           hierarchyData.introducer,

@@ -98,15 +98,16 @@ project_code:66efa1fcfb844876e472f02b
 
 ###
 
-POST {{HOST}}/hierarchy/addNew/reg HTTP/1.1
+POST {{HOSTL}}/hierarchy/addNew/reg HTTP/1.1
 Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"creative",
-    "introducer":"bkhh",
+    "contactNumber":"test456",
+    "introducer":"kalam",
     "productid":"66e665de966efc2edaa97cf0",
-    "category":"FC"
+    "category":"FC",
+    "price":"90"
 }
 
 ###
