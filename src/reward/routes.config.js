@@ -75,6 +75,16 @@ const rootPath="../../";
           PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
           RewardController.removeById
       ]);
+        app.get('/reward/stats', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        RewardController.rewardSummary
+    ]);
+     app.get('/stats/reward', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        RewardController.rewardSummary
+    ]);
   };
   
     

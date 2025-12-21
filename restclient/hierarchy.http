@@ -103,7 +103,7 @@ Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"test456",
+    "contactNumber":"test567",
     "introducer":"kalam",
     "productid":"66e665de966efc2edaa97cf0",
     "category":"FC",
@@ -227,10 +227,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"chesmyo",
-    "introducer":"flo10",
+    "contactNumber":"asha",
+    "introducer":"chesmyo",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"cashflow",
+    "upline":"chesmyo",
     "position":"L"
 }
 
