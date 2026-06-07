@@ -82,6 +82,19 @@ exports.routesConfig = function (app) {
     RedeemController.removeById,
   ]);
 
-
+ app.post("/redeem-transfer/alifpay", [
+      ValidationMiddleware.validJWTNeeded,
   
+      FormValidation.formValidation(formValidationRules2),
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      RedeemController.redeemTransferAlifPay,
+    ]);
+
+  app.post("/redeem-transfer/confirm", [
+      ValidationMiddleware.validJWTNeeded,
+  
+      FormValidation.formValidation(formValidationRules2),
+      PermissionMiddleware.minimumPermissionLevelRequired(USER),
+      RedeemController.redeemTransferAlifPayConfirm,
+    ]);
 };

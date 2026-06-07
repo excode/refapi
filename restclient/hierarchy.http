@@ -203,9 +203,9 @@ content-type: application/json
 
 {
     "contactNumber":"saaban69",
-    "introducer":"ajiree",
+    "introducer":"nicholas.sylvester",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"apani51",
+    "upline":"drbadrie",
     "position":"L"
 }
 
@@ -215,10 +215,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"odabilloinare769",
-    "introducer":"selawat69",
+    "contactNumber":"noreendarma",
+    "introducer":"cikadik",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"anom69",
+    "upline":"farrahdarma",
     "position":"L"
 }
 ###
@@ -227,10 +227,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"asha",
-    "introducer":"chesmyo",
+    "contactNumber":"djshah",
+    "introducer":"qashking69",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"chesmyo",
+    "upline":"qashking69",
     "position":"L"
 }
 
