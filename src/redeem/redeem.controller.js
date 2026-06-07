@@ -267,3 +267,7 @@ exports.redeemTransferAlifPay = (req, res) => {
       res.status(400).json({ err: err.message || "An error occurred" });
     });
 };
+
+exports.redeemTransferAlifPayConfirm = (req, res) => {
+  res.status(200).send({ ok: true });
+}
