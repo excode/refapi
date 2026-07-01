@@ -250,6 +250,20 @@ exports.listSuggestions = (req, res ) => {
               res.status(400).json( {err:err} );
           });
   };
+  exports.addNewUserBU = (req, res) => {
+    req.body.createBy="AlifPay" 
+    req.body.createAt=funcs.getTime()
+    console.log(req.body)
+    //res.status(200).send(req.body);
+    //return;
+    HierarchyModel.createHierarchyAlifPayBU(req.body)
+
+          .then((result)=>{
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+  };
   exports.addNewUserCheck = (req, res) => {
    
     HierarchyModel.addNewUserCheck(req.body)
@@ -422,6 +436,28 @@ exports.listSuggestions = (req, res ) => {
           });
         }
   };
+  exports.list_level_username = (req, res) => {
+
+    let username=req.params.username
+   
+    
+    let key=username+"_level1_"+req.query.productId??"";
+    let cVal=myCache.get(key)
+    if(cVal){
+        console.log("Cached+"+key)
+        res.status(200).send(cVal);
+    }else{
+        HierarchyModel.getUsersIntroducedBySingle(username,req.query.productId)
+
+          .then((result)=>{
+             myCache.set( key, result, 60*30 )
+              res.status(200).send(result);
+          }).catch((err)=>{
+              res.status(400).json( {err:err} );
+          });
+        }
+  };
+  
   exports.list_level3 = (req, res) => {
 
     let username=req.jwt.username
@@ -492,8 +528,12 @@ exports.listSuggestions = (req, res ) => {
     let key=username+"_claim_reward";
     let product_id="66e665de966efc2edaa97cf0";
     let cVal=myCache.get(key)
+     if(req.jwt.provider=="alifpay"){
+
+
+     }
     if(!cVal){
-      myCache.set( key, true, 60*15 )
+      myCache.set( key, true, 60*2 )
       console.log("DONE CLAIMED")
       await HierarchyModel.processRewardsAndUpdateWallet(username, product_id)
     }
@@ -504,6 +544,7 @@ exports.listSuggestions = (req, res ) => {
     }else{
       req.query={...req.query,forced_productid: null}
     }
+    
 
     console.log("*** ITS CHECKINF***")
     if(req.headers["project_code"]){
@@ -644,3 +685,42 @@ exports.rewardPayhub=(req, res)=>{
 
    
 }
+
+// Hardcoded API key – replace with environment variable in production
+const EXTERNAL_API_KEY = 'ALIFPay-api-key-PUR_REWARD3459901AKNBgTTTsx762121333';
+
+exports.rewardAlifpayMerchantPurchase = (req, res) => {
+    // 1. Validate API Key from header
+    const apiKey = req.headers['x-api-key'];
+    if (!apiKey || apiKey !== EXTERNAL_API_KEY) {
+        return res.status(401).json({ error: 'Invalid or missing API key' });
+    }
+
+    // 2. Validate required fields (including amount)
+    const { storeCreatedBy, merchat_username, alifpay_member_username, trx_id, storeName, amount } = req.body;
+    if (!storeCreatedBy || !merchat_username || !alifpay_member_username || !trx_id || !storeName || amount === undefined || amount === null || amount === '') {
+        return res.status(400).json({
+            error: 'Missing required fields: storeCreatedBy, merchat_username, alifpay_member_username, trx_id, storeName, amount'
+        });
+    }
+
+    // Optional: ensure amount is a valid number
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+        return res.status(400).json({ error: 'amount must be a positive number' });
+    }
+
+    // 3. Acknowledge receipt immediately (process in background)
+    res.status(200).send('Request received. Processing in the background.');
+
+    // 4. Asynchronous processing (non-blocking)
+    (async () => {
+        try {
+            // Pass amount to the background processing function
+            // await rewardMerchantPurchase2(storeCreatedBy, merchat_username, alifpay_member_username, productId, trx_id, storeName, numericAmount)
+            console.log('Long processing completed.');
+        } catch (error) {
+            console.error('Error during processing:', error);
+        }
+    })();
+};

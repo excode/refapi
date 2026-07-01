@@ -36,7 +36,8 @@ exports.rewardPayhubPurchase = async (
 
         // Step 4: Save Rewards
         await saveRewards(rewardsData);
-        await postTransactionComplete(transactionId);
+        
+       // await postTransactionComplete(transactionId);
 
         console.log('Rewards processed successfully.');
     } catch (err) {
@@ -262,7 +263,7 @@ async function calculateRewards(params) {
                         amount : amount_10*remain_level, //20% of community_reward
                         status : 0,
                         productid : productId,
-                        contactNumber :  customer,
+                        contactNumber :  "kalam",
                         ref : transactionId,
                         sourceContactNumber : customer,
                         particular : "PayHub Cashback Reward Leftover: "+customer,
@@ -282,6 +283,7 @@ async function calculateRewards(params) {
         let amount_20 =community_reward*.2;
         amount_20=amount_20.toFixed(4);
         amount_20=Number(amount_20)
+        /*
         const merchant_introducer_reward={
             
             createBy : 'ALIF-PAY',
@@ -297,7 +299,8 @@ async function calculateRewards(params) {
             type : "5"
     
          };
-    rewards.push(merchant_introducer_reward);
+         */
+    //rewards.push(merchant_introducer_reward);
     const pool_reward={
             
         createBy : 'ALIF-PAY',

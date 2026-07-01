@@ -251,3 +251,23 @@ exports.temp = (req, res) => {
     });
 };
 
+
+
+exports.redeemTransferAlifPay = (req, res) => {
+  req.body.createBy = req.jwt.email;
+  req.body.contactNumber = req.jwt.username;
+  req.body.createAt = funcs.getTime();
+ // req.body.id = req.jwt.id;
+  
+  RedeemModel.createRedeemTransferAlifPay(req.body)
+    .then((result) => {
+      res.status(200).send({ id: result.id });
+    })
+    .catch((err) => {
+      res.status(400).json({ err: err.message || "An error occurred" });
+    });
+};
+
+exports.redeemTransferAlifPayConfirm = (req, res) => {
+  res.status(200).send({ ok: true });
+}

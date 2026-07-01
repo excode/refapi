@@ -1,0 +1,14 @@
+{
+  "createBy": "kazad79@gmail.com",
+  "merchantID": "eesa",
+  "sender": "kalam",
+  "amount": 24,
+  "sharingValue": 2.4,
+  "refNumber": "29915-29916",
+  "dispatched": true,
+  "sharingValueDistributed": false,
+  "_id": "675ad60abc15139301867125",
+  "createAt": "2024-12-12T12:24:41.879Z",
+  "storesId": "6756a1d9d1e604005c274ff6",
+  "id": "675ad60abc15139301867125"
+}

@@ -113,19 +113,19 @@ exports.createRedeemAlifPay = async (redeemData) => {
   const min= env.MIN_REDEEM ??30;
   const pid = mongoose.Types.ObjectId(productid);
 
-  const session = await mongoose.startSession();
+  //const session = await mongoose.startSession();
   if (amount < min) {
     throw new Error("Minimum redeem amount is "+min );
   }
   try {
-    session.startTransaction();
+   // session.startTransaction();
  
     const Hierarchy = mongoose.model('Hierarchy');
     const Redeem = mongoose.model('Redeem'); // Ensure Redeem model is imported or defined properly
     const matched = { contactNumber: contactNumber, productid: pid };
 
     // Step 1: Find the user's wallet and check if the reward balance is sufficient
-    const wallet = await Hierarchy.findOne(matched).session(session); // Correct usage of session
+    const wallet = await Hierarchy.findOne(matched); // Correct usage of session
     if (!wallet || wallet.rewardbalance < amount) {
       throw new Error("Insufficient reward balance.");
     }
@@ -134,7 +134,7 @@ exports.createRedeemAlifPay = async (redeemData) => {
     await Hierarchy.updateOne(
       matched,
       { $inc: { rewardbalance: -amount } },
-      { session }
+     
     );
 
     // Step 3: Insert a new record into the Redeem collection
@@ -149,23 +149,23 @@ exports.createRedeemAlifPay = async (redeemData) => {
         createBy: redeemData.createBy,
         unitprice: 1,
         sellerNumber: seller,
-      }],
-      { session } // Pass session in options
+      }]
+     
     );
 
     // Commit the transaction
-    await session.commitTransaction();
+    //await session.commitTransaction();
 
     // Return or log success
     console.log("Redeem record created successfully.");
     return newRedeemRecord;
   } catch (error) {
     // Abort the transaction in case of error
-    await session.abortTransaction();
+   // await session.abortTransaction();
     console.error("Transaction aborted due to error: ", error.message);
     throw error; // Re-throw the error so that the caller knows it failed
   } finally {
-    session.endSession();
+   // session.endSession();
   }
 };
 
@@ -475,4 +475,114 @@ exports.temp=async(changeEvent) =>{
     console.log(err);
     console.log("error performing mongodb write: ", err.message);
   }
+};
+
+
+
+
+exports.createRedeemTransferAlifPay = async (redeemData) => {
+    const productid = env.ALIF_PAY_PRODUCT;
+    const redeemid = env.ALIF_PAY_TRANSFER;
+    const amount = redeemData.quantity;
+    const seller = (redeemData.destination_username || "")
+    .trim()
+    .toLowerCase();
+
+  const contactNumber = (redeemData.contactNumber || "")
+    .trim();
+    const min = env.MIN_REDEEM ?? 30;
+
+    const pid = mongoose.Types.ObjectId(productid);
+
+    if (amount < min) {
+        throw new Error("Minimum Transfer amount is " + min);
+    }
+
+    try {
+        const Hierarchy = mongoose.model('Hierarchy');
+        const Redeem = mongoose.model('Redeem');
+        const Reward = mongoose.model('Reward');
+
+        const senderQuery = { contactNumber, productid: pid };
+
+        // STEP 1: Fetch sender + recipient
+        const [senderWallet, recipientWallet] = await Promise.all([
+            Hierarchy.findOne(senderQuery),
+            Hierarchy.findOne({
+                contactNumber: seller,
+                productid: pid
+            })
+        ]);
+
+        // STEP 2: Validate sender
+        if (!senderWallet || senderWallet.rewardbalance < amount) {
+            throw new Error("Insufficient reward balance.");
+        }
+
+        // STEP 3: Validate recipient exists
+        if (!recipientWallet) {
+            throw new Error("Destination username not found.");
+        }
+
+        // STEP 4: Prevent self transfer
+        if (contactNumber === seller) {
+            throw new Error("You cannot transfer to your own account.");
+        }
+
+        // STEP 5: Deduct sender balance
+        await Hierarchy.updateOne(
+            senderQuery,
+            { $inc: { rewardbalance: -amount } }
+        );
+
+        // STEP 6: Credit recipient balance
+        await Hierarchy.updateOne(
+            {
+                contactNumber: seller,
+                productid: pid
+            },
+            { $inc: { rewardbalance: amount } }
+        );
+
+        // STEP 7: Create Redeem record (sender side)
+        const newRedeemRecord = await Redeem.create([{
+            contactNumber,
+            productid,
+            redeemproductid: redeemid,
+            quantity: amount,
+            total: amount,
+            createAt: new Date(),
+            createBy: redeemData.createBy,
+            unitprice: 1,
+            sellerNumber: seller,
+            processed: true
+        }]);
+
+        // STEP 8: Create Reward record (credit to receiver)
+        const newRewardRecord = await Reward.create([{
+            createBy: redeemData.createBy,
+            createAt: new Date(),
+            level: 0,
+            amount: amount,
+            status: true,
+            productid: productid,
+            redeemProductId: redeemid,
+            contactNumber: seller,
+            ref: newRedeemRecord[0]._id.toString(),
+            sourceContactNumber: contactNumber,
+            particular: `Transfer received from ${contactNumber}`,
+            type: 'ALIFPAY_TRANSFER'
+        }]);
+
+        console.log("Transfer completed successfully.");
+
+        return {
+            redeem: newRedeemRecord[0],
+            reward: newRewardRecord[0]
+        };
+
+    } catch (error) {
+        console.error("Transfer failed:", error.message);
+        throw error;
+    }
 };

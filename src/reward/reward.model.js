@@ -326,3 +326,107 @@ exports.InsertMany = (rewards) => {
         });
     });
 };
+
+
+exports.sumAmountByProduct = (
+    productId,
+    excludeUsers = []
+) => {
+    return Reward.aggregate([
+        {
+            $match: {
+                level: 0,
+                amount: { $gt: 0 },
+                productid: mongoose.Types.ObjectId(productId),
+                ...buildExcludeUsersMatch(excludeUsers)
+            }
+        },
+        {
+            $group: {
+                _id: "$productid",
+                totalAmount: { $sum: "$amount" }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                productid: "$_id",
+                totalAmount: 1
+            }
+        }
+    ]);
+};
+exports.sumAmountBySourceContactAndProducts = (
+    username,
+    productIds,
+    excludeUsers = []
+) => {
+    return Reward.aggregate([
+        {
+            $match: {
+                level: 0,
+                amount: { $gt: 0 },
+                contactNumber: username,
+                productid: {
+                    $in: productIds.map(id => mongoose.Types.ObjectId(id))
+                },
+                ...buildExcludeUsersMatch(excludeUsers)
+            }
+        },
+        {
+            $group: {
+                _id: "$contactNumber",
+                totalAmount: { $sum: "$amount" }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                contactNumber: "$_id",
+                totalAmount: 1
+            }
+        }
+    ]);
+};
+
+exports.topNSumAmountBySourceContactNumber = (
+    productId,
+    limit = 20,
+    excludeUsers = []
+) => {
+    return Reward.aggregate([
+        {
+            $match: {
+                level: 0,
+                amount: { $gt: 0 },
+                productid: mongoose.Types.ObjectId(productId),
+                ...buildExcludeUsersMatch(excludeUsers)
+            }
+        },
+        {
+            $group: {
+                _id: "$contactNumber",
+                totalAmount: { $sum: "$amount" }
+            }
+        },
+        { $sort: { totalAmount: -1 } },
+        { $limit: Number(limit) },
+        {
+            $project: {
+                _id: 0,
+                contactNumber: "$_id",
+                totalAmount: 1
+            }
+        }
+    ]);
+};
+
+
+const buildExcludeUsersMatch = (excludeUsers = []) => {
+    return excludeUsers.length
+        ? {
+            sourceContactNumber: { $nin: excludeUsers },
+            contactNumber: { $nin: excludeUsers }
+          }
+        : {};
+};

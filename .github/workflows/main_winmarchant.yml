@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +46,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -55,15 +58,15 @@ jobs:
         run: unzip release.zip
       
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3DCCD71A7B9E4CC9BC0FB88F85517583 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FBD608E50E79434693A6C49CBBECAD04 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A330F2DA1DF84B06A67A9E072194E393 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AC96B964B12C4D428134377BD696960F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_38629506C5C143EDB0ADABAC7838F419 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5E63EC24FD4042F4BB4CFBF437064DBE }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'winmarchant'
           slot-name: 'Production'

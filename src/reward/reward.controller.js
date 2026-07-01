@@ -3,6 +3,7 @@ const RewardModel = require('./reward.model');
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const funcs =  require("../../common/functions/funcs");
 const  env  = process.env;
+const NodeCache = require("node-cache");
   exports.insert = (req, res) => {
             req.body.createBy=req.jwt.email  
         req.body.createAt=funcs.getTime()
@@ -214,3 +215,58 @@ exports.listSuggestions = (req, res ) => {
   
 
     
+exports.rewardSummary = async (req, res) => {
+    const cache = new NodeCache({ stdTTL: 1800, checkperiod: 600 });
+    try {
+        const productIds =['66e665de966efc2edaa97cf0'];          // array
+        const email = req.jwt.email;                    // user identifier
+        const username = req.jwt.contactNumber;         // sourceContactNumber
+        const primaryProductId = productIds[0];         // single product for total/top
+
+            console.log("Product IDs:", productIds);
+            console.log("Email:", email);
+            console.log("Username:", username);
+            console.log("Primary Product ID:", primaryProductId);   
+        const cacheKey = `rewardv6_summary_${email}`;
+
+        const cachedData = cache.get(cacheKey);
+        if (cachedData) {
+            console.log("✅ Returning REWARD SUMMARY from cache");
+            return res.status(200).send(cachedData);
+        }
+        const EXCLUDED_USERNAMES = [
+  "kalam",
+  "afia",
+  "alifpay",
+"afia2345",
+"kalamerwe",
+"eesa",
+    "alifpay_admin",    
+"ahmad1",
+  "alifpay_marketing",
+  "alifpay_pool","alifpay_mdr"
+
+];
+
+        // Run all aggregations in parallel
+        const [top, my, total] = await Promise.all([
+            RewardModel.topNSumAmountBySourceContactNumber(primaryProductId, 10,EXCLUDED_USERNAMES),
+            RewardModel.sumAmountBySourceContactAndProducts(username, productIds,EXCLUDED_USERNAMES),
+            RewardModel.sumAmountByProduct(primaryProductId,EXCLUDED_USERNAMES)
+        ]);
+
+        const responseData = {
+            top: top || [],
+            my: my?.[0] || { sourceContactNumber: username, totalAmount: 0 },
+            total: total?.[0] || { productid: primaryProductId, totalAmount: 0 }
+        };
+
+        cache.set(cacheKey, responseData);
+        console.log("✅ REWARD SUMMARY stored in cache");
+
+        return res.status(200).send(responseData);
+
+    } catch (err) {
+        return res.status(400).json({ err });
+    }
+};

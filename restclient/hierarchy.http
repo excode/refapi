@@ -98,15 +98,16 @@ project_code:66efa1fcfb844876e472f02b
 
 ###
 
-POST {{HOST}}/hierarchy/addNew/reg HTTP/1.1
+POST {{HOSTL}}/hierarchy/addNew/reg HTTP/1.1
 Authorization: Bearer {{AUTH}}
 content-type: application/json
 
 {
-    "contactNumber":"azad19",
-    "introducer":"afia",
+    "contactNumber":"test567",
+    "introducer":"kalam",
     "productid":"66e665de966efc2edaa97cf0",
-    "category":"FP"
+    "category":"FC",
+    "price":"90"
 }
 
 ###
@@ -202,9 +203,9 @@ content-type: application/json
 
 {
     "contactNumber":"saaban69",
-    "introducer":"ajiree",
+    "introducer":"nicholas.sylvester",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"apani51",
+    "upline":"drbadrie",
     "position":"L"
 }
 
@@ -214,10 +215,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"azmiab63",
-    "introducer":"salmisalmi45",
+    "contactNumber":"noreendarma",
+    "introducer":"cikadik",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"bakar63",
+    "upline":"farrahdarma",
     "position":"L"
 }
 ###
@@ -226,10 +227,10 @@ POST {{HOST}}/hierarchy/placement/reg HTTP/1.1
 content-type: application/json
 
 {
-    "contactNumber":"enjoyrebate66",
-    "introducer":"payrebate",
+    "contactNumber":"djshah",
+    "introducer":"qashking69",
     "productid":"66e665de966efc2edaa97cf0",
-    "upline":"payrebate",
+    "upline":"qashking69",
     "position":"L"
 }
 
@@ -263,14 +264,32 @@ GET {{URL2}}/transactions/taskcompleted/{{TRX}} HTTP/1.1
 GET {{URL}}/transactions/taskcheck/{{TRX2}} HTTP/1.1
 
 ###
+@DD =https://winmarchant.azurewebsites.net
+###
 
-POST {{HOSTL}}/hierarchy/reward/payhub  HTTP/1.1
+POST {{HOST}}/hierarchy/reward/payhub  HTTP/1.1
 content-type: application/json
 
 {
 
-    "alifPayUsername":"kalam",
+    "alifPayUsername":"fajrain68",
     "productId":"66e665de966efc2edaa97cf0",
-    "trx_id":"6829ebf4b90b2f0f49ed7e26",
-    "productName":"TNB Bill"
+    "trx_id":"68556f68f759d7045cca1b2d",
+    "productName":"ETNB"
 }
+
+###
+
+POST {{HOSTL}}/hierarchy/addNewBU/reg  HTTP/1.1
+content-type: application/json
+
+{
+    "contactNumber": "excodetemp111",
+    "introducer": "afnan",
+    "productid":"66e665de966efc2edaa97cf0",
+    "category": "BU"
+}
+
+###
+
+GET {{HOSTL}}/hierarchy/single/level/ahmad?productId=66e665de966efc2edaa97cf0  HTTP/1.1

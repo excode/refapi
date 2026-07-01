@@ -63,6 +63,11 @@ const rootPath="../../";
     PermissionMiddleware.minimumPermissionLevelRequired(USER),
     HierarchyController.list_level2
 ]);
+ app.get('/hierarchy/single/level/:username', [
+    //ValidationMiddleware.validJWTNeeded,
+    PermissionMiddleware.minimumPermissionLevelRequired(USER),
+    HierarchyController.list_level_username
+]);
 app.get('/hierarchy/all/level3', [
   ValidationMiddleware.validJWTNeeded,
   PermissionMiddleware.minimumPermissionLevelRequired(USER),
@@ -126,6 +131,12 @@ app.get('/hierarchy/all/level3/u', [
          //PermissionMiddleware.minimumPermissionLevelRequired(USER),
          HierarchyController.addNewUser2
        ]);
+        app.post('/hierarchy/addNewBU/reg', [
+        // ValidationMiddleware.validJWTNeeded,
+         //FormValidation.formValidation(formValidationRules1),
+         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+         HierarchyController.addNewUserBU
+       ]);
        app.post('/hierarchy/addNew/reward', [
         // ValidationMiddleware.validJWTNeeded,
          //FormValidation.formValidation(formValidationRules1),
@@ -188,6 +199,16 @@ app.get('/hierarchy/all/level3/u', [
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.rewardPayhub
       ]);
+
+
+
+      app.post('/hierarchy/reward/alifpay-purchase', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardAlifpayMerchantPurchase
+      ]);
+
   };
   
     
