@@ -199,6 +199,16 @@ app.get('/hierarchy/all/level3/u', [
         //PermissionMiddleware.minimumPermissionLevelRequired(USER),
         HierarchyController.rewardPayhub
       ]);
+
+
+
+      app.post('/hierarchy/reward/alifpay-purchase', [
+        //ValidationMiddleware.validJWTNeeded,
+        //FormValidation.formValidation(formValidationRules1),
+        //PermissionMiddleware.minimumPermissionLevelRequired(USER),
+        HierarchyController.rewardAlifpayMerchantPurchase
+      ]);
+
   };
   
     

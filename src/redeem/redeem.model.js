@@ -484,8 +484,12 @@ exports.createRedeemTransferAlifPay = async (redeemData) => {
     const productid = env.ALIF_PAY_PRODUCT;
     const redeemid = env.ALIF_PAY_TRANSFER;
     const amount = redeemData.quantity;
-    const contactNumber = redeemData.contactNumber;
-    const seller = redeemData.destination_username;
+    const seller = (redeemData.destination_username || "")
+    .trim()
+    .toLowerCase();
+
+  const contactNumber = (redeemData.contactNumber || "")
+    .trim();
     const min = env.MIN_REDEEM ?? 30;
 
     const pid = mongoose.Types.ObjectId(productid);

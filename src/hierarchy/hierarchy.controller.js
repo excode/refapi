@@ -685,3 +685,42 @@ exports.rewardPayhub=(req, res)=>{
 
    
 }
+
+// Hardcoded API key – replace with environment variable in production
+const EXTERNAL_API_KEY = 'ALIFPay-api-key-PUR_REWARD3459901AKNBgTTTsx762121333';
+
+exports.rewardAlifpayMerchantPurchase = (req, res) => {
+    // 1. Validate API Key from header
+    const apiKey = req.headers['x-api-key'];
+    if (!apiKey || apiKey !== EXTERNAL_API_KEY) {
+        return res.status(401).json({ error: 'Invalid or missing API key' });
+    }
+
+    // 2. Validate required fields (including amount)
+    const { storeCreatedBy, merchat_username, alifpay_member_username, trx_id, storeName, amount } = req.body;
+    if (!storeCreatedBy || !merchat_username || !alifpay_member_username || !trx_id || !storeName || amount === undefined || amount === null || amount === '') {
+        return res.status(400).json({
+            error: 'Missing required fields: storeCreatedBy, merchat_username, alifpay_member_username, trx_id, storeName, amount'
+        });
+    }
+
+    // Optional: ensure amount is a valid number
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+        return res.status(400).json({ error: 'amount must be a positive number' });
+    }
+
+    // 3. Acknowledge receipt immediately (process in background)
+    res.status(200).send('Request received. Processing in the background.');
+
+    // 4. Asynchronous processing (non-blocking)
+    (async () => {
+        try {
+            // Pass amount to the background processing function
+            // await rewardMerchantPurchase2(storeCreatedBy, merchat_username, alifpay_member_username, productId, trx_id, storeName, numericAmount)
+            console.log('Long processing completed.');
+        } catch (error) {
+            console.error('Error during processing:', error);
+        }
+    })();
+};
