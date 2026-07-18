@@ -293,3 +293,20 @@ content-type: application/json
 ###
 
 GET {{HOSTL}}/hierarchy/single/level/ahmad?productId=66e665de966efc2edaa97cf0  HTTP/1.1
+
+
+
+###
+
+POST {{HOST}}/hierarchy/reward/alifpay-purchase
+x-api-key: ALIFPay-api-key-PUR_REWARD3459901AKNBgTTTsx762121333
+Content-Type: application/json
+
+{
+  "storeCreatedBy": "owner001",
+  "merchat_username": "merchant_john",
+  "alifpay_member_username": "member_ali",
+  "trx_id": "TXN-20240701-001",
+  "storeName": "Alif Mart",
+  "amount": 250.75
+}

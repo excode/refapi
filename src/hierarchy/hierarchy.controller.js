@@ -717,7 +717,8 @@ exports.rewardAlifpayMerchantPurchase = (req, res) => {
     (async () => {
         try {
             // Pass amount to the background processing function
-            // await rewardMerchantPurchase2(storeCreatedBy, merchat_username, alifpay_member_username, productId, trx_id, storeName, numericAmount)
+            console.log(req.body)
+             //await rewardMerchantPurchase2(storeCreatedBy, merchat_username, alifpay_member_username, productId, trx_id, storeName, numericAmount)
             console.log('Long processing completed.');
         } catch (error) {
             console.error('Error during processing:', error);

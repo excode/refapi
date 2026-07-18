@@ -18,7 +18,7 @@ let  db_name = env.DB_NAME|| "winandwings";
             "SUPER_ADMIN": 1
         },
         "postmark":env.POSTMARK,
-        "dbConfig":"mongodb://"+user+":"+pass+"@"+host+"/"+db_name+"?authSource=admin", 
+        "dbConfig":"mongodb://"+user+":"+pass+"@"+host+"/"+db_name+"?replicaSet=rs0&authSource=admin&connectTimeoutMS=30000", 
         
         "dbOptions":{
             useNewUrlParser: true,
